@@ -1,0 +1,9 @@
+outputs/
+runs/
+Feb_2024_src_backup/
+inputs/*.json 
+inputs/timeseries/
+scripts/__pycache__/
+
+*.png
+
