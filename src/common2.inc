@@ -1,7 +1,0 @@
-
-      REAL CONST(ncz)
-      REAL EMT(LCOLSP)
-      INTEGER NSPECS
-
-      COMMON / PARAM / CONST, NSPECS
-      COMMON / TRAJT / EMT
