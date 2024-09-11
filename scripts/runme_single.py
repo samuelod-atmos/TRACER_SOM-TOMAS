@@ -81,7 +81,8 @@ queue = 'defaultfaculty.q'
 #identify = 'sclOH'
 #identify = 'sclfn'
 #identify = 'GC_OH'
-identify = 'debug' 
+identify = '300KT'
+#identify = 'debug' 
 #----------|+++++|----------
 
 settings = get_settings(identify)
@@ -376,7 +377,7 @@ if OH_proxy == 'Rad':
       if writer < 6.033e4:
         writer = 6.033e4
       
-      writer = writer + 2.0*10.0*(writer - 6.033e4)
+      writer = writer + 10.0*(writer - 6.033e4)
       #writer = writer + 10*(writer - 267332.0)
   
       if writer < 267332.0:
@@ -417,12 +418,14 @@ metfid = open('../inputs/TRACER_met/Interp_dataset.txt')
 for line in metfid.readlines():
   spl_line=line.split(',')
   dates = dt.datetime.strptime(spl_line[0],'%Y-%m-%d %H:%M:%S')
-  temp = float(spl_line[1]) #/1000.  #conversion to ppm is done in box.f 
+  temp = float(spl_line[1]) 
   RH = float(spl_line[2])
 
   if dates >= og_date[0] and dates <= og_date[-1]:
     #temperature.append(temp)
     #rel_hum.append(RH)
+    temp = 300.0
+    #RH = 0.7
     f5.write('%s\n'%str(temp))
     f6.write('%s\n'%str(RH/100.0))
 
