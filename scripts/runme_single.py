@@ -68,7 +68,7 @@ queue = 'defaultfaculty.q'
 #identify = 'mxout' 
 #identify = 'HOM.3' 
 #identify = 'smtOH' 
-identify = '2x_OH' 
+#identify = '2x_OH' 
 #identify = 'HOMmx' 
 #identify = 'nan_0' 
 #identify = 'kvpon' 
@@ -81,7 +81,7 @@ identify = '2x_OH'
 #identify = 'sclOH'
 #identify = 'sclfn'
 #identify = 'GC_OH'
-#identify = 'debug' 
+identify = 'debug' 
 #----------|+++++|----------
 
 settings = get_settings(identify)
