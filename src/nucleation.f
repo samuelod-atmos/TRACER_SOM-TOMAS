@@ -194,7 +194,7 @@ C      dunne_nuc = 0
      &                        fntemp2,rnuc,Jbn2,Jtn2,Jbi2,Jti2)
       !print*,'Jbn2=', Jbn2,'Jtn2=', Jtn2,'Jbi2=', Jbi2,'Jti2=', Jti2
         !print*,'fntemp2',fntemp2,'rnuc',rnuc 
-        !fntemp2 = fntemp2*1000.d0
+        fntemp2 = fntemp2*1000.d0
         fn = fn + fntemp2
       endif
       !print*,'fn = ',fn
