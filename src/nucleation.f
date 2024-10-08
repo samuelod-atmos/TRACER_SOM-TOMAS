@@ -39,7 +39,7 @@ C     Nkf, Mkf, Gcf - same as above, but final values
 !      SUBROUTINE nucleation(Nki,Mki,Gci,Nkf,Mkf,Gcf,dt,nucscale)
       SUBROUTINE nucleation(Nki, Mki, Gci, Nkf, Mkf, Gcf,
      &     dt, fion, cstar_nuc, org_nuc,dunne_nuc,nh3molec_cm31,MW_ORG,
-     &      HOM)
+     &      HOM, FN_SCALE2)
 
       IMPLICIT NONE
 
@@ -57,6 +57,7 @@ C-----ARGUMENT DECLARATIONS---------------------------------------------
       double precision nh3molec_cm31  ! Added by SamO
       DOUBLE PRECISION MW_ORG(iorg)    ! Added by SamO 
       DOUBLE PRECISION HOM
+      DOUBLE PRECISION FN_SCALE2
 
 C-----VARIABLE DECLARATIONS---------------------------------------------
 
@@ -194,7 +195,7 @@ C      dunne_nuc = 0
      &                        fntemp2,rnuc,Jbn2,Jtn2,Jbi2,Jti2)
       !print*,'Jbn2=', Jbn2,'Jtn2=', Jtn2,'Jbi2=', Jbi2,'Jti2=', Jti2
         !print*,'fntemp2',fntemp2,'rnuc',rnuc 
-        fntemp2 = fntemp2*1000.d0
+        fntemp2 = fntemp2*FN_SCALE2
         fn = fn + fntemp2
       endif
       !print*,'fn = ',fn

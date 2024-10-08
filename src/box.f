@@ -167,6 +167,7 @@ C-------------------------------------------------------------------------------
       DOUBLE PRECISION CALVALDBLE
       
       DOUBLE PRECISION Dbk ! particle-phase diffusion coefficient [m2/s] 
+      INTEGER Dbk_switch   ! switch for using dynamic or constand Dbk
       DOUBLE PRECISION Kc  ! first-order loss rate of species in the particle phase [1/s]
 
       REAL a_oh, ax_oh, b_oh, bx_oh,OH_NIGHT ! OH parameters for changing
@@ -195,7 +196,9 @@ C      REAL lights_on       ! the time when lights were turned on in the experim
       ! nucleation variables added in March 2020
       DOUBLE PRECISION CSTAR_NUC ! cstar limit for nucleation
       INTEGER ORG_NUC, INORG_NUC ! Ricco and Dunne nucleation switch
-      DOUBLE PRECISION FION 
+      DOUBLE PRECISION FN_SCALE  ! scale for inorganic nucleation
+      INTEGER HOM_switch, T_switch, RH_switch ! Switches for HOM, T, RH
+      DOUBLE PRECISION FION
       DOUBLE PRECISION kappa_avg(ibins)
       ! NH3 and H2SO4 Variables: added by SamO on April 24, 2020
       DOUBLE PRECISION NH3MOLEC_CM3,NH3_ppt
@@ -460,7 +463,12 @@ C      ORG_NUC = 0.0
       read(*,'(I1)') INORG_NUC
 C      DUNNE_NUC = 0.0
       print*, 'INORG_NUC=', INORG_NUC
-      
+
+      write(*,*) 'Inorganic FN scale'
+      read(*,*) FN_scale
+C      DUNNE_NUC = 0.0
+      print*, 'FN_scale=', FN_scale
+
       write(*,*) 'Enter the NH3 concentration [ppt]'
       read(*,'(E8.1)') NH3_ppt
 C      NH3_ppt = 0.0
@@ -481,11 +489,9 @@ C      endtime = 4.0
 C      alpha = 1.0
       print*, 'alpha=', alpha
       
-      write(*,*) 'Enter the particle phase diffusivity'
-      read(*,'(F8.5)') Dbk
-      !Dbk = 3.4d-19
-      !Dbk = 1.0d-15
-      print*, 'Dbk=', Dbk
+      write(*,*) 'Enter the particle phase switch'
+      read(*,'(I1)') Dbk_switch
+      print*, 'Dbk_switch=', Dbk_switch
 
       write(*,*) 'first-order loss rate of species in the'
      &     //' particle phase'
@@ -497,6 +503,17 @@ C      alpha = 1.0
 C      storg = 0.025
       print*, 'storg=', storg
 
+      write(*,*) 'HOM_switch 1/0 for HOM formation'
+      read(*,'(I1)') HOM_switch
+      print*, 'HOM_switch=', HOM_switch
+
+      write(*,*) 'T_switch 1/0 for constant Temperature'
+      read(*,'(I1)') T_switch
+      print*, 'T_switch=', T_switch
+
+      write(*,*) 'RH_switch 1/0 for constant RH'
+      read(*,'(I1)') RH_switch
+      print*, 'RH_switch=', RH_switch
 
 C      read(*,'(F12.3)') upper_pres
 C      print*,'upper_pres=', upper_pres
@@ -637,11 +654,17 @@ C-------------------------------------------------------------------------------
       OPEN(UNIT = 43, FILE = '../../inputs/timeseries/'// runname(1:14)
      & //'_Temp',STATUS = 'old')
       READ(43,'(f8.5)') temp
+      IF (T_switch.eq.0) THEN
+        Temp = 305.0
+      ENDIF 
       print*,'Temp=',Temp
 
       OPEN(UNIT = 44, FILE = '../../inputs/timeseries/'// runname(1:14)
      & //'_RH',STATUS = 'old')
       READ(44,'(f12.6)') RH
+      IF (RH_switch.eq.0) THEN
+        RH = 0.7
+      ENDIF
       print*,'RH=',RH
 C      OPEN(UNIT = 44, FILE ='../../inputs/'// runname(1:8)
 C     & //'_SfcPres',STATUS = 'old')
@@ -985,10 +1008,15 @@ C==============================================================================
       print*,'o3=',o3
       
       IF (CTRW.gt.0) THEN
-        READ(43,'(f8.5)') temp
-        print*,'temp=',temp
-        READ(44,'(f12.6)') RH
-        print*,'RH=',RH
+        IF (T_switch.eq.1) THEN
+          READ(43,'(f8.5)') temp
+          print*,'temp=',temp
+        ENDIF 
+        
+        IF (RH_switch.eq.1) THEN
+          READ(44,'(f12.6)') RH
+          print*,'RH=',RH
+        ENDIF
       ENDIF
 
 
@@ -1193,37 +1221,42 @@ C HOM formation
 C ----------------------------------------------------------------
 
 C     AUTOXIDATION: CHARLES
-         dHOM = 0.d0
-         HOM2 = 0.d0
-         HOM = Gc(SRTORGLAST)
-C         print*,'INDEX_VOC =',INDEX_VOC
-C         print*,'kOH =',kOH
-         DO I = 1,6
-C             DEX = INDEX_VOC(i)
-C           print*,'INDEX_VOC(I) =',INDEX_VOC(I)
-C           print*,'SAPRCGC(INDEX_VOC(I)):',SAPRCGC(INDEX_VOC(I))
-C           print*,'DOUBLE PREC',DBLE(SAPRCGC(INDEX_VOC(I)))
-C           print*,'kOH(I):',kOH(I)
-C           print*,'fHOM(I):',fHOM(I)
-C           print*,'CONST(6):',CONST(6)
-           CALVALDBLE = DBLE(SAPRCGC(INDEX_VOC(I)))*1e-6*PRES/
-     &      R/TEMP*6.022e23*1e-6
-           dHOM = CALVALDBLE*kOH(I)*fHOM(I)*ohc*aadt/3.d0
-           HOM2 = HOM2 + dHOM
-C           print*,'HOM2 in loop =',HOM2
-         END DO
-C         HOM = HOM*1e-6*PRES/R/TEMP*6.022E23
-         HOM = HOM + HOM2*BOXVOL/6.022e23*300.0/1000.0  ! HOM in kg/box
-         
-C         HOM = 0.d0
+         IF (HOM_switch.eq.1) THEN
+           dHOM = 0.d0
+           HOM2 = 0.d0
+           HOM = Gc(SRTORGLAST)
+C           print*,'INDEX_VOC =',INDEX_VOC
+C           print*,'kOH =',kOH
+           DO I = 1,6
+C               DEX = INDEX_VOC(i)
+C             print*,'INDEX_VOC(I) =',INDEX_VOC(I)
+C             print*,'SAPRCGC(INDEX_VOC(I)):',SAPRCGC(INDEX_VOC(I))
+C             print*,'DOUBLE PREC',DBLE(SAPRCGC(INDEX_VOC(I)))
+C             print*,'kOH(I):',kOH(I)
+C             print*,'fHOM(I):',fHOM(I)
+C             print*,'CONST(6):',CONST(6)
+             CALVALDBLE = DBLE(SAPRCGC(INDEX_VOC(I)))*1e-6*PRES/
+     &        R/TEMP*6.022e23*1e-6
+             dHOM = CALVALDBLE*kOH(I)*fHOM(I)*ohc*aadt/3.d0
+             HOM2 = HOM2 + dHOM
+C             print*,'HOM2 in loop =',HOM2
+           END DO
+C           HOM = HOM*1e-6*PRES/R/TEMP*6.022E23
+           HOM = HOM + HOM2*BOXVOL/6.022e23*300.0/1000.0  ! HOM in kg/box
+           
+           HOM = 0.d0
 
-         print*,'HOM in kg = ',HOM
-C         print*,'After Auto-ox'
-C         OPEN(UNIT=48, FILE=HOM_FILE, STATUS='old', ACCESS='append')
-C         WRITE(48,905) TOUT*60.0, HOM
-C         CLOSE(48)
+           print*,'HOM in kg = ',HOM
+C           print*,'After Auto-ox'
+C           OPEN(UNIT=48, FILE=HOM_FILE, STATUS='old', ACCESS='append')
+C           WRITE(48,905) TOUT*60.0, HOM
+C           CLOSE(48)
 
-         Gc(SRTORGLAST) = HOM
+           Gc(SRTORGLAST) = HOM
+         ELSE
+           HOM = 0.0
+         ENDIF
+
 
 ! -------------------------------------------------------------------------------------------
 C        ! get organic aerosol psats at current temperature
@@ -1378,7 +1411,7 @@ C ----------------------------------------------------------------
          call storenm()
          call nucleation(Nk,Mk,Gc,Nkout,Mkout,Gcout,
      &        adt, fion, cstar_nuc, org_nuc, inorg_nuc, NH3MOLEC_CM3,
-     &        MWORG, HOM) ! Orginally from JRP codes, SamO added NH3
+     &        MWORG, HOM, FN_SCALE) ! Orginally from JRP codes, SamO added NH3
          do k=1,ibins
             if (isnan(Nk(k)))then
                print*,'NaN 3'
@@ -1410,34 +1443,39 @@ C ----------------------------------------------------------------
 
 
 C ==========================================================  
-         HOM = Gc(SRTORGLAST)
-         print*,'HOM before HOMCOND=',HOM
-         print*, 'SUM(Mk) before HOMCOND =',SUM(Mk(:,SRTORGLAST))
-         call storenm()
-         call getCondSink(Nk,Mk,SRTORGLAST,CS,sinkfrac)
-         print*,'HOM CS=',CS
-         massin=0.0 
-         massin = HOM*CS*aadt
-         HOM = HOM - massin
-
-!         call HOMCOND(Nk,Mk,Nkout,Mkout,HOM,aadt,tau_p,
-!     &     Dbk,kc,ORG_O2C,kappa_avg)
-         call HOMCOND(Nk,Mk,massin,SRTORGLAST,Nkout,Mkout)
-        
-         print*,'HOM after HOMCOND=',HOM
-         print*, 'SUM(Mk) after HOMCOND =',SUM(Mkout(:,SRTORGLAST))
-         print*,'Mk diff:',
-     &           SUM(Mk(:,SRTORGLAST))-SUM(Mkout(:,SRTORGLAST))
          
-         Gc(SRTORGLAST) = HOM
+         IF (HOM_switch.eq.1) THEN
 
-         do n=1,IBINS
-            do j=1,icomp
-               Mk(n,j)=Mkout(n,j)
-            enddo
-            Nk(n)=Nkout(n)
-         enddo
+           HOM = Gc(SRTORGLAST)
+           print*,'HOM before HOMCOND=',HOM
+           print*, 'SUM(Mk) before HOMCOND =',SUM(Mk(:,SRTORGLAST))
+           call storenm()
+           call getCondSink(Nk,Mk,SRTORGLAST,CS,sinkfrac)
+           print*,'HOM CS=',CS
+           massin=0.0 
+           massin = HOM*CS*aadt
+           HOM = HOM - massin
 
+!          call HOMCOND(Nk,Mk,Nkout,Mkout,HOM,aadt,tau_p,
+!      &     Dbk,kc,ORG_O2C,kappa_avg)
+           call HOMCOND(Nk,Mk,massin,SRTORGLAST,Nkout,Mkout)
+          
+           print*,'HOM after HOMCOND=',HOM
+           print*, 'SUM(Mk) after HOMCOND =',SUM(Mkout(:,SRTORGLAST))
+           print*,'Mk diff:',
+     &           SUM(Mk(:,SRTORGLAST))-SUM(Mkout(:,SRTORGLAST))
+           
+           Gc(SRTORGLAST) = HOM
+  
+           do n=1,IBINS
+              do j=1,icomp
+                 Mk(n,j)=Mkout(n,j)
+              enddo
+              Nk(n)=Nkout(n)
+           enddo
+
+         ENDIF
+         
 C ========================================================== Need to update for prognostic H2SO4
          GC(srtso4)=GCOUT(srtso4)
          GC(SRTORG1:SRTORGLAST) = GCOUT(SRTORG1:SRTORGLAST) ! Added by AliA - IS IT RIGHT???????
@@ -1603,12 +1641,15 @@ C         print*,'SAPRCGC(10:20) After HOM =',SAPRCGC(10:20)
 C Particle Phase Diffusion Coefficient 
 C ----------------------------------------------------------------
 
-         Dbk = 1.0E-14
+         !Dbk = 1.0E-14
          !print*,'SAPRCGC(29) before =',SAPRCGC(29)
          !print*,'GC(iCOMP-4) before =',GC(iCOMP-4)
-         !IF (Dbk.eq.0.0d0) THEN
-         !Dbk = CALC_DB(time,ORG_O2C)
-         !ENDIF
+         IF (Dbk_switch.eq.1) THEN
+           Dbk = CALC_DB(time,ORG_O2C)
+         ELSE
+           Dbk = 1.0e-18
+         ENDIF
+
          print*,'Dbk =',Dbk 
          !print*,'SAPRCGC(29) after =',SAPRCGC(29)
          !print*,'GC(iCOMP-4) after =',GC(iCOMP-4)

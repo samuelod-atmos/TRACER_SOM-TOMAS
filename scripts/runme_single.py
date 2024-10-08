@@ -81,7 +81,12 @@ queue = 'defaultfaculty.q'
 #identify = 'sclOH'
 #identify = 'sclfn'
 #identify = 'GC_OH'
-identify = '300KT'
+#identify = '300KT'
+#identify = '0.7RH'
+#identify = 'DP_O3' 
+#identify = 'DP2O3' 
+#identify = '100fn' 
+identify = 'noHOM' 
 #identify = 'debug' 
 #----------|+++++|----------
 
@@ -424,8 +429,8 @@ for line in metfid.readlines():
   if dates >= og_date[0] and dates <= og_date[-1]:
     #temperature.append(temp)
     #rel_hum.append(RH)
-    temp = 300.0
-    #RH = 0.7
+    #temp = 300.0
+    #RH = 70.0
     f5.write('%s\n'%str(temp))
     f6.write('%s\n'%str(RH/100.0))
 
@@ -466,7 +471,7 @@ df_emiss_ML = gsh_emission_ML.worksheet_by_title(title='%s'%emiss_sheetname).get
  
 index  = np.where(df_emiss_ML.iloc[:,0]!='')[0].shape[0] 
 spname = df_emiss_ML['species'].iloc[:index]
-g_ippm_ML = df_emiss_ML['gas_id'].iloc[:index]
+#g_ippm_ML = df_emiss_ML['gas_id'].iloc[:index]
 p_frac = df_emiss_ML['pfrac_id'].iloc[:index] 
 
 
@@ -534,7 +539,8 @@ f5.close()
 
 
 #f11 = open('../inputs/TRACER_O3_MAQL2.txt','r')
-f11 = open('../inputs/TRACER_O3_AOS.txt','r')
+#f11 = open('../inputs/TRACER_O3_AOS.txt','r')
+f11 = open('../inputs/TRACER_O3_DeerPark.txt','r')
 O3 = []
 for line in f11.readlines():
   spl_line=line.split(',')
@@ -544,6 +550,7 @@ for line in f11.readlines():
   #  voc_raw = 0.0
 
   dates = dt.datetime.strptime(spl_line[1][:-2],' %Y-%m-%d %H:%M:%S')
+  dates = dates - dt.timedelta(hours=1)
   #sys.exit()
   if dates >= og_date[0] and dates <= og_date[-1]:
     O3.append(spl_line[0])
@@ -552,6 +559,7 @@ for line in f11.readlines():
     #f8.write('%s  %s  %s  %s\n'%(str(injection),str(injec_Dp),str(injec_sig),str(dates)))
 
 f11.close()
+
 
 f12 = open('../inputs/timeseries/%s%s%s_%s_o3'%(str(start_t.year).zfill(4),str(start_t.month).zfill(2),str(start_t.day).zfill(2),identify),'w')
 

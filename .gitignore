@@ -1,7 +1,8 @@
 outputs/
 runs/
 Feb_2024_src_backup/
-inputs/*.json 
+postprocessing/
+inputs/*.json
 inputs/timeseries/
 scripts/__pycache__/
 

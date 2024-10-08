@@ -34,9 +34,9 @@ delt = 300.0
 #identify = 'tmbto'
 #identify = 'kvpon'
 #identify = 'smtOH'
-identify = 'wiMDL'
+#identify = 'wiMDL'
 #identify = 'noinj'
-#identify = 'debug'
+identify = 'debug'
 
 #=================================================================
 db = [1E-15]

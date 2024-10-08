@@ -59,14 +59,15 @@ VWL  =  [1,0] # [0 or 1] the switch for On/Off vapor wall loss
 PWL  =  [1,0] # [0 or 1] the switch for On/Off particle wall loss 
 
 NOx = 5.0                             # NOx concentration for OH proxy #3
-nh3_ppt = [500.0, 5000.0, 15000.0]   # NH3 concentration [ppt]
+nh3_ppt = 5000.0                    # NH3 concentration [ppt]
 OH_multi = [0.5, 1.0, 2.0]            # multiplier for OH concentration
+OH_proxy = 'Rad'
 boxvol  = 2000000.0                   # teflon [cm3] - [CalTech 24 m3, CSU 10 m3, CMU ?? m3]
 
 orgfrac_bg = 0.8                                   # Organic fraction of background aerosols  
 density_bg = orgfrac_bg*1400.0+(1-orgfrac_bg)*1770 # [kg/m3] - density of aerosol originally in the chamber
 
-db     = [1.0E-15]  # particle-phase diffusion coefficient [m2/s] (could try 3.4e-15 from Charles) 
+db     = [1,0]                    # switch for dynamic [1] or constant [0] particle-phase diffusion coefficient [m2/s] 
 alpha   = 1.0                     # accommodation coefficient 
 storg   = 0.025                   # [N/m] surface tension
 kc      = 0.0                     # first-order loss rate of species in the particle phase [1/s]
@@ -75,8 +76,13 @@ stppres = 101325.0                # STP pressure
 
 # nucleation parameters
 fion = 8.0           # Ion recombination coefficient [cm-3 s-]
-organic_nuc = [1,0]      # switch for organic nucleation [0 or 1]
-inorganic_nuc = [1,0]    # switch for inorganic nucleation [0 or 1]
+organic_nuc = 1      # switch for organic nucleation [0 or 1]
+inorganic_nuc = 1    # switch for inorganic nucleation [0 or 1]
+fn_multi = [1, 100, 1000]
+
+HOM_switch = [1,0]
+T_switch = [1,0]
+RH_switch = [1,0]
 
 
 # ====================================================================================================
@@ -188,7 +194,17 @@ gc = pyg.authorize(service_file='../inputs/som-tomas-9d97902effb8.json')
 #sigma_bg1 = 1.5 
 
 #Nobg1,Dpm_bg1,sigma_bg1,Nobg2,Dpm_bg2,sigma_bg2,Nobg3,Dpm_bg3,sigma_bg3  = SD_smps(SMPS_sheetname,SMPS_lower,endtime,gc)
-Nobg1,Dpm_bg1,sigma_bg1,Nobg2,Dpm_bg2,sigma_bg2,Nobg3,Dpm_bg3,sigma_bg3  = 100.0,0.02,1.5,0.0,0.2,1.5,0.0,0.3,1.5
+#Nobg1,Dpm_bg1,sigma_bg1,Nobg2,Dpm_bg2,sigma_bg2,Nobg3,Dpm_bg3,sigma_bg3  = 100.0,0.02,1.5,0.0,0.2,1.5,0.0,0.3,1.5
+
+Nobg1,Dpm_bg1,sigma_bg1,Nobg2,Dpm_bg2,sigma_bg2,Nobg3,Dpm_bg3,sigma_bg3  = 4692.597952523227 , \
+  0.032606184546552064 , \
+  1.163217944787477 , \
+  3915.9576072088835 , \
+  0.028060107283775015 , \
+  1.28985945295308 , \
+  0.0 , \
+  0.3 , \
+  1.5
 
 #===================================================================================
 print('making aerosol injection file')
@@ -238,28 +254,39 @@ switchfile.close()
 #===================================================================================
 print('making OH file')
 f4 = open('../inputs/timeseries/%s%s%s_%s_OH'%(str(start_t.year).zfill(4),str(start_t.month).zfill(2),str(start_t.day).zfill(2),identify),'w')
-radfid = open('../inputs/SW_radiation/Interp_radiation.txt')
-for line in radfid.readlines():
-  spl_line=line.split(',')
-  dates = dt.datetime.strptime(spl_line[0],'%Y-%m-%d %H:%M:%S')
-  sw_rad = float(spl_line[1])
 
-  if dates >= og_date[0] and dates <= og_date[-1]:
-    if sw_rad<0.001:
-      sw_rad = 0.001
+if OH_proxy == 'Rad':
   
-    X = np.log10(NOx) - 0.195
-    Y = sw_rad/(1370*0.76)
+  radfid = open('../inputs/SW_radiation/Interp_radiation.txt')
+  for line in radfid.readlines():
+    spl_line=line.split(',')
+    dates = dt.datetime.strptime(spl_line[0],'%Y-%m-%d %H:%M:%S')
+    sw_rad = float(spl_line[1])
   
-    P1 = -0.014*X**6 + 0.0027*X**5 + 0.1713*X**4 - 0.0466*X**3 - 0.7893*X**2 - 0.1739*X + 6.9414
-    P2 = (-1345*Y**3 + 4002*Y**2 - 471.8*Y + 42.72)*10**4
+    if dates >= og_date[0] and dates <= og_date[-1]:
+      if sw_rad<0.001:
+        sw_rad = 0.001
+    
+      #X = np.log10(NOx) - 0.195
+      #Y = sw_rad/(1370*0.76)
+      #P1 = -0.014*X**6 + 0.0027*X**5 + 0.1713*X**4 - 0.0466*X**3 - 0.7893*X**2 - 0.1739*X + 6.9414
+      #P2 = (-1345*Y**3 + 4002*Y**2 - 471.8*Y + 42.72)*10**4
+      #writer = 0.82*10**(P1*np.log10(P2)/6.8)
   
-    writer = 0.82*10**(P1*np.log10(P2)/6.8)
-    f4.write('%s\n'%str(writer)) #Comment out to not overwrite
-
-f4.close()
-radfid.close()
-
+      writer = 3081.0*sw_rad**0.8397
+      if writer < 6.033e4:
+        writer = 6.033e4
+      
+      writer = writer + 10.0*(writer - 6.033e4)
+      #writer = writer + 10*(writer - 267332.0)
+  
+      if writer < 267332.0:
+        writer = 267332.0
+  
+      
+      f4.write('%s\n'%str(writer)) #Comment out to not overwrite
+  
+  radfid.close()
 #===================================================================================
 print('making temperature and RH files')
 f5 = open('../inputs/timeseries/%s%s%s_%s_Temp'%(str(start_t.year).zfill(4),str(start_t.month).zfill(2),str(start_t.day).zfill(2),identify),'w')
@@ -349,9 +376,9 @@ f9.close()
 
 #f10 = open('../inputs/TRACER_VOC_PTRMS_nan2zero.txt','r')
 #f10 = open('../inputs/TRACER_VOC_PTRMS_sty.txt','r')
-#f10 = open('../inputs/TRACER_VOC_PTRMS_withMDL.txt','r')
+f10 = open('../inputs/TRACER_VOC_PTRMS_withMDL.txt','r')
 #f10 = open('../inputs/TRACER_VOC_PTRMS.txt','r')
-f10 = open('../inputs/TRACER_VOC_PTRMS_Splice.txt','r')
+#f10 = open('../inputs/TRACER_VOC_PTRMS_Splice.txt','r')
 VOCs = []
 for line in f10.readlines():
   spl_line=line.split('#')
@@ -380,7 +407,8 @@ for i in range(int(endtime*3600/aadt)):
 f5.close()
 
 
-f11 = open('../inputs/TRACER_O3_MAQL2.txt','r')
+#f11 = open('../inputs/TRACER_O3_MAQL2.txt','r')
+f11 = open('../inputs/TRACER_O3_DeerPark.txt','r')
 O3 = []
 for line in f11.readlines():
   spl_line=line.split(',')
@@ -421,224 +449,232 @@ print('nh3_ppt = %s'%nh3_ppt)
 #sys.exit('You suck at this!!!') 
 
 ctr = 0
-for NH3 in nh3_ppt:
-  for dbk in db:
-    for pwl in PWL:
-      for vwl in VWL:
-        for org_nuc in organic_nuc:
-          for inorg_nuc in inorganic_nuc:
-            for OH_scale in OH_multi:
+for dbk in db:
+  for pwl in PWL:
+    for vwl in VWL:
+      for OH_scale in OH_multi:
+        for fn_scale in fn_multi:
+          for HOMs in HOM_switch:
+            for Temp in T_switch:
+              for RH in RH_switch:
+                ctr+=1
+                No_bg1 = str(float(Nobg1))
+                No_bg2 = str(float(Nobg2))
+                No_bg3 = str(float(Nobg3))
+                
+                rname = '%s_%s_db%s_pwl%1i_vwl%1i_OH%s_FN%s_HOM%li_T%li_RH%li'%(name,identify,dbk,pwl,vwl,OH_scale,fn_scale,HOMs,Temp,RH)
             
-              ctr+=1
-              No_bg1 = str(float(Nobg1))
-              No_bg2 = str(float(Nobg2))
-              No_bg3 = str(float(Nobg3))
-              
-              rname = '%s_%s_vwl%1i_pwl%1i_nh3%s_orgfn%s_inorg%s_db%s_ohscale%s'%(name,identify,vwl,pwl,NH3,org_nuc,inorg_nuc,dbk,OH_scale)
-          
-              #print('%i - Simulation'%ctr)
-              #print('---------------')
-              #print('VWL = %s'%vwl)
-              #print('PWL = %s'%pwl)
-              #print('Db = %s [m2/s]'%db)
-              #print('Kc = %s [1/s]'%kc)
-              #print('ke = %s [1/s]'%ke)
-              #print('OH = %s [molec/cm3]'%OH_conc)
-              #print('No1 = %s [#/cm3]'%No1)
-              #print('Dpm1 = %s [um]'%Dpm1)
-              #print('sigma1 = %s'%sigma1)
-              #print('No2 = %s [#/cm3]'%No2)
-              #print('Dpm2 = %s [um]'%Dpm2)
-              #print('sigma2 = %s'%sigma2)
-              #print('time = %s [h]'%tend)
-              #print('runname = %s'%rname)
-              
-              if os.path.exists('../runs/%s'%(rname)):
-               os.system('rm -r ../runs/%s'%(rname))
+                #print('%i - Simulation'%ctr)
+                #print('---------------')
+                #print('VWL = %s'%vwl)
+                #print('PWL = %s'%pwl)
+                #print('Db = %s [m2/s]'%db)
+                #print('Kc = %s [1/s]'%kc)
+                #print('ke = %s [1/s]'%ke)
+                #print('OH = %s [molec/cm3]'%OH_conc)
+                #print('No1 = %s [#/cm3]'%No1)
+                #print('Dpm1 = %s [um]'%Dpm1)
+                #print('sigma1 = %s'%sigma1)
+                #print('No2 = %s [#/cm3]'%No2)
+                #print('Dpm2 = %s [um]'%Dpm2)
+                #print('sigma2 = %s'%sigma2)
+                #print('time = %s [h]'%tend)
+                #print('runname = %s'%rname)
                 
-              os.system('mkdir ../runs/%s'%(rname))
-              os.system('cp ../src/box.exe ../runs/%s/'%(rname))
-              os.system('cp ../src/saprc14_rev1.mod ../runs/%s/saprc14_rev1.mod'%(rname))
+                if os.path.exists('../runs/%s'%(rname)):
+                 os.system('rm -r ../runs/%s'%(rname))
+                  
+                os.system('mkdir ../runs/%s'%(rname))
+                os.system('cp ../src/box.exe ../runs/%s/'%(rname))
+                os.system('cp ../src/saprc14_rev1.mod ../runs/%s/saprc14_rev1.mod'%(rname))
+                  
+                f1 = open('../runs/%s/input'%(rname),'w')
+                f1.write('%s\n'%rname)
+                f1.write('%f\n'%aadt)
+                f1.write('%i\n'%nintern)
+                f1.write('%1i\n'%COAG)
+                f1.write('%1i\n'%vwl)
+                f1.write('%1i\n'%pwl)
+                f1.write('%f\n'%kvap_on)
+                f1.write('%s\n'%kpar)
+                #f1.write('%e\n'%OH_conc) # ***
+                #f1.write('%e\n'%b_oh) # ***
+                #f1.write('%e\n'%bx_oh) # ***
+                f1.write('%e\n'%OH_scale)
+                f1.write('%15.4f\n'%fion)
+                f1.write('%i\n'%organic_nuc)
+                f1.write('%i\n'%inorganic_nuc)
+                f1.write('%e\n'%fn_scale)
+                f1.write('%8.1e\n'%nh3_ppt)
+                f1.write('%10.1f\n'%boxvol)
+                f1.write('%5.2f\n'%endtime) # ***
+                f1.write('%8.5f\n'%alpha)
+                f1.write('%i\n'%dbk)
+                f1.write('%f\n'%kc)
+                f1.write('%8.5f\n'%storg)
+                f1.write('%i\n'%HOMs)
+                f1.write('%i\n'%Temp)
+                f1.write('%i\n'%RH)
+            #    f1.write('%8.5f\n'%temp)
+            #    f1.write('%8.5f\n'%RH)
+                f1.write('%8.5f\n'%No1) # ***
+                f1.write('%8.5f\n'%Dpm1) # ***
+                f1.write('%8.5g\n'%sigma1)
+                f1.write('%8.5f\n'%No2) # ***
+                f1.write('%8.5f\n'%Dpm2) # ***
+                f1.write('%8.5g\n'%sigma2)
+                f1.write('%02i\n'%nsomprec)
+                f1.write('%s\n'%somprecname)
+                f1.write('%s\n'%dlvp)
+                f1.write('%s\n'%poa_1stname)
+                f1.write('%s\n'%poa_1st_lenname)
+                f1.write('%03i\n'%nspemiss)
+                f1.write('%s\n'%emiss_spname)
+                #f1.write('%15.5E %s\n'%(SO2[0],emiss_ippm))
+                f1.write('%s\n'%seed_frac)
+                f1.write('%s\n'%seed_dens)
+                f1.write('%s\n'%No_bg1)
+                f1.write('%s\n'%Dpm_bg1) 
+                f1.write('%s\n'%sigma_bg1)
+                f1.write('%s\n'%No_bg2)
+                f1.write('%s\n'%Dpm_bg2) 
+                f1.write('%s\n'%sigma_bg2)
+                f1.write('%s\n'%No_bg3)
+                f1.write('%s\n'%Dpm_bg3) 
+                f1.write('%s\n'%sigma_bg3)
+                f1.write('%8.5f\n'%density_bg)
+                f1.write('%8.6f\n'%orgfrac_bg)
+                #f1.write('%20.4f\n'%p_dilt1[0])
+                #f1.write('%20.4f\n'%p_dilt2[0])
+                #f1.write('%20.4f\n'%p_dilt3[0])
+                #f1.write('%20.4f\n'%p_dilt4[0])
+                f1.close()
                 
-              f1 = open('../runs/%s/input'%(rname),'w')
-              f1.write('%s\n'%rname)
-              f1.write('%f\n'%aadt)
-              f1.write('%i\n'%nintern)
-              f1.write('%1i\n'%COAG)
-              f1.write('%1i\n'%vwl)
-              f1.write('%1i\n'%pwl)
-              f1.write('%f\n'%kvap_on)
-              f1.write('%s\n'%kpar)
-              #f1.write('%e\n'%OH_conc) # ***
-              #f1.write('%e\n'%b_oh) # ***
-              #f1.write('%e\n'%bx_oh) # ***
-              f1.write('%e\n'%OH_scale)
-              f1.write('%15.4f\n'%fion)
-              f1.write('%i\n'%org_nuc)
-              f1.write('%i\n'%inorg_nuc)
-              f1.write('%8.1e\n'%NH3)
-              f1.write('%10.1f\n'%boxvol)
-              f1.write('%5.2f\n'%endtime) # ***
-              f1.write('%8.5f\n'%alpha)
-              f1.write('%8.5f\n'%dbk)
-              f1.write('%f\n'%kc)
-              f1.write('%8.5f\n'%storg)
-          #    f1.write('%8.5f\n'%temp)
-          #    f1.write('%8.5f\n'%RH)
-              f1.write('%8.5f\n'%No1) # ***
-              f1.write('%8.5f\n'%Dpm1) # ***
-              f1.write('%8.5g\n'%sigma1)
-              f1.write('%8.5f\n'%No2) # ***
-              f1.write('%8.5f\n'%Dpm2) # ***
-              f1.write('%8.5g\n'%sigma2)
-              f1.write('%02i\n'%nsomprec)
-              f1.write('%s\n'%somprecname)
-              f1.write('%s\n'%dlvp)
-              f1.write('%s\n'%poa_1stname)
-              f1.write('%s\n'%poa_1st_lenname)
-              f1.write('%03i\n'%nspemiss)
-              f1.write('%s\n'%emiss_spname)
-              f1.write('%15.5E %s\n'%(SO2[0],emiss_ippm))
-              f1.write('%s\n'%seed_frac)
-              f1.write('%s\n'%seed_dens)
-              f1.write('%s\n'%No_bg1)
-              f1.write('%s\n'%Dpm_bg1) 
-              f1.write('%s\n'%sigma_bg1)
-              f1.write('%s\n'%No_bg2)
-              f1.write('%s\n'%Dpm_bg2) 
-              f1.write('%s\n'%sigma_bg2)
-              f1.write('%s\n'%No_bg3)
-              f1.write('%s\n'%Dpm_bg3) 
-              f1.write('%s\n'%sigma_bg3)
-              f1.write('%8.5f\n'%density_bg)
-              f1.write('%8.6f\n'%orgfrac_bg)
-              #f1.write('%20.4f\n'%p_dilt1[0])
-              #f1.write('%20.4f\n'%p_dilt2[0])
-              #f1.write('%20.4f\n'%p_dilt3[0])
-              #f1.write('%20.4f\n'%p_dilt4[0])
-              f1.close()
-              
-              # info file
-              # ---------------------------------------------------------
-              if os.path.exists('../outputs/%s.input'%(rname)):
-               print('YES - %s.input exists!'%(rname))
-               os.system('rm ../outputs/%s*'%(rname))
-              f2 = open('../outputs/%s.input'%rname,'w')
-              f2.write('filename    = %s\n'%rname)
-              #f2.write('parameterization: %s_%s\n'%(precursor,regime))
-              f2.write('aadt        = %s\n'%aadt)
-              f2.write('nintern     = %s\n'%nintern)
-              f2.write('ibins       = %s\n'%ibins)
-              f2.write('COAG        = %s\n'%COAG)
-              f2.write('VWL         = %s\n'%vwl)
-              f2.write('PWL         = %s\n'%pwl)
-              f2.write('kvap_on          = %s [1/s]\n'%kvap_on)
-              f2.write('kpar         = %s [1/s]\n'%kpar)
-              f2.write('A           = %s [nm/s]\n'%A)
-              #f2.write('OH eqn. = a_oh*exp(-1.*ax_oh*t) + b_oh*exp(-1.*bx_oh*t)\n') # ***
-              #f2.write('OH_conc        = %s\n'%OH_conc) # ***
-              #f2.write('ax_oh       = %s\n'%ax_oh) # ***
-              #f2.write('b_oh        = %s\n'%b_oh) # ***
-              #f2.write('bx_oh       = %s\n'%bx_oh) # ***
-              f2.write('OH_scale    = %s\n'%OH_scale)
-              f2.write('fion        = %s\n'%fion)
-              f2.write('org_nuc     = %s\n'%org_nuc)
-              f2.write('inorg_nuc    = %s\n'%inorg_nuc)
-              f2.write('nh3_ppt     = %s\n'%NH3)
-              f2.write('boxvol      = %s [cm3]\n'%boxvol)
-              f2.write('endtime     = %s [hours]\n'%endtime) # ***
-              f2.write('alpha       = %s\n'%alpha)
-              f2.write('Db          = %s [m2/s]\n'%dbk)
-              f2.write('Kc          = %s [1/s]\n'%kc)
-              f2.write('storg       = %s [N/m]\n'%storg)
-          #    f2.write('temperature = %s [K]\n'%temp)
-              f2.write('No1         = %s [# cm-3]\n'%No1) # ***
-              f2.write('Dpm1        = %s [um]\n'%Dpm1) # ***
-              f2.write('Sigma1      = %s\n'%sigma1)
-              f2.write('No2         = %s [# cm-3]\n'%No2) # ***
-              f2.write('Dpm2        = %s [um]\n'%Dpm2) # ***
-              f2.write('Sigma2      = %s\n'%sigma2)
-              f2.write('nsomprec    = %s\n'%nsomprec)
-              f2.write('somprecname = %s\n'%somprecname)
-              f2.write('dlvp        = %s\n'%dlvp)
-              f2.write('poa_1stname = %s\n'%poa_1stname)
-              f2.write('poa_1st_len = %s\n'%poa_1st_lenname)
-              f2.write('nspemiss    = %s\n'%nspemiss)
-              f2.write('emiss_spname= %s\n'%emiss_spname)
-              f2.write('emiss_ippm  = %s\n'%emiss_ippm)
-              f2.write('seed_frac   = %s\n'%seed_frac)
-              f2.write('seed_dens   = %s\n'%seed_dens)
-              f2.write('No_bg1      = %s\n'%No_bg1)
-              f2.write('Dpm_bg1     = %s\n'%Dpm_bg1) 
-              f2.write('sigma_bg1   = %s\n'%sigma_bg1)
-              f2.write('density_bg  = %s\n'%density_bg)
-              f2.write('orgfrac_bg  = %s\n'%orgfrac_bg)
-              #f2.write('p_dilt1     = %s\n'%p_dilt1[0])
-              #f2.write('p_dilt2     = %s\n'%p_dilt2[0])
-              #f2.write('p_dilt3     = %s\n'%p_dilt3[0])
-              #f2.write('p_dilt4     = %s\n'%p_dilt4[0])
-              
-              f2.close()
-              
-              #sys.exit('Sucker')
-              # ---------------------------------------------------------
-              # ************************************************
-              c = os.popen('squeue').read()
-              b=re.findall('samuelod', c)
-              njobs=len(b)
-              print('b=',b)
-              print('njobs=',len(b))
-              
-              while njobs >= maxjobs:
-                 os.system('sleep 30m')
-                 c = os.popen('squeue -u samuelod -p pie_all').read()
-                 b = re.findall('%s.sh'%identify, c)
-                 njobs=len(b)
-              # ************************************************
-              
-              os.system('sleep 5')
-          
-              df4 = open('../inputs/raw_runme.sh', mode='r') # reading the default header file of TOMAS
-              runme_line = []
-              for i in df4.readlines():
-               runme_line.append(i.strip('\n'))
-               df4.close()
-                       
-              ind1 = np.where(np.array(runme_line)=='cd run_direct')[0][0]
-              runme_line[ind1] = 'cd %s/%s'%(run_directory, rname)
-              
-              ind2 = np.where(np.array(runme_line)=="echo 'rname'")[0][0]
-              runme_line[ind2] = 'echo %s'%(rname)
-              
-              #ind3 = np.where(np.array(runme_line)=='./box.exe <input> /dev/null')[0][0]
-              ind3 = np.where(np.array(runme_line)=='./box.exe <input> out')[0][0]
-              #runme_line[ind3] = './box.exe <input> /dev/null'
-              #runme_line[ind3] = './box.exe <input> %s.out'%(rname)
-              runme_line[ind3] = './box.exe <input> out'
-              
-              #if os.path.exists('runme.sh'):
-              #   os.system('rm runme.sh')
-              
-              runme_out = open('../runs/%s/%s.sh'%(rname,identify), mode='w')
-              #runme_out = open('../runs/%s/runme.sh'%(rname), mode='w')
-              for i in runme_line:
-               runme_out.write(i)
-               runme_out.write('\n')
-              runme_out.close()
-          
-              #os.system('cd ../runs/%s/; qsub -cwd -V -pe MPI 1 -q %s ./runme.sh'%(rname, queue))
-              os.system('cd ../runs/%s/; sbatch ./%s.sh'%(rname,identify))
-              #os.system('cd ../runs/%s/; sbatch ./runme.sh'%(rname))
-          
-              #os.system('sleep 1')
+                # info file
+                # ---------------------------------------------------------
+                if os.path.exists('../outputs/%s.input'%(rname)):
+                 print('YES - %s.input exists!'%(rname))
+                 os.system('rm ../outputs/%s*'%(rname))
+                f2 = open('../outputs/%s.input'%rname,'w')
+                f2.write('filename    = %s\n'%rname)
+                #f2.write('parameterization: %s_%s\n'%(precursor,regime))
+                f2.write('aadt        = %s\n'%aadt)
+                f2.write('nintern     = %s\n'%nintern)
+                f2.write('ibins       = %s\n'%ibins)
+                f2.write('COAG        = %s\n'%COAG)
+                f2.write('VWL         = %s\n'%vwl)
+                f2.write('PWL         = %s\n'%pwl)
+                f2.write('kvap_on     = %s [1/s]\n'%kvap_on)
+                f2.write('kpar        = %s [1/s]\n'%kpar)
+                f2.write('A           = %s [nm/s]\n'%A)
+                #f2.write('OH eqn. = a_oh*exp(-1.*ax_oh*t) + b_oh*exp(-1.*bx_oh*t)\n') # ***
+                #f2.write('OH_conc        = %s\n'%OH_conc) # ***
+                #f2.write('ax_oh       = %s\n'%ax_oh) # ***
+                #f2.write('b_oh        = %s\n'%b_oh) # ***
+                #f2.write('bx_oh       = %s\n'%bx_oh) # ***
+                f2.write('OH_scale    = %s\n'%OH_scale)
+                f2.write('fion        = %s\n'%fion)
+                f2.write('org_nuc     = %s\n'%organic_nuc)
+                f2.write('inorg_nuc   = %s\n'%inorganic_nuc)
+                f2.write('fn_scale    = %s\n'%fn_scale)
+                f2.write('nh3_ppt     = %s\n'%nh3_ppt)
+                f2.write('boxvol      = %s [cm3]\n'%boxvol)
+                f2.write('endtime     = %s [hours]\n'%endtime) # ***
+                f2.write('alpha       = %s\n'%alpha)
+                f2.write('Db switch   = %s [m2/s]\n'%dbk)
+                f2.write('Kc          = %s [1/s]\n'%kc)
+                f2.write('storg       = %s [N/m]\n'%storg)
+                f2.write('HOM switch  = %s\n'%HOMs)
+                f2.write('Temp switch = %s\n'%Temp)
+                f2.write('RH switch   = %s\n'%RH)
+            #    f2.write('temperature = %s [K]\n'%temp)
+                f2.write('No1         = %s [# cm-3]\n'%No1) # ***
+                f2.write('Dpm1        = %s [um]\n'%Dpm1) # ***
+                f2.write('Sigma1      = %s\n'%sigma1)
+                f2.write('No2         = %s [# cm-3]\n'%No2) # ***
+                f2.write('Dpm2        = %s [um]\n'%Dpm2) # ***
+                f2.write('Sigma2      = %s\n'%sigma2)
+                f2.write('nsomprec    = %s\n'%nsomprec)
+                f2.write('somprecname = %s\n'%somprecname)
+                f2.write('dlvp        = %s\n'%dlvp)
+                f2.write('poa_1stname = %s\n'%poa_1stname)
+                f2.write('poa_1st_len = %s\n'%poa_1st_lenname)
+                f2.write('nspemiss    = %s\n'%nspemiss)
+                f2.write('emiss_spname= %s\n'%emiss_spname)
+                f2.write('emiss_ippm  = %s\n'%emiss_ippm)
+                f2.write('seed_frac   = %s\n'%seed_frac)
+                f2.write('seed_dens   = %s\n'%seed_dens)
+                f2.write('No_bg1      = %s\n'%No_bg1)
+                f2.write('Dpm_bg1     = %s\n'%Dpm_bg1) 
+                f2.write('sigma_bg1   = %s\n'%sigma_bg1)
+                f2.write('density_bg  = %s\n'%density_bg)
+                f2.write('orgfrac_bg  = %s\n'%orgfrac_bg)
+                #f2.write('p_dilt1     = %s\n'%p_dilt1[0])
+                #f2.write('p_dilt2     = %s\n'%p_dilt2[0])
+                #f2.write('p_dilt3     = %s\n'%p_dilt3[0])
+                #f2.write('p_dilt4     = %s\n'%p_dilt4[0])
                 
-          #keep the compute node from logging out before each box.exe has finished
-          #test=2
-          #while test>=1:
-          #    c=os.popen('ps -u alia').read()
-          #    b=re.findall('box.exe', c)
-          #    test=len(b)
-          #    os.system('sleep 2')
-          
-          
-          
+                f2.close()
+                
+                #sys.exit('Sucker')
+                # ---------------------------------------------------------
+                # ************************************************
+                c = os.popen('squeue').read()
+                b=re.findall('samuelod', c)
+                njobs=len(b)
+                print('b=',b)
+                print('njobs=',len(b))
+                
+                while njobs >= maxjobs:
+                   os.system('sleep 30m')
+                   c = os.popen('squeue -u samuelod -p pie_all').read()
+                   b = re.findall('%s.sh'%identify, c)
+                   njobs=len(b)
+                # ************************************************
+                
+                os.system('sleep 5')
+            
+                df4 = open('../inputs/raw_runme.sh', mode='r') # reading the default header file of TOMAS
+                runme_line = []
+                for i in df4.readlines():
+                 runme_line.append(i.strip('\n'))
+                 df4.close()
+                         
+                ind1 = np.where(np.array(runme_line)=='cd run_direct')[0][0]
+                runme_line[ind1] = 'cd %s/%s'%(run_directory, rname)
+                
+                ind2 = np.where(np.array(runme_line)=="echo 'rname'")[0][0]
+                runme_line[ind2] = 'echo %s'%(rname)
+                
+                #ind3 = np.where(np.array(runme_line)=='./box.exe <input> /dev/null')[0][0]
+                ind3 = np.where(np.array(runme_line)=='./box.exe <input> out')[0][0]
+                #runme_line[ind3] = './box.exe <input> /dev/null'
+                #runme_line[ind3] = './box.exe <input> %s.out'%(rname)
+                runme_line[ind3] = './box.exe <input> out'
+                
+                #if os.path.exists('runme.sh'):
+                #   os.system('rm runme.sh')
+                
+                runme_out = open('../runs/%s/%s.sh'%(rname,identify), mode='w')
+                #runme_out = open('../runs/%s/runme.sh'%(rname), mode='w')
+                for i in runme_line:
+                 runme_out.write(i)
+                 runme_out.write('\n')
+                runme_out.close()
+            
+                #os.system('cd ../runs/%s/; qsub -cwd -V -pe MPI 1 -q %s ./runme.sh'%(rname, queue))
+                os.system('cd ../runs/%s/; sbatch ./%s.sh'%(rname,identify))
+                #os.system('cd ../runs/%s/; sbatch ./runme.sh'%(rname))
+            
+                #os.system('sleep 1')
+                  
+            #keep the compute node from logging out before each box.exe has finished
+            #test=2
+            #while test>=1:
+            #    c=os.popen('ps -u alia').read()
+            #    b=re.findall('box.exe', c)
+            #    test=len(b)
+            #    os.system('sleep 2')
+            
+            
+            

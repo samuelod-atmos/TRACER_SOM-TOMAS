@@ -32,8 +32,8 @@ delt = 300.0
 #identify = 'noHOM'
 #identify = 'x1000'
 #identify = 'tmbto'
-identify = 'wiMDL'
-#identify = 'debug'
+#identify = 'wiMDL'
+identify = 'debug'
 
 #=================================================================
 db = [1E-15]

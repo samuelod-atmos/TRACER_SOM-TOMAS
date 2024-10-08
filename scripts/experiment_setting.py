@@ -693,27 +693,6 @@ def get_settings(experiment_name):
            
             },
 
-        # same as tmbto but with no HOMs
-        "noHOM": {
-            "endtime": 144.0,   # length of simulation 
-            "aadt": 10,           # time step [s]
-            "NOx": 5.0,           # NOx concentration [ppb]
-            "nh3_ppt": [5000],    # Ammonia concentration for nucleation [ppt]
-            "OH_scale": 1.0,      # pre-factor to multiply OH concentration by
-            "fion": 8.0,          # ion recombination coefficient 
-            "org_nuc": 1,         # organic nucleation switch
-            "inorg_nuc": 1,       # inorganic nucleation switch
-            "COAG": 1,            # coagulation switch
-            "vwl": 1,             # vapor wall loss switch
-            "pwl": 1,             # particle wall loss switch
-            "A": 2.0e-3,          # loss constant for particle wall losses
-            "orgfrac_bg": 0.8,    # initial organic fraction of aerosols
-            "boxvol": 2000000.0,  # box/bag volume [cm^3]
-            "sfcpres": 101325.0,  # surface pressure 
-            "kpar": ''.join([k_par + '0.00001440 ' for i in range(ibins)]), # size dependent wall loss coefficient 
-            #"kvap_on": 2.50000e-03, # vapor wall loss coefficient 
-           
-            },
         
         # HOM yields divided by 3. 
         "HOM.3": {
@@ -1204,6 +1183,121 @@ def get_settings(experiment_name):
             #"kvap_on": 2.50000e-03, # vapor wall loss coefficient 
             
             },
+        
+        # RH is constant with smoothed OH
+        "0.7RH": {
+            "endtime": 144.0,   # length of simulation 
+            "aadt": 10,           # time step [s]
+            "NOx": 5.0,           # NOx concentration [ppb]
+            "nh3_ppt": [5000],    # Ammonia concentration for nucleation [ppt]
+            "OH_scale": 1.0,      # pre-factor to multiply OH concentration by
+            "fion": 8.0,          # ion recombination coefficient 
+            "org_nuc": 1,         # organic nucleation switch
+            "inorg_nuc": 1,       # inorganic nucleation switch
+            "COAG": 1,            # coagulation switch
+            "vwl": 1,             # vapor wall loss switch
+            "pwl": 1,             # particle wall loss switch
+            "A": 1.0e-3,          # loss constant for particle wall losses
+            "orgfrac_bg": 0.8,    # initial organic fraction of aerosols
+            "boxvol": 2000000.0,  # box/bag volume [cm^3]
+            "sfcpres": 101325.0,  # surface pressure 
+            "kpar": ''.join([k_par + '0.00001440 ' for i in range(ibins)]), # size dependent wall loss coefficient 
+            #"kvap_on": 2.50000e-03, # vapor wall loss coefficient 
+            
+            },
+
+        # ozone from Deer Park 
+        "DP_O3": {
+            "endtime": 144.0,   # length of simulation 
+            "aadt": 10,           # time step [s]
+            "NOx": 5.0,           # NOx concentration [ppb]
+            "nh3_ppt": [5000],    # Ammonia concentration for nucleation [ppt]
+            "OH_scale": 1.0,      # pre-factor to multiply OH concentration by
+            "fion": 8.0,          # ion recombination coefficient 
+            "org_nuc": 1,         # organic nucleation switch
+            "inorg_nuc": 1,       # inorganic nucleation switch
+            "COAG": 1,            # coagulation switch
+            "vwl": 1,             # vapor wall loss switch
+            "pwl": 1,             # particle wall loss switch
+            "A": 1.0e-3,          # loss constant for particle wall losses
+            "orgfrac_bg": 0.8,    # initial organic fraction of aerosols
+            "boxvol": 2000000.0,  # box/bag volume [cm^3]
+            "sfcpres": 101325.0,  # surface pressure 
+            "kpar": ''.join([k_par + '0.00001440 ' for i in range(ibins)]), # size dependent wall loss coefficient 
+            #"kvap_on": 2.50000e-03, # vapor wall loss coefficient 
+            
+            },
+
+
+        # DP2o3 but no HOMs 
+        "noHOM": {
+            "endtime": 144.0,   # length of simulation 
+            "aadt": 10,           # time step [s]
+            "NOx": 5.0,           # NOx concentration [ppb]
+            "nh3_ppt": [5000],    # Ammonia concentration for nucleation [ppt]
+            "OH_scale": 1.0,      # pre-factor to multiply OH concentration by
+            "fion": 8.0,          # ion recombination coefficient 
+            "org_nuc": 1,         # organic nucleation switch
+            "inorg_nuc": 1,       # inorganic nucleation switch
+            "COAG": 1,            # coagulation switch
+            "vwl": 1,             # vapor wall loss switch
+            "pwl": 1,             # particle wall loss switch
+            "A": 1.0e-3,          # loss constant for particle wall losses
+            "orgfrac_bg": 0.8,    # initial organic fraction of aerosols
+            "boxvol": 2000000.0,  # box/bag volume [cm^3]
+            "sfcpres": 101325.0,  # surface pressure 
+            "kpar": ''.join([k_par + '0.00001440 ' for i in range(ibins)]), # size dependent wall loss coefficient 
+            #"kvap_on": 2.50000e-03, # vapor wall loss coefficient 
+            
+            },
+
+
+        # ozone from Deer Park and Dbk changing
+        "DP2O3": {
+            "endtime": 144.0,   # length of simulation 
+            "aadt": 10,           # time step [s]
+            "NOx": 5.0,           # NOx concentration [ppb]
+            "nh3_ppt": [5000],    # Ammonia concentration for nucleation [ppt]
+            "OH_scale": 1.0,      # pre-factor to multiply OH concentration by
+            "fion": 8.0,          # ion recombination coefficient 
+            "org_nuc": 1,         # organic nucleation switch
+            "inorg_nuc": 1,       # inorganic nucleation switch
+            "COAG": 1,            # coagulation switch
+            "vwl": 1,             # vapor wall loss switch
+            "pwl": 1,             # particle wall loss switch
+            "A": 1.0e-3,          # loss constant for particle wall losses
+            "orgfrac_bg": 0.8,    # initial organic fraction of aerosols
+            "boxvol": 2000000.0,  # box/bag volume [cm^3]
+            "sfcpres": 101325.0,  # surface pressure 
+            "kpar": ''.join([k_par + '0.00001440 ' for i in range(ibins)]), # size dependent wall loss coefficient 
+            #"kvap_on": 2.50000e-03, # vapor wall loss coefficient 
+            
+            },
+
+
+        # fn scaled by 100 instead of 1000
+        "100fn": {
+            "endtime": 144.0,   # length of simulation 
+            "aadt": 10,           # time step [s]
+            "NOx": 5.0,           # NOx concentration [ppb]
+            "nh3_ppt": [5000],    # Ammonia concentration for nucleation [ppt]
+            "OH_scale": 1.0,      # pre-factor to multiply OH concentration by
+            "fion": 8.0,          # ion recombination coefficient 
+            "org_nuc": 1,         # organic nucleation switch
+            "inorg_nuc": 1,       # inorganic nucleation switch
+            "COAG": 1,            # coagulation switch
+            "vwl": 1,             # vapor wall loss switch
+            "pwl": 1,             # particle wall loss switch
+            "A": 1.0e-3,          # loss constant for particle wall losses
+            "orgfrac_bg": 0.8,    # initial organic fraction of aerosols
+            "boxvol": 2000000.0,  # box/bag volume [cm^3]
+            "sfcpres": 101325.0,  # surface pressure 
+            "kpar": ''.join([k_par + '0.00001440 ' for i in range(ibins)]), # size dependent wall loss coefficient 
+            #"kvap_on": 2.50000e-03, # vapor wall loss coefficient 
+            
+            },
+
+
 
 
         }

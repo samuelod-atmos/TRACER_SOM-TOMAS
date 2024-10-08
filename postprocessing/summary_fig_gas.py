@@ -24,8 +24,8 @@ def smoothdist(dist):
 #===========================================================================================================
 
 output_dir = '../outputs'
-#save_png = False 
-save_png = True
+save_png = False 
+#save_png = True
 
 boxvol = 2000000.0
 srtSO4 = 0
@@ -54,7 +54,12 @@ nbins = 40
 #identify = 'splic'
 #identify = 'NPF_3'
 #identify = 'sclOH'
-identify = '2x_OH'
+#identify = '2x_OH'
+#identify = '0.7RH'
+#identify = '300KT'
+#identify = 'DP2O3'
+identify = '100fn'
+#identify = 'noHOM'
 #identify = 'debug'
 #==========================================================================================================
 
@@ -390,9 +395,9 @@ o3 = o3[::30]
 
 #x = np.linspace(0,len(OH),len(OH))/360.
 
-#ax2.plot(x,o3,color='r')
-#ax2.set_ylabel('Ozone [ppb]',color='r')
-#ax2.set_ylim(0,)
+ax2.plot(x,o3,color='r')
+ax2.set_ylabel('Ozone [ppb]',color='r')
+ax2.set_ylim(0,)
 
 #axes[2].set_title('') 
 
@@ -410,7 +415,6 @@ for line in rh_fid.readlines():
 RH = np.array(RH)
 RH = signal.savgol_filter(RH,101,2)
 RH = RH[::30]
-
 #matplotlib.axes.Axes.ticklabel_format(axis=['y'],style='sci')
 #plt.ticklabel_format(axis='y',style='sci')
 
@@ -418,7 +422,7 @@ RH = RH[::30]
 axes[2].plot(x[:len(RH)],RH*100.,color='green')
 axes[2].set_xlabel('Date')
 axes[2].set_ylabel('RH [%]',color='green')
-
+#axes[2].set_ylim(0,2)
 
 #T_fid = open('../inputs/timeseries/20220801_%s_Temp'%identify,'r')
 T_fid = open('../inputs/timeseries/%s%s%s_%s_Temp'%(str(startT.year),str(startT.month).zfill(2),str(startT.day).zfill(2),identify),'r')
@@ -431,11 +435,12 @@ Temp = np.array(Temp)
 Temp = signal.savgol_filter(Temp,101,2)
 Temp = Temp[::30]
 
+
 #matplotlib.axes.Axes.ticklabel_format(axis=['y'],style='sci')
 #plt.ticklabel_format(axis='y',style='sci')
 
 #x = np.linspace(0,len(RH),len(RH))/360.
-ax2.plot(x[:len(Temp)],Temp,color='blue')
+ax2.plot(x,Temp,color='blue')
 #ax2.set_xlabel('Time [hours]')
 ax2.set_ylabel('T [K]',color='blue')
 
