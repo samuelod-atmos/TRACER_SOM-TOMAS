@@ -826,6 +826,8 @@ C      ENDIF
       MWT_ACTSP(:) = 0.0
 
       print*, '33333'
+      
+      EMISS_IPPM(:) = 0.0
 
       CALL SAPRC_INIT(SAPRCGC, NSOMPREC, PREC_ID,  
      &                NSPEMISS, EMISS_SPNAME, EMISS_IPPM,  
@@ -1244,7 +1246,7 @@ C             print*,'HOM2 in loop =',HOM2
 C           HOM = HOM*1e-6*PRES/R/TEMP*6.022E23
            HOM = HOM + HOM2*BOXVOL/6.022e23*300.0/1000.0  ! HOM in kg/box
            
-           HOM = 0.d0
+C           HOM = 0.d0
 
            print*,'HOM in kg = ',HOM
 C           print*,'After Auto-ox'

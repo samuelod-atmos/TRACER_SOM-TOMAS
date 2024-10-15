@@ -60,7 +60,7 @@ PWL  =  [1,0] # [0 or 1] the switch for On/Off particle wall loss
 
 NOx = 5.0                             # NOx concentration for OH proxy #3
 nh3_ppt = 5000.0                    # NH3 concentration [ppt]
-OH_multi = [0.5, 1.0, 2.0]            # multiplier for OH concentration
+OH_multi = [0.1, 1.0, 10.0]            # multiplier for OH concentration
 OH_proxy = 'Rad'
 boxvol  = 2000000.0                   # teflon [cm3] - [CalTech 24 m3, CSU 10 m3, CMU ?? m3]
 
@@ -78,12 +78,11 @@ stppres = 101325.0                # STP pressure
 fion = 8.0           # Ion recombination coefficient [cm-3 s-]
 organic_nuc = 1      # switch for organic nucleation [0 or 1]
 inorganic_nuc = 1    # switch for inorganic nucleation [0 or 1]
-fn_multi = [1, 100, 1000]
+fn_multi = [1.0, 10.0, 100.0]
 
 HOM_switch = [1,0]
 T_switch = [1,0]
 RH_switch = [1,0]
-
 
 # ====================================================================================================
 # Date range for the simulation
@@ -463,7 +462,7 @@ for dbk in db:
                 No_bg3 = str(float(Nobg3))
                 
                 rname = '%s_%s_db%s_pwl%1i_vwl%1i_OH%s_FN%s_HOM%li_T%li_RH%li'%(name,identify,dbk,pwl,vwl,OH_scale,fn_scale,HOMs,Temp,RH)
-            
+                print('rname =',rname)
                 #print('%i - Simulation'%ctr)
                 #print('---------------')
                 #print('VWL = %s'%vwl)
@@ -626,6 +625,7 @@ for dbk in db:
                 print('njobs=',len(b))
                 
                 while njobs >= maxjobs:
+                   print('Sleeping for 30 minutes')
                    os.system('sleep 30m')
                    c = os.popen('squeue -u samuelod -p pie_all').read()
                    b = re.findall('%s.sh'%identify, c)

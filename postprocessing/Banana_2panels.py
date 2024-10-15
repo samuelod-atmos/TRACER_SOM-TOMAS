@@ -49,8 +49,9 @@ save_png = False
 #identify = 'sclOH'
 #identify = 'GC_OH'
 #identify = 'sclfn'
+identify = 'DP2O3'
 #identify = 'debug'
-identify = '300KT'
+#identify = '300KT'
 #==========================================================================================================
 
 endtime = 144.0
@@ -59,6 +60,7 @@ endtime = 144.0
 #rname = '%s/20220801_vwl0_pwl0_hr7.20e+01_Pfunc_bg10_noconc.dat'%output_dir
 #rname = '%s/20220801_%s_vwl1_pwl1_hr1.44e+02_bg10_noconc.dat'%(output_dir,identify)
 rname = '%s/20220801_%s_vwl1_pwl1_hr%4.2e_nh35000_orgfn1_inorg1_db1e-14_noconc.dat'%(output_dir,identify,endtime)
+#rname = '%s/20220801_%s_db1_pwl1_vwl1_OH1.0_FN1000_HOM1_T1_RH1_noconc.dat'%(output_dir,identify)
 #rname = '%s/20220801_multi_vwl0_pwl0_nh35000.0_orgfn1_inorg1_db1e-15_ohscale1.0_noconc.dat'%output_dir
 #rname = '../outputs/20220801_multi_vwl1_pwl1_nh35000.0_orgfn1_inorg1_db1e-15_ohscale1.0_noconc.dat'
 
