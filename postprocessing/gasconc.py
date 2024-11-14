@@ -23,18 +23,19 @@ upper_pres = 70000
 endtime = 144.0
 
 #===========================================================================================================
-identify = 'debug'
+identify = 'A1e-3'
 db = [1E-15]
 orgnuc = 1
 inorgnuc = 1
 
-files = ['%s/20220801_%s_vwl1_pwl1_hr1.44e+02_nh35000_orgfn%s_inorg%s_db%s_gc.dat'%(output_dir,identify,orgnuc,inorgnuc,db[0])]
+#files = ['%s/20220801_%s_vwl1_pwl1_hr1.44e+02_nh35000_orgfn%s_inorg%s_db%s_gc.dat'%(output_dir,identify,orgnuc,inorgnuc,db[0])]
+files = ['%s/20220801_%s_db1_pwl1_vwl1_OH1.0_FN100.0_HOM0_T1_RH1_gc.dat'%(output_dir,identify)]
 #files = ['%s/20220801_%s_vwl1_pwl1_hr1.44e+02_bg10__gc.dat'%(output_dir,identify)]
 #files = ['%s/20220820_Nobg11103.0176_scale1.00_hr1.00e+01_ricco1_dunn1_bg10_gc.dat'%output_dir]
 
 save_png = False
 layer = 0
-delt = 10.0
+delt = 300.0
 #==================================================================================
 
 
@@ -168,7 +169,7 @@ for file in files:
 
   # -------------------------------------------------------------------------------------------------------------
 
-  Benzene,TriBenz,Toluene,mXylene,Isoprene,Monoterp = [],[],[],[],[],[]
+  Benzene,TriBenz,Toluene,mXylene,Isoprene,Monoterp,Styrene = [],[],[],[],[],[],[]
   
   voc_fid = open('../inputs/timeseries/%s%s%s_%s_voc'%(str(year).zfill(4),str(month).zfill(2),str(day).zfill(2),identify),'r')
   for line in voc_fid.readlines():
@@ -181,25 +182,35 @@ for file in files:
     mXylene.append(float(spl_line[6]))
     Isoprene.append(float(spl_line[7]))
     Monoterp.append(float(spl_line[8]))
+    Styrene.append(float(spl_line[9]))
   
   Benzene = np.array(Benzene)
+  Benzene = Benzene[::int(delt/10)]
   Benzene = Benzene[:len(Time)-1]
   
   TriBenz = np.array(TriBenz)
+  TriBenz = TriBenz[::int(delt/10)]
   TriBenz = TriBenz[:len(Time)-1]
   
   Toluene = np.array(Toluene)
+  Toluene = Toluene[::int(delt/10)]
   Toluene = Toluene[:len(Time)-1]
   
   mXylene = np.array(mXylene)
+  mXylene = mXylene[::int(delt/10)]
   mXylene = mXylene[:len(Time)-1]
   
   Isoprene = np.array(Isoprene)
+  Isoprene = Isoprene[::int(delt/10)]
   Isoprene = Isoprene[:len(Time)-1]
   
   Monoterp = np.array(Monoterp)
+  Monoterp = Monoterp[::int(delt/10)]
   Monoterp = Monoterp[:len(Time)-1]
 
+  Styrene = np.array(Styrene)
+  Styrene = Styrene[::int(delt/10)]
+  Styrene = Styrene[:len(Time)-1]
 #print('Shape of fid4',np.shape(fid4))
 #benz2 = fid4[0,:,benzindx]*1e-6*pres/R/T*molwt 
 #isop2 = fid4[0,:,isopindx]
@@ -239,18 +250,18 @@ for file in files:
   fig = plt.gcf()
   fig.set_size_inches(10,4)
   #plt.scatter(x,so2*1000,s=1.0,label='SO2')
-  #plt.scatter(x,benz,s=1.0,color='y',label='Cage Benzene')
+  plt.scatter(x,benz,s=1.0,color='y',label='Cage Benzene')
   #plt.scatter(x,isop,s=1.0,color='g',label='Cage Isoprene')
   #plt.scatter(x,tolu,s=1.0,color='r',label='Cage Toluene')
   #plt.scatter(x,terp,s=1.0,color='m',label='Cage Terpenes')
-  plt.scatter(x,trimeth,s=1.0,color='c',label='Cage Trimethylbenzene')
+  #plt.scatter(x,trimeth,s=1.0,color='c',label='Cage Trimethylbenzene')
   #plt.scatter(x,xylene,s=1.0,color='k',label='Cage M-Xylene')
   
-  #plt.plot(x,Benzene,linestyle='--',color='y',label='Amb. Benzene')
+  plt.plot(x,Benzene,linestyle='--',color='y',label='Amb. Benzene')
   #plt.plot(x,Isoprene,linestyle='--',color='g',label='Amb. Isoprene')
   #plt.plot(x,Toluene,linestyle='--',color='r',label='Amb. Toluene')
   #plt.plot(x,Monoterp,linestyle='--',color='m',label='Amb. Terpenes')
-  plt.plot(x,TriBenz,linestyle='--',color='c',label='Amb. Trimethylbenzene')
+  #plt.plot(x,TriBenz,linestyle='--',color='c',label='Amb. Trimethylbenzene')
   #plt.plot(x,mXylene,linestyle='--',color='k',label='Amb. M-Xylene')
   #plt.scatter(x/360,ivoc*1000,s=1.0,label='IVOC')
   #plt.scatter(x/360,svoc*1000,s=1.0,label='SVOC')

@@ -85,8 +85,13 @@ queue = 'defaultfaculty.q'
 #identify = '0.7RH'
 #identify = 'DP_O3' 
 #identify = 'DP2O3' 
-#identify = '100fn' 
-identify = 'noHOM' 
+#identify = '100fn'
+#identify = 'noHOM'
+#identify = 'kp2.5'
+identify = 'A1e-3' 
+#identify = '1.8kp' 
+#identify = 'y_mix' 
+#identify = 'n_mix' 
 #identify = 'debug' 
 #----------|+++++|----------
 
@@ -160,6 +165,7 @@ Dp=((6.*xkm/pdens/np.pi)**(1.0/3.0))*1E9 # [m] average particle diameter of bin
 #kpar = settings['kpar']
 
 kflat = 6.9e-5
+#kflat = 1.3e-4
 
 kpar = ''
 for i in range(len(Dp)):
@@ -167,7 +173,7 @@ for i in range(len(Dp)):
   if i < 5:
   #  kpar = kpar + str(A/Dp[np.where(Dp>100.)[0][0]])+' '
     #print('Dp[i]=',Dp[i])
-    kpar = kpar + str(A/Dp[4]+kflat)+' '
+    kpar = kpar + str((A/Dp[4]+kflat))+' '
   #else:
   #print(Dp[np.where(Dp>20.)[0][0]])
   #sys.exit()
@@ -178,7 +184,7 @@ for i in range(len(Dp)):
   #elif Dp[i]>1000:
   #  kpar = kpar + str(A/Dp[np.where(Dp>1000)[0][0]])+' '
   else:
-    kpar = kpar + str(A/Dp[i]+kflat)+' '
+    kpar = kpar + str((A/Dp[i]+kflat))+' '
   #---------------------------
   #kpar = kpar + str(9.108699918785293e-06)+' '
 
@@ -205,12 +211,13 @@ for i in range(len(Dp)):
 #ke      = 0.0        # loss rate constant
 #kw0     = 0.0        # loss rate constant 
 #kvap_on = settings['kvap_on']
-kvap_on = A/Dp[4]
+kvap_on = (A/Dp[4]+kflat)
 #kvap_on = A
 
 alpha   = 1.0        # accommodation coefficient 
 storg   = 0.025      # [N/m] surface tension
-db     = 1           # particle-phase diffusion coefficient [m2/s] (could try 3.4e-15 from Charles) 
+#dbk     = 1          # particle-phase diffusion coefficient [m2/s] (could try 3.4e-15 from Charles) 
+dbk     = 1          # diffusivity switch [2 and 3 are constant values and 1 is dynamic]
 kc      = 0.0        # first-order loss rate of species in the particle phase [1/s]
 # ---------------------- 
 boxvol  = settings['boxvol'] # teflon [cm3] - [CalTech 24 m3, CSU 10 m3, CMU ?? m3]
@@ -512,9 +519,9 @@ f9.close()
 
 #f10 = open('../inputs/TRACER_VOC_PTRMS_nan2zero.txt','r')
 #f10 = open('../inputs/TRACER_VOC_PTRMS_sty.txt','r')
-f10 = open('../inputs/TRACER_VOC_PTRMS_withMDL.txt','r')
+#f10 = open('../inputs/TRACER_VOC_PTRMS_withMDL.txt','r')
 #f10 = open('../inputs/TRACER_VOC_PTRMS.txt','r')
-#f10 = open('../inputs/TRACER_VOC_PTRMS_Splice.txt','r')
+f10 = open('../inputs/TRACER_VOC_PTRMS_Splice.txt','r')
 VOCs = []
 for line in f10.readlines():
   spl_line=line.split('#')
@@ -596,7 +603,8 @@ No_bg1 = str(float(Nobg1))
 No_bg2 = str(float(Nobg2))
 No_bg3 = str(float(Nobg3))
 
-rname = '%s_%s_vwl%1i_pwl%1i_hr%4.2e_nh3%s_orgfn%s_inorg%s_db%li'%(name,identify,vwl,pwl,endtime,NH3,org_nuc,inorg_nuc,db)
+#rname = '%s_%s_vwl%1i_pwl%1i_hr%4.2e_nh3%s_orgfn%s_inorg%s_db%li'%(name,identify,vwl,pwl,endtime,NH3,org_nuc,inorg_nuc,db)
+rname = '%s_%s_db%s_pwl%1i_vwl%1i_OH%s_FN%s_HOM%li_T%li_RH%li'%(name,identify,dbk,pwl,vwl,OH_scale,fn_scale,HOM_switch,T_switch,RH_switch)
 
 index  = np.where(df_emiss_ML.iloc[:,0]!='')[0].shape[0] 
 spname = df_emiss_ML['species'].iloc[:index]
@@ -658,7 +666,7 @@ f1.write('%8.1e\n'%nh3_ppt[0])
 f1.write('%10.1f\n'%boxvol)
 f1.write('%5.2f\n'%endtime) # ***
 f1.write('%8.5f\n'%alpha)
-f1.write('%i\n'%db)
+f1.write('%i\n'%dbk)
 f1.write('%f\n'%kc)
 f1.write('%8.5f\n'%storg)
 f1.write('%i\n'%HOM_switch)
@@ -725,11 +733,11 @@ f2.write('OH_scale    = %s\n'%OH_scale)
 f2.write('fion        = %s\n'%fion)
 f2.write('org_nuc     = %s\n'%org_nuc)
 f2.write('inorg_nuc    = %s\n'%inorg_nuc)
-f2.write('nh3_ppt     = %s\n'%NH3)
+f2.write('nh3_ppt     = %s\n'%nh3_ppt[0])
 f2.write('boxvol      = %s [cm3]\n'%boxvol)
 f2.write('endtime     = %s [hours]\n'%endtime) # ***
 f2.write('alpha       = %s\n'%alpha)
-f2.write('Db switch   = %s [1/0]\n'%db)
+f2.write('Db switch   = %s [1/0]\n'%dbk)
 f2.write('Kc          = %s [1/s]\n'%kc)
 f2.write('storg       = %s [N/m]\n'%storg)
 #    f2.write('temperature = %s [K]\n'%temp)

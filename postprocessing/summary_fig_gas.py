@@ -58,19 +58,31 @@ nbins = 40
 #identify = '0.7RH'
 #identify = '300KT'
 #identify = 'DP2O3'
-identify = '100fn'
+#identify = '100fn'
 #identify = 'noHOM'
+identify = 'multi'
 #identify = 'debug'
 #==========================================================================================================
 
 startT = dt.datetime(2022,8,1,11)
 
-db = [1E-14]
-orgnuc = 1
-inorgnuc = 1
-endtime = 144.0
+db = 1
+pwl = 1
+vwl = 1
+OH_scale = 0.8
+FN_scale = 1000.0
+HOM = 0
+T_switch = 1
+RH_switch = 1
+A = 1.0e-3
+#endtime = 144.0
 
-rname = '%s/%s%s%s_%s_vwl1_pwl1_hr%4.2e_nh35000_orgfn%s_inorg%s_db%s_noconc.dat'%(output_dir,str(startT.year),str(startT.month).zfill(2),str(startT.day).zfill(2),identify,endtime,orgnuc,inorgnuc,db[0])
+
+
+
+#rname = '%s/%s%s%s_%s_vwl1_pwl1_hr%4.2e_nh35000_orgfn%s_inorg%s_db%s_noconc.dat'%(output_dir,str(startT.year),str(startT.month).zfill(2),str(startT.day).zfill(2),identify,endtime,orgnuc,inorgnuc,db[0])
+#rname = '%s/20220801_%s_db1_pwl1_vwl1_OH1.0_FN100.0_HOM0_T1_RH1_noconc.dat'%(output_dir,identify)
+rname = '%s/20220801_%s_A%s_db%i_pwl%i_vwl%i_OH%s_FN%s_HOM%i_T%i_RH%i_noconc.dat'%(output_dir,identify,A,db,pwl,vwl,OH_scale,FN_scale,HOM,T_switch,RH_switch)
 
 df_no = np.array(pd.read_csv(rname,header=None, delim_whitespace=True))
 print('shape of df_no=',np.shape(df_no))
@@ -241,7 +253,9 @@ c1.set_clim(1,4.3)
 ax2 = axes[0].twinx()
 
 #cs_file = '%s/20220801_%s_vwl1_pwl1_hr1.44e+02_nh35000_orgfn%s_inorg%s_db%s_cs.dat'%(output_dir,identify,orgnuc,inorgnuc,db[0])
-cs_file = '%s/%s%s%s_%s_vwl1_pwl1_hr%4.2e_nh35000_orgfn%s_inorg%s_db%s_cs.dat'%(output_dir,str(startT.year),str(startT.month).zfill(2),str(startT.day).zfill(2),identify,endtime,orgnuc,inorgnuc,db[0])
+#cs_file = '%s/%s%s%s_%s_vwl1_pwl1_hr%4.2e_nh35000_orgfn%s_inorg%s_db%s_cs.dat'%(output_dir,str(startT.year),str(startT.month).zfill(2),str(startT.day).zfill(2),identify,endtime,orgnuc,inorgnuc,db[0])
+#cs_file = '%s/20220801_%s_db1_pwl1_vwl1_OH1.0_FN100.0_HOM0_T1_RH1_cs.dat'%(output_dir,identify)
+cs_file = '%s/20220801_%s_A%s_db%i_pwl%i_vwl%i_OH%s_FN%s_HOM%i_T%i_RH%i_cs.dat'%(output_dir,identify,A,db,pwl,vwl,OH_scale,FN_scale,HOM,T_switch,RH_switch)
 
 cs_array = np.array(pd.read_csv(cs_file,header=None,delim_whitespace=True))
 print('initial shape of array:',np.shape(cs_array))
@@ -256,7 +270,9 @@ ax2.set_ylim(0.00001,0.01)
 #=============================================================================================
 
 #spname_file = '%s/20220801_%s_vwl1_pwl1_hr1.44e+02_nh35000_orgfn%s_inorg%s_db%s_spec.dat'%(output_dir,identify,orgnuc,inorgnuc,db[0])
-spname_file = '%s/%s%s%s_%s_vwl1_pwl1_hr%4.2e_nh35000_orgfn%s_inorg%s_db%s_spec.dat'%(output_dir,str(startT.year),str(startT.month).zfill(2),str(startT.day).zfill(2),identify,endtime,orgnuc,inorgnuc,db[0])
+#spname_file = '%s/%s%s%s_%s_vwl1_pwl1_hr%4.2e_nh35000_orgfn%s_inorg%s_db%s_spec.dat'%(output_dir,str(startT.year),str(startT.month).zfill(2),str(startT.day).zfill(2),identify,endtime,orgnuc,inorgnuc,db[0])
+#spname_file = '%s/20220801_%s_db1_pwl1_vwl1_OH1.0_FN100.0_HOM0_T1_RH1_spec.dat'%(output_dir,identify)
+spname_file = '%s/20220801_%s_A%s_db%i_pwl%i_vwl%i_OH%s_FN%s_HOM%i_T%i_RH%i_spec.dat'%(output_dir,identify,A,db,pwl,vwl,OH_scale,FN_scale,HOM,T_switch,RH_switch)
 #spname_file = '../outputs/20220801_styre_vwl1_pwl1_hr1.44e+02_nh35000_orgfn1_inorg1_db1e-15_spec.dat'
 df_spec = pd.read_csv(spname_file, header=None, delim_whitespace=True)
 saprc_spname = np.array(df_spec.iloc[1,1:1505])
@@ -276,7 +292,10 @@ styrindx = int(np.where(saprc_spname=='STYRENE')[0])
 print('benzindx =',benzindx)
 
 #gcfile = '%s/20220801_%s_vwl1_pwl1_hr1.44e+02_nh35000_orgfn%s_inorg%s_db%s_saprcgc.dat'%(output_dir,identify,orgnuc,inorgnuc,db[0])
-gcfile = '%s/%s%s%s_%s_vwl1_pwl1_hr%4.2e_nh35000_orgfn%s_inorg%s_db%s_saprcgc.dat'%(output_dir,str(startT.year),str(startT.month).zfill(2),str(startT.day).zfill(2),identify,endtime,orgnuc,inorgnuc,db[0])
+#gcfile = '%s/%s%s%s_%s_vwl1_pwl1_hr%4.2e_nh35000_orgfn%s_inorg%s_db%s_saprcgc.dat'%(output_dir,str(startT.year),str(startT.month).zfill(2),str(startT.day).zfill(2),identify,endtime,orgnuc,inorgnuc,db[0])
+#gcfile = '%s/20220801_%s_db1_pwl1_vwl1_OH1.0_FN100.0_HOM0_T1_RH1_saprcgc.dat'%(output_dir,identify)
+gcfile = '%s/20220801_%s_A%s_db%i_pwl%i_vwl%i_OH%s_FN%s_HOM%i_T%i_RH%i_saprcgc.dat'%(output_dir,identify,A,db,pwl,vwl,OH_scale,FN_scale,HOM,T_switch,RH_switch)
+
 df_saprcgc = pd.read_csv(gcfile,header=None,delim_whitespace=True,)
 
 saprc_gas = np.array(df_saprcgc)
@@ -315,7 +334,9 @@ axes[4].set_ylim(0,)
 ax2 = axes[3].twinx()
 
 #gc_file = '%s/20220801_%s_vwl1_pwl1_hr1.44e+02_nh35000_orgfn%s_inorg%s_db%s_gc.dat'%(output_dir,identify,orgnuc,inorgnuc,db[0])
-gc_file = '%s/%s%s%s_%s_vwl1_pwl1_hr%4.2e_nh35000_orgfn%s_inorg%s_db%s_gc.dat'%(output_dir,str(startT.year),str(startT.month).zfill(2),str(startT.day).zfill(2),identify,endtime,orgnuc,inorgnuc,db[0])
+#gc_file = '%s/%s%s%s_%s_vwl1_pwl1_hr%4.2e_nh35000_orgfn%s_inorg%s_db%s_gc.dat'%(output_dir,str(startT.year),str(startT.month).zfill(2),str(startT.day).zfill(2),identify,endtime,orgnuc,inorgnuc,db[0])
+#gc_file = '%s/20220801_%s_db1_pwl1_vwl1_OH1.0_FN100.0_HOM0_T1_RH1_gc.dat'%(output_dir,identify)
+gc_file = '%s/20220801_%s_A%s_db%i_pwl%i_vwl%i_OH%s_FN%s_HOM%i_T%i_RH%i_gc.dat'%(output_dir,identify,A,db,pwl,vwl,OH_scale,FN_scale,HOM,T_switch,RH_switch)
 
 df_saprcgc = pd.read_csv(gc_file,header=None,delim_whitespace=True,)
 

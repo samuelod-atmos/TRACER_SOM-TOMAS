@@ -55,19 +55,19 @@ nintern = 1       # frequency of printing values or number of internal microphys
 ibins = 40        # number of bins
 
 COAG =  1     # [0 or 1] the switch for On/Off coagulation
-VWL  =  [1,0] # [0 or 1] the switch for On/Off vapor wall loss
-PWL  =  [1,0] # [0 or 1] the switch for On/Off particle wall loss 
+VWL  =  [1] # [0 or 1] the switch for On/Off vapor wall loss
+PWL  =  [1] # [0 or 1] the switch for On/Off particle wall loss 
 
 NOx = 5.0                             # NOx concentration for OH proxy #3
 nh3_ppt = 5000.0                    # NH3 concentration [ppt]
-OH_multi = [0.1, 1.0, 10.0]            # multiplier for OH concentration
+OH_multi = [0.6, 0.8, 1.0]            # multiplier for OH concentration
 OH_proxy = 'Rad'
 boxvol  = 2000000.0                   # teflon [cm3] - [CalTech 24 m3, CSU 10 m3, CMU ?? m3]
 
 orgfrac_bg = 0.8                                   # Organic fraction of background aerosols  
 density_bg = orgfrac_bg*1400.0+(1-orgfrac_bg)*1770 # [kg/m3] - density of aerosol originally in the chamber
 
-db     = [1,0]                    # switch for dynamic [1] or constant [0] particle-phase diffusion coefficient [m2/s] 
+db     = [1,2,3]                    # switch for dynamic [1] or constant [0] particle-phase diffusion coefficient [m2/s] 
 alpha   = 1.0                     # accommodation coefficient 
 storg   = 0.025                   # [N/m] surface tension
 kc      = 0.0                     # first-order loss rate of species in the particle phase [1/s]
@@ -78,11 +78,11 @@ stppres = 101325.0                # STP pressure
 fion = 8.0           # Ion recombination coefficient [cm-3 s-]
 organic_nuc = 1      # switch for organic nucleation [0 or 1]
 inorganic_nuc = 1    # switch for inorganic nucleation [0 or 1]
-fn_multi = [1.0, 10.0, 100.0]
+fn_multi = [100.0, 1000.0]
 
-HOM_switch = [1,0]
-T_switch = [1,0]
-RH_switch = [1,0]
+HOM_switch = [0]
+T_switch = [1]
+RH_switch = [1]
 
 # ====================================================================================================
 # Date range for the simulation
@@ -461,7 +461,7 @@ for dbk in db:
                 No_bg2 = str(float(Nobg2))
                 No_bg3 = str(float(Nobg3))
                 
-                rname = '%s_%s_db%s_pwl%1i_vwl%1i_OH%s_FN%s_HOM%li_T%li_RH%li'%(name,identify,dbk,pwl,vwl,OH_scale,fn_scale,HOMs,Temp,RH)
+                rname = '%s_%s_A%s_db%s_pwl%1i_vwl%1i_OH%s_FN%s_HOM%li_T%li_RH%li'%(name,identify,A,dbk,pwl,vwl,OH_scale,fn_scale,HOMs,Temp,RH)
                 print('rname =',rname)
                 #print('%i - Simulation'%ctr)
                 #print('---------------')

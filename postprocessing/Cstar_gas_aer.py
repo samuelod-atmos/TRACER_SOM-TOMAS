@@ -13,7 +13,7 @@ output_dir = '../outputs'
 boxvol = 2000000.0
 srtSO4 = 0
 srtorg1 = 1
-iorg = 477
+iorg = 456
 icomp = iorg + 3
 srtorglast = srtorg1+iorg
 nbins = 40
@@ -30,13 +30,21 @@ delt = 10.0
 #identify = 'v2pwl'
 #identify = 'sm_OH'
 #identify = 'noHOM'
-identify = 'x1000'
+#identify = 'x1000'
 #identify = 'tmbto'
+identify = 'multi'
 
 #=================================================================
-db = [1E-15]
 orgnuc = 1
 inorgnuc = 1
+db = 1
+pwl = 1
+vwl = 1
+OH = 1.0
+fn = 100.0
+HOM = 1
+T = 1
+RH = 1
 
 
 # C* bin bounds 
@@ -49,7 +57,17 @@ l5,u5 = 1e2,1e3
 l6,u6 = 1e3,1e4
 
 #=================================================================
-gc_file = '%s/20220801_%s_vwl1_pwl1_hr1.44e+02_nh35000_orgfn%s_inorg%s_db%s_gc.dat'%(output_dir,identify,orgnuc,inorgnuc,db[0])
+#gc_file = '%s/20220801_%s_vwl1_pwl1_hr1.44e+02_nh35000_orgfn%s_inorg%s_db%s_gc.dat'%(output_dir,identify,orgnuc,inorgnuc,db[0])
+gc_file = '%s/20220801_%s_db%s_pwl%s_vwl%s_OH%s_FN%s_HOM%s_T%s_RH%s_gc.dat'%(output_dir,
+    identify,
+    str(db),
+    str(pwl),
+    str(vwl),
+    str(OH),
+    str(fn),
+    str(HOM),
+    str(T),
+    str(RH))
 
 #=================================================================
 df_somgc = pd.read_csv(gc_file,header=None,delim_whitespace=True)
@@ -114,11 +132,21 @@ inst_flow = np.array(inst_flow)
 inst_flow = inst_flow[:-1]
 switchfile.close()
 
-cs_fid = '%s/20220801_%s_vwl1_pwl1_hr1.44e+02_nh35000_orgfn1_inorg1_db%s_cs.dat'%(output_dir,identify,db[0])
+#cs_fid = '%s/20220801_%s_vwl1_pwl1_hr1.44e+02_nh35000_orgfn1_inorg1_db%s_cs.dat'%(output_dir,identify,db[0])
+cs_fid = '%s/20220801_%s_db%s_pwl%s_vwl%s_OH%s_FN%s_HOM%s_T%s_RH%s_cs.dat'%(output_dir,
+    identify,
+    str(db),
+    str(pwl),
+    str(vwl),
+    str(OH),
+    str(fn),
+    str(HOM),
+    str(T),
+    str(RH))
 
 cs_array = np.array(pd.read_csv(cs_fid,header=None,delim_whitespace=True))
 #print('initial shape of array:',np.shape(cs_array))
-cs_array = cs_array[:,1]
+cs_array = cs_array[:-1,1]
 
 print(np.shape(cs_array),np.shape(inst_flow))
 
@@ -127,9 +155,9 @@ kpwl = 1.27E-4
 #kpwl = 60.0*1.27E-6
 #kpwl = 1.97E-7
 
-
+print(np.shape(cs_array))
+print(np.shape(inst_flow))
 G_A = (1./cs_array)*(kpwl + 1./inst_flow)
-
 
 
 #=================================================================
@@ -156,11 +184,21 @@ cstar_n2_n1 = np.sum(cstar_n2_n1,axis=1)/boxvol*1E6*1E9
 
 # Aerosol mass file name(s)
 #####################################################
-amass_file = '%s/20220801_%s_vwl1_pwl1_hr1.44e+02_nh35000_orgfn1_inorg1_db%s_aemass.dat'%(output_dir,identify,db[0])
+#amass_file = '%s/20220801_%s_vwl1_pwl1_hr1.44e+02_nh35000_orgfn1_inorg1_db%s_aemass.dat'%(output_dir,identify,db[0])
+amass_file = '%s/20220801_%s_db%s_pwl%s_vwl%s_OH%s_FN%s_HOM%s_T%s_RH%s_aemass.dat'%(output_dir,
+    identify,
+    str(db),
+    str(pwl),
+    str(vwl),
+    str(OH),
+    str(fn),
+    str(HOM),
+    str(T),
+    str(RH))
 
 df_ae = np.array(pd.read_csv(amass_file,header=None, delim_whitespace=True))
-print(np.shape(df_ae))
 Mk = df_ae[:,1:]
+print(np.shape(df_ae),int(len(Mk)/(icomp)))
 Mk = np.reshape(Mk, (int(len(Mk)/(icomp)), icomp,nbins))
 print(np.shape(Mk))
 Mk = np.sum(Mk,axis=-1)
@@ -206,6 +244,6 @@ ax2.grid(True)
 
 plt.show()
 
-fig.savefig('%s_gas-aer_kpwl%s_Cstar%s.png'%(identify,str(kpwl),str(l1)),bbox_inches='tight')
+#fig.savefig('%s_gas-aer_kpwl%s_Cstar%s.png'%(identify,str(kpwl),str(l1)),bbox_inches='tight')
 
 

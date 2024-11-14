@@ -16,8 +16,8 @@ import sys
 #===========================================================================================================
 
 output_dir = '../outputs'
-save_png = False 
-#save_png = True
+#save_png = False 
+save_png = True
 
 #===========================================================================================================
 
@@ -34,7 +34,7 @@ save_png = False
 #identify = 'HOM.3'
 #identify = 'nan_0'
 #identify = 'inx10'
-#identify = 'A4e-3'
+identify = 'A1e-3'
 #identify = 'styon'
 #identify = 'tmbto'
 #identify = 'HOMmx'
@@ -49,9 +49,17 @@ save_png = False
 #identify = 'sclOH'
 #identify = 'GC_OH'
 #identify = 'sclfn'
-identify = 'DP2O3'
-#identify = 'debug'
+#identify = 'DP2O3'
+#identify = 'sommx'
+#identify = 'noHOM'
+#identify = 'kp2.5'
+#identify = 'y_mix'
+#identify = '1.8kp'
+#identify = '10xkp'
 #identify = '300KT'
+#identify = 'kflat'
+#identify = 'multi'
+#identify = 'debug'
 #==========================================================================================================
 
 endtime = 144.0
@@ -59,8 +67,8 @@ endtime = 144.0
 #rname = '%s/20220808_vwl0_pwl1_hr1.00e+01_no_particle_flow_bg10_noconc.dat'%output_dir
 #rname = '%s/20220801_vwl0_pwl0_hr7.20e+01_Pfunc_bg10_noconc.dat'%output_dir
 #rname = '%s/20220801_%s_vwl1_pwl1_hr1.44e+02_bg10_noconc.dat'%(output_dir,identify)
-rname = '%s/20220801_%s_vwl1_pwl1_hr%4.2e_nh35000_orgfn1_inorg1_db1e-14_noconc.dat'%(output_dir,identify,endtime)
-#rname = '%s/20220801_%s_db1_pwl1_vwl1_OH1.0_FN1000_HOM1_T1_RH1_noconc.dat'%(output_dir,identify)
+#rname = '%s/20220801_%s_vwl1_pwl1_hr%4.2e_nh35000_orgfn1_inorg1_db1e-14_noconc.dat'%(output_dir,identify,endtime)
+rname = '%s/20220801_%s_A0.001_db1_pwl1_vwl1_OH1.0_FN100.0_HOM0_T1_RH1_noconc.dat'%(output_dir,identify)
 #rname = '%s/20220801_multi_vwl0_pwl0_nh35000.0_orgfn1_inorg1_db1e-15_ohscale1.0_noconc.dat'%output_dir
 #rname = '../outputs/20220801_multi_vwl1_pwl1_nh35000.0_orgfn1_inorg1_db1e-15_ohscale1.0_noconc.dat'
 
@@ -83,7 +91,7 @@ Time = np.array(Time)
 year = int(rname[11:15])
 month = int(rname[15:17])
 day = int(rname[17:19])
-startT = dt.datetime(year,month,day,1)
+startT = dt.datetime(year,month,day,11)
 print(startT)
 
 date = []
@@ -316,4 +324,5 @@ c1.set_clim(1,4.3)
 plt.show()
 if save_png==True:
   #fig.savefig('%s_full_SizeDist.png'%identify,bbox_inches='tight')
-  fig.savefig('%s_A2e-4_SizeDist.png'%identify,bbox_inches='tight')
+  #fig.savefig('%s_A2e-4_SizeDist.png'%identify,bbox_inches='tight')
+  fig.savefig('%s_SizeDist_.png'%rname[11:-11],bbox_inches='tight')

@@ -65,7 +65,7 @@ for i in range(days):
   down_short_hemisp = smoothdist(down_short_hemisp)
   down_short_hemisp = smoothdist(down_short_hemisp)
   
-  down_short_hemisp = savgol_filter(down_short_hemisp, 601, 2)
+  #down_short_hemisp = savgol_filter(down_short_hemisp, 601, 2)
 
 
   #interp_time = np.linspace(time[0],time[-1],length)

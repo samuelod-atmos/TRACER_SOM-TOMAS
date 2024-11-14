@@ -19,8 +19,8 @@ import pandas as pd
 #####################################################
 boxvol = 2000000.0
 srtSO4 = 0
-srtorg1 = 1
-iorg = 477
+srtorg1 = 2
+iorg = 456
 icomp = iorg + 3
 srtorglast = srtorg1+iorg
 nbins = 40
@@ -37,7 +37,7 @@ save_png = False
 
 # 5 character name of run
 #####################################################
-identify = 'debug'
+identify = 'A1e-3'
 
 # Length of run [hours]
 #####################################################
@@ -54,8 +54,9 @@ db = [1E-15]
 #####################################################
 #files = ['%s/20220801_vwl0_pwl0_hr7.20e+01_Pfunc_bg10_aemass.dat'%output_dir
 #files = ['%s/20220801_%s_vwl1_pwl1_hr1.44e+02_bg10_aemass.dat'%(output_dir,identify)
-files = ['%s/20220801_%s_vwl1_pwl1_hr1.44e+02_nh35000_orgfn1_inorg1_db%s_aemass.dat'%(output_dir,identify,db[0])]
+#files = ['%s/20220801_%s_vwl1_pwl1_hr1.44e+02_nh35000_orgfn1_inorg1_db%s_aemass.dat'%(output_dir,identify,db[0])]
 
+files = ['%s/20220801_%s_db1_pwl1_vwl1_OH0.8_FN1000.0_HOM0_T1_RH1_aemass.dat'%(output_dir,identify)]
 
 for file in files:
   print('Running file:',file)
@@ -83,7 +84,9 @@ for file in files:
   #sys.exit('You suck')
   
   df_ae = np.array(pd.read_csv(file,header=None, delim_whitespace=True))
+  print(np.shape(df_ae))
   Mk = df_ae[:,1:]
+  print(np.shape(Mk))
   Mk = np.reshape(Mk, (int(len(Mk)/(icomp)), icomp,nbins))
   Mk = np.sum(Mk,axis=-1)
   
@@ -149,6 +152,7 @@ for file in files:
   total = Mk[0:,:]
   #total = Mk[0:,:-1]
   total = np.sum(total, axis=1)#/boxvol*1e9*100**3
+  total_org = np.sum(total_org, axis=1)#/boxvol*1e9*100**3
   
   
   # Sum across the indecies
@@ -160,12 +164,13 @@ for file in files:
   terp = np.sum(terp, axis=1)#/boxvol*1e9*100**3
   ivoc = np.sum(ivoc, axis=1)#/boxvol*1e9*100**3
   svoc = np.sum(svoc, axis=1)#/boxvol*1e9*100**3
- 
+
+
   #sys.exit('you will bever graduate')
  
   # Print the organic fraction at the beginning of the sim
   ############################################################ 
-  print('orgfrac =',nonvol[1]/(nonvol[1]+so4[1]))
+  #print('orgfrac =',nonvol[1]/(nonvol[1]+so4[1]))
  
   # Plotting! 
   ############################################################ 
@@ -178,7 +183,7 @@ for file in files:
   #plt.plot(x/360,organic,label='Organics')
   #plt.plot(x/360,NH4,label='NH4')
   #plt.plot(x,H2O,label='Water')
-  plt.plot(x,total,label='Total')
+  plt.plot(x,total_org,label='Total Org.')
   plt.plot(x,so4,color='r',label='Sulfate')
   plt.plot(x,benz,color='y',label='Benzene')
   plt.plot(x,tolu,color='b',label='Toluene')

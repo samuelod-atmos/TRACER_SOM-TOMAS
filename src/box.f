@@ -1076,7 +1076,7 @@ C --- Update SAPRC based on TOMAS gas-phase concentration of SO4 species -------
           SAPRCGC(SO4_INDX) = REAL(CALVALDBLE)
 
 C --- Update SAPRC based on TOMAS gas-phase concentration of SOM species --------------------
-      DO I=1,IORG-1
+      DO I=1,IORG ! SamO chaned from iorg-1 to iorg
           CALVALDBLE = GC(I+SRTORG1-1) * 1.0E+6 / ! TOMAS gas-phase SOM
      &    PRES * R * TEMP / MWORG(I) *
      &    1.0E+3 / BOXVOL * 1.0e+6 ! kg/bag -> g/m3 -> ppm
@@ -1114,7 +1114,8 @@ C     &      1.0E-3 * BOXVOL * 1.0e-6
 ! -------------------------------------------------------------------------------------------
       DO I=1,IORG
          SAPRCGC(I-1+SOM_1STINDX) = SAPRCGC(I-1+SOM_1STINDX) - 
-     &   SAPRCGC(I-1+SOM_1STINDX)*(Fi+Fm_out)/boxvol*aadt
+     &   SAPRCGC(I-1+SOM_1STINDX)*(Fi)/boxvol*aadt   ! 
+!     &   SAPRCGC(I-1+SOM_1STINDX)*(Fi+Fm_out)/boxvol*aadt
       ENDDO
 
 
@@ -1125,7 +1126,7 @@ C --- Update TOMAS based on SAPRC gas-phase concentration of SO4 species -------
          GC(SRTSO4) = DBLE(CALVALREAL)
 
 C --- Update TOMAS based on SAPRC gas-phase concentration of SOM species ----------------------
-      DO I=1,IORG-1
+      DO I=1,IORG  ! SamO chaned from iorg-1 to iorg
          CALVALREAL = SAPRCGC(I-1+SOM_1STINDX)*1.0E-6 ! SAPRC gas-phase SOM
      &                * PRES/R/TEMP * MWORG(I) *
      &                1.0E-3 * BOXVOL * 1.0e-6 ! ppm -> g/m3 -> kg/bag
@@ -1149,7 +1150,7 @@ C --- Update TOMAS based on SAPRC gas-phase concentration of SOM species -------
 ! -------------------------------------------------------------------------------------------
       SAPRCGC(SO2_INDX) = SAPRCGC(SO2_INDX) + 
      &        Gc_ppm(1)*(Fi+Fm)/boxvol*aadt - 
-     &      SAPRCGC(SO2_INDX)*(Fi+Fm)/boxvol*aadt
+     &      SAPRCGC(SO2_INDX)*(Fi+Fm_out)/boxvol*aadt
 ! -------------------------------------------------------------------------------------------
       
       !print*,'Gc(SO2_INDX) after=',Gc(SO2_INDX)
@@ -1443,6 +1444,11 @@ C ----------------------------------------------------------------
             Nk(n)=Nkout(n)
          enddo
 
+         
+C ========================================================== Need to update for prognostic H2SO4
+         GC(srtso4)=GCOUT(srtso4)
+         GC(SRTORG1:SRTORGLAST) = GCOUT(SRTORG1:SRTORGLAST) ! Added by AliA - IS IT RIGHT???????
+C ==========================================================         
 
 C ==========================================================  
          
@@ -1477,11 +1483,8 @@ C ==========================================================
            enddo
 
          ENDIF
-         
-C ========================================================== Need to update for prognostic H2SO4
-         GC(srtso4)=GCOUT(srtso4)
-         GC(SRTORG1:SRTORGLAST) = GCOUT(SRTORG1:SRTORGLAST) ! Added by AliA - IS IT RIGHT???????
-C ==========================================================         
+
+C ==========================================================  
 C         print*,'Problem with GC'
          do k=1,ibins
             if (isnan(Nk(k)))then
@@ -1565,7 +1568,7 @@ C --- Update SAPRC based on TOMAS gas-phase concentration of SO4 species -------
             SAPRCGC(SO4_INDX) = REAL(CALVALDBLE)
 
 C --- Update SAPRC based on TOMAS gas-phase concentration of SOM species --------------------
-            DO I=1,IORG-1
+            DO I=1,IORG ! SamO chaned from iorg-1 to iorg
                CALVALDBLE = GC(I+SRTORG1-1) * 1.0E+6 / ! TOMAS gas-phase SOM
      &                      PRES * R * TEMP / MWORG(I) *
      &                      1.0E+3 / BOXVOL * 1.0e+6 ! kg/bag -> g/m3 -> ppm
@@ -1602,7 +1605,7 @@ C --- Update TOMAS based on SAPRC gas-phase concentration of SO4 species -------
      &        1.0E-3 * BOXVOL * 1.0e-6 ! ppm -> g/m3 -> kg/bag
          GC(SRTSO4) = DBLE(CALVALREAL)
 C --- Update TOMAS based on SAPRC gas-phase concentration of SOM species ----------------------
-         DO I=1,IORG-1
+         DO I=1,IORG  ! SamO chaned from iorg-1 to iorg
             CALVALREAL = SAPRCGC(I-1+SOM_1STINDX)*1.0E-6 ! SAPRC gas-phase SOM
      &                   * PRES/R/TEMP * MWORG(I) *
      &                   1.0E-3 * BOXVOL * 1.0e-6 ! ppm -> g/m3 -> kg/bag
@@ -1648,8 +1651,10 @@ C ----------------------------------------------------------------
          !print*,'GC(iCOMP-4) before =',GC(iCOMP-4)
          IF (Dbk_switch.eq.1) THEN
            Dbk = CALC_DB(time,ORG_O2C)
-         ELSE
+         ELSEIF (Dbk_switch.eq.2) THEN
            Dbk = 1.0e-18
+         ELSEIF (Dbk_switch.eq.3) THEN
+           Dbk = 1.0e-21
          ENDIF
 
          print*,'Dbk =',Dbk 

@@ -19,15 +19,16 @@ endtime = 144.0
 boxvol  = 2000000.0 
 
 #===========================================================================================================
-identify = 'sommx'
+identify = 'debug'
 db = [1E-15]
 orgnuc = 1
 inorgnuc = 1
 
-files = ['%s/20220801_%s_vwl1_pwl1_hr1.44e+02_nh35000_orgfn%s_inorg%s_db%s_wallgc.dat'%(output_dir,identify,orgnuc,inorgnuc,db[0])]
+#files = ['%s/20220801_%s_vwl1_pwl1_hr1.44e+02_nh35000_orgfn%s_inorg%s_db%s_wallgc.dat'%(output_dir,identify,orgnuc,inorgnuc,db[0])]
+files = ['%s/20220801_%s_db1_pwl1_vwl1_OH1.0_FN100.0_HOM1_T1_RH1_wallgc.dat'%(output_dir,identify)]
 
 save_png = False
-delt = 10.0
+delt = 300.0
 #==================================================================================
 # C* bin bounds 
 l1,u1 = 1e-2,1e-1
@@ -70,7 +71,8 @@ for file in files:
   #sys.exit('Sucker')
   
   #df_spec = pd.read_csv('%s_spec.dat'%(file[:-11]), header=None, delim_whitespace=True)
-  df_spec = pd.read_csv('../outputs/20220801_A4e-3_vwl1_pwl1_hr1.44e+02_nh35000_orgfn1_inorg1_db1e-15_spec.dat', header=None, delim_whitespace=True)
+  #df_spec = pd.read_csv('../outputs/20220801_A4e-3_vwl1_pwl1_hr1.44e+02_nh35000_orgfn1_inorg1_db1e-15_spec.dat', header=None, delim_whitespace=True)
+  df_spec = pd.read_csv('%s/20220801_%s_db1_pwl1_vwl1_OH1.0_FN100.0_HOM1_T1_RH1_spec.dat'%(output_dir,identify),header=None, delim_whitespace=True)
   #som_spname = np.array(df_spec.iloc[2,1:iorg+2])
   som_cstar = np.array(df_spec.iloc[7,1:iorg+2])
  
@@ -99,7 +101,7 @@ for file in files:
   #sys.exit('Sucker')
   # ----------------------------------------------------------------------------
 
-  x = mdates.date2num(Time[0:len(cstar_0_1)])
+  x = mdates.date2num(Time[0:len(cstar_0_1)]-dt.timedelta(hours=6))
   #x = np.linspace(0,len(cstar_0_1),len(cstar_0_1))/360.
   ax = plt.gca()
   fig = plt.gcf()
@@ -130,4 +132,4 @@ for file in files:
   plt.show()
   
   #fig.savefig('20160917_GasConc.png',bbox_inches='tight')
-  fig.savefig('CAGE_GasWall.png',bbox_inches='tight')
+  #fig.savefig('CAGE_GasWall.png',bbox_inches='tight')
