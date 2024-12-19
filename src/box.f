@@ -47,6 +47,7 @@ C-----VARIABLE DECLARATIONS------------------------------------------
       double precision time     !elapsed time (seconds)
       double precision report_time     !time stepper for reporting
       double precision hour  !elapsed time (hours)
+      INTEGER,dimension(8) :: values
       double precision adt,aadt,aadtn      !aerosol microphysics time step (seconds)
       double precision Dpk, vd  !particle diameter (um) and drydep velocity (cm/s)
       double precision mnucl    !mass nucleating in a time step (kg)
@@ -234,9 +235,13 @@ C-----ADJUSTABLE PARAMETERS------------------------------------------
 
       parameter(R=8.314159)
 
+      HOM = 0.0
 C-----CODE-----------------------------------------------------------
 
-      HOM = 0.0
+      CALL date_and_time(VALUES=values)
+      print*,'Start time =',values
+      
+
       write(*,*) 'Enter name of run'
       read(*,'(A120)') runname
 
@@ -1655,6 +1660,8 @@ C ----------------------------------------------------------------
            Dbk = 1.0e-18
          ELSEIF (Dbk_switch.eq.3) THEN
            Dbk = 1.0e-21
+         ELSEIF (Dbk_switch.eq.4) THEN
+           Dbk = 1.0e-11
          ENDIF
 
          print*,'Dbk =',Dbk 
@@ -2073,6 +2080,8 @@ C      do v=1,nlayers
       enddo
       print*,'totmass [ug m-3]', totmass*1.0e9/boxvol*1.0e6
       print*,'Nk=',Nk(:)
+      CALL date_and_time(VALUES=values)
+      print*,'End time =',values
 
       END   !of main
 

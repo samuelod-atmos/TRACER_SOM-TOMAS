@@ -37,7 +37,7 @@ save_png = False
 
 # 5 character name of run
 #####################################################
-identify = 'A1e-3'
+identify = 'multi'
 
 # Length of run [hours]
 #####################################################
@@ -56,7 +56,7 @@ db = [1E-15]
 #files = ['%s/20220801_%s_vwl1_pwl1_hr1.44e+02_bg10_aemass.dat'%(output_dir,identify)
 #files = ['%s/20220801_%s_vwl1_pwl1_hr1.44e+02_nh35000_orgfn1_inorg1_db%s_aemass.dat'%(output_dir,identify,db[0])]
 
-files = ['%s/20220801_%s_db1_pwl1_vwl1_OH0.8_FN1000.0_HOM0_T1_RH1_aemass.dat'%(output_dir,identify)]
+files = ['%s/20220801_%s_A0.001_db1_pwl1_vwl1_OH0.8_FN1000.0_HOM0_T1_RH1_aemass.dat'%(output_dir,identify)]
 
 for file in files:
   print('Running file:',file)

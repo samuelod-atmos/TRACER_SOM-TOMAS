@@ -261,7 +261,7 @@ C Calculate rates of change for Nk and Mk
                in=in+Nk(i)*kij(k,i)
             enddo
          endif
-         print*,kij(k,k),Dpk(k),Dk(k),phi(k),k1mtot,zeta,k1mxtot
+         !print*,kij(k,k),Dpk(k),Dk(k),phi(k),k1mtot,zeta,k1mxtot
          !Calculate rates of change
          dNdt(k)= 
      &           -kij(k,k)*Nk(k)**2

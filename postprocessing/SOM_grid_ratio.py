@@ -20,8 +20,8 @@ output_dir = '../outputs'
 
 # Sage image [True/False]
 #####################################################
-#save_png = False
-save_png = True
+save_png = False
+#save_png = True
 
 # 5 character name of run
 #####################################################

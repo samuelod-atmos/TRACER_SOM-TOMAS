@@ -42,7 +42,7 @@ pwl = 1
 vwl = 1
 OH = 1.0
 fn = 100.0
-HOM = 1
+HOM = 0
 T = 1
 RH = 1
 
@@ -225,14 +225,14 @@ ax2.plot(x[:-1],G_A, color='r',linestyle='--',label='Ratio (simple theory)')
 #axes.plot(x,cstar_2_3,  color='m',linestyle='--',label='C*=%s-%s'%(str(l5),str(u5)))
 #axes.plot(x,cstar_3_4,  color='y',linestyle='--',label='C*=%s-%s'%(str(l6),str(u6)))
 
-axes.plot(x,cstar_n2_n1,color='green',linestyle='--',label='Gas C*= <= %s'%str(l1))
-axes.plot(x,cstar_aer,color='k',linestyle='--',label='Aer C*= <= %s'%str(l1))
+#axes.plot(x,cstar_n2_n1,color='green',label='Gas C*= <= %s'%str(l1))
+#axes.plot(x,cstar_aer,color='k',label='Aer C*= <= %s'%str(l1))
 
 
 #=================================================================
 axes.set_ylabel('$ \mu g $ $ m^{-3} $')
 axes.xaxis.set_major_formatter(mdates.DateFormatter('%m/%d'))
-#axes.set_yscale('log')
+axes.set_yscale('log')
 axes.set_ylim(0,0.4)
 axes.legend(loc=2,fontsize=10)
 

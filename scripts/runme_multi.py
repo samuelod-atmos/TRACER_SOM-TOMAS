@@ -67,7 +67,7 @@ boxvol  = 2000000.0                   # teflon [cm3] - [CalTech 24 m3, CSU 10 m3
 orgfrac_bg = 0.8                                   # Organic fraction of background aerosols  
 density_bg = orgfrac_bg*1400.0+(1-orgfrac_bg)*1770 # [kg/m3] - density of aerosol originally in the chamber
 
-db     = [1,2,3]                    # switch for dynamic [1] or constant [0] particle-phase diffusion coefficient [m2/s] 
+db     = [1,2,3,4]                    # switch for dynamic [1] or constant [0] particle-phase diffusion coefficient [m2/s] 
 alpha   = 1.0                     # accommodation coefficient 
 storg   = 0.025                   # [N/m] surface tension
 kc      = 0.0                     # first-order loss rate of species in the particle phase [1/s]
@@ -78,7 +78,7 @@ stppres = 101325.0                # STP pressure
 fion = 8.0           # Ion recombination coefficient [cm-3 s-]
 organic_nuc = 1      # switch for organic nucleation [0 or 1]
 inorganic_nuc = 1    # switch for inorganic nucleation [0 or 1]
-fn_multi = [100.0, 1000.0]
+fn_multi = [10, 100.0, 1000.0]
 
 HOM_switch = [0]
 T_switch = [1]
@@ -375,9 +375,9 @@ f9.close()
 
 #f10 = open('../inputs/TRACER_VOC_PTRMS_nan2zero.txt','r')
 #f10 = open('../inputs/TRACER_VOC_PTRMS_sty.txt','r')
-f10 = open('../inputs/TRACER_VOC_PTRMS_withMDL.txt','r')
+#f10 = open('../inputs/TRACER_VOC_PTRMS_withMDL.txt','r')
 #f10 = open('../inputs/TRACER_VOC_PTRMS.txt','r')
-#f10 = open('../inputs/TRACER_VOC_PTRMS_Splice.txt','r')
+f10 = open('../inputs/TRACER_VOC_PTRMS_Splice.txt','r')
 VOCs = []
 for line in f10.readlines():
   spl_line=line.split('#')

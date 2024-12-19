@@ -9,7 +9,7 @@ fig  = plt.gcf()
 
 fig.set_size_inches(9,3)
 
-A = 2.0E-3    #nm/s
+A = 1.0E-3    #nm/s
 xk = np.zeros(ibins+1) 
 xk[0]=1E-21*2**-10 
 for k in range(1,ibins+1):
@@ -84,4 +84,4 @@ plt.grid()
 plt.xlim(0,800)
 plt.show()
 
-fig.savefig('Kpar.png')
+#fig.savefig('Kpar.png')

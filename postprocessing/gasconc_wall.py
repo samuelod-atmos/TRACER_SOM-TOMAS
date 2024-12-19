@@ -19,13 +19,14 @@ endtime = 144.0
 boxvol  = 2000000.0 
 
 #===========================================================================================================
-identify = 'debug'
+identify = 'multi'
 db = [1E-15]
 orgnuc = 1
 inorgnuc = 1
 
 #files = ['%s/20220801_%s_vwl1_pwl1_hr1.44e+02_nh35000_orgfn%s_inorg%s_db%s_wallgc.dat'%(output_dir,identify,orgnuc,inorgnuc,db[0])]
-files = ['%s/20220801_%s_db1_pwl1_vwl1_OH1.0_FN100.0_HOM1_T1_RH1_wallgc.dat'%(output_dir,identify)]
+#files = ['%s/20220801_%s_db1_pwl1_vwl1_OH1.0_FN100.0_HOM1_T1_RH1_wallgc.dat'%(output_dir,identify)]
+files = ['%s/20220801_%s_A0.001_db1_pwl1_vwl1_OH1.0_FN100.0_HOM0_T1_RH1_gc.dat'%(output_dir,identify)]
 
 save_png = False
 delt = 300.0
@@ -70,9 +71,9 @@ for file in files:
   print('%s_spec.dat'%(file[:-7]))
   #sys.exit('Sucker')
   
-  #df_spec = pd.read_csv('%s_spec.dat'%(file[:-11]), header=None, delim_whitespace=True)
+  df_spec = pd.read_csv('%s_spec.dat'%(file[:72]), header=None, delim_whitespace=True)
   #df_spec = pd.read_csv('../outputs/20220801_A4e-3_vwl1_pwl1_hr1.44e+02_nh35000_orgfn1_inorg1_db1e-15_spec.dat', header=None, delim_whitespace=True)
-  df_spec = pd.read_csv('%s/20220801_%s_db1_pwl1_vwl1_OH1.0_FN100.0_HOM1_T1_RH1_spec.dat'%(output_dir,identify),header=None, delim_whitespace=True)
+  #df_spec = pd.read_csv('%s/20220801_%s_db1_pwl1_vwl1_OH1.0_FN100.0_HOM1_T1_RH1_spec.dat'%(output_dir,identify),header=None, delim_whitespace=True)
   #som_spname = np.array(df_spec.iloc[2,1:iorg+2])
   som_cstar = np.array(df_spec.iloc[7,1:iorg+2])
  

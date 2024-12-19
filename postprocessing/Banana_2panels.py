@@ -34,7 +34,7 @@ save_png = True
 #identify = 'HOM.3'
 #identify = 'nan_0'
 #identify = 'inx10'
-identify = 'A1e-3'
+#identify = 'A1e-3'
 #identify = 'styon'
 #identify = 'tmbto'
 #identify = 'HOMmx'
@@ -58,7 +58,7 @@ identify = 'A1e-3'
 #identify = '10xkp'
 #identify = '300KT'
 #identify = 'kflat'
-#identify = 'multi'
+identify = 'multi'
 #identify = 'debug'
 #==========================================================================================================
 
@@ -68,7 +68,7 @@ endtime = 144.0
 #rname = '%s/20220801_vwl0_pwl0_hr7.20e+01_Pfunc_bg10_noconc.dat'%output_dir
 #rname = '%s/20220801_%s_vwl1_pwl1_hr1.44e+02_bg10_noconc.dat'%(output_dir,identify)
 #rname = '%s/20220801_%s_vwl1_pwl1_hr%4.2e_nh35000_orgfn1_inorg1_db1e-14_noconc.dat'%(output_dir,identify,endtime)
-rname = '%s/20220801_%s_A0.001_db1_pwl1_vwl1_OH1.0_FN100.0_HOM0_T1_RH1_noconc.dat'%(output_dir,identify)
+rname = '%s/20220801_%s_A0.001_db4_pwl1_vwl1_OH0.6_FN100.0_HOM0_T1_RH1_noconc.dat'%(output_dir,identify)
 #rname = '%s/20220801_multi_vwl0_pwl0_nh35000.0_orgfn1_inorg1_db1e-15_ohscale1.0_noconc.dat'%output_dir
 #rname = '../outputs/20220801_multi_vwl1_pwl1_nh35000.0_orgfn1_inorg1_db1e-15_ohscale1.0_noconc.dat'
 

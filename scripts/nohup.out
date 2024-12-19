@@ -597,3 +597,200 @@ njobs= 19
 YES - 20220801_multi_vwl0_pwl0_nh315000.0_orgfn0_inorg0_db1e-15_ohscale2.0.input exists!
 b= ['samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod']
 njobs= 20
+Submitted batch job 315494
+Submitted batch job 315495
+Submitted batch job 315496
+Submitted batch job 315497
+Submitted batch job 315498
+Submitted batch job 315499
+Submitted batch job 315500
+Submitted batch job 315501
+Submitted batch job 315502
+Submitted batch job 315503
+Submitted batch job 315504
+Submitted batch job 315505
+Submitted batch job 315506
+Submitted batch job 315507
+Submitted batch job 315508
+Submitted batch job 315509
+Submitted batch job 315510
+Submitted batch job 315511
+Submitted batch job 315512
+Submitted batch job 315513
+Submitted batch job 315581
+Submitted batch job 315582
+Submitted batch job 315583
+Submitted batch job 315584
+Submitted batch job 315585
+Submitted batch job 315586
+Submitted batch job 315587
+Submitted batch job 315588
+Submitted batch job 315589
+Submitted batch job 315590
+Submitted batch job 315591
+Submitted batch job 315592
+Submitted batch job 315593
+Submitted batch job 315594
+Submitted batch job 315595
+Submitted batch job 315596
+making aerosol injection file
+making chamber flow file
+making OH file
+making temperature and RH files
+General information for the following simulations
+======================================================
+Simulation: 20220801
+inbins = 40
+COAG = 1
+boxvol = 2000000.0 [cm3]
+alpha = 1.0
+nh3_ppt = 5000.0
+rname = 20220801_multi_A0.001_db1_pwl1_vwl1_OH0.6_FN10_HOM0_T1_RH1
+YES - 20220801_multi_A0.001_db1_pwl1_vwl1_OH0.6_FN10_HOM0_T1_RH1.input exists!
+b= []
+njobs= 0
+rname = 20220801_multi_A0.001_db1_pwl1_vwl1_OH0.6_FN100.0_HOM0_T1_RH1
+YES - 20220801_multi_A0.001_db1_pwl1_vwl1_OH0.6_FN100.0_HOM0_T1_RH1.input exists!
+b= ['samuelod']
+njobs= 1
+rname = 20220801_multi_A0.001_db1_pwl1_vwl1_OH0.6_FN1000.0_HOM0_T1_RH1
+YES - 20220801_multi_A0.001_db1_pwl1_vwl1_OH0.6_FN1000.0_HOM0_T1_RH1.input exists!
+b= ['samuelod', 'samuelod']
+njobs= 2
+rname = 20220801_multi_A0.001_db1_pwl1_vwl1_OH0.8_FN10_HOM0_T1_RH1
+YES - 20220801_multi_A0.001_db1_pwl1_vwl1_OH0.8_FN10_HOM0_T1_RH1.input exists!
+b= ['samuelod', 'samuelod', 'samuelod']
+njobs= 3
+rname = 20220801_multi_A0.001_db1_pwl1_vwl1_OH0.8_FN100.0_HOM0_T1_RH1
+YES - 20220801_multi_A0.001_db1_pwl1_vwl1_OH0.8_FN100.0_HOM0_T1_RH1.input exists!
+b= ['samuelod', 'samuelod', 'samuelod', 'samuelod']
+njobs= 4
+rname = 20220801_multi_A0.001_db1_pwl1_vwl1_OH0.8_FN1000.0_HOM0_T1_RH1
+YES - 20220801_multi_A0.001_db1_pwl1_vwl1_OH0.8_FN1000.0_HOM0_T1_RH1.input exists!
+b= ['samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod']
+njobs= 5
+rname = 20220801_multi_A0.001_db1_pwl1_vwl1_OH1.0_FN10_HOM0_T1_RH1
+YES - 20220801_multi_A0.001_db1_pwl1_vwl1_OH1.0_FN10_HOM0_T1_RH1.input exists!
+b= ['samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod']
+njobs= 6
+rname = 20220801_multi_A0.001_db1_pwl1_vwl1_OH1.0_FN100.0_HOM0_T1_RH1
+YES - 20220801_multi_A0.001_db1_pwl1_vwl1_OH1.0_FN100.0_HOM0_T1_RH1.input exists!
+b= ['samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod']
+njobs= 7
+rname = 20220801_multi_A0.001_db1_pwl1_vwl1_OH1.0_FN1000.0_HOM0_T1_RH1
+YES - 20220801_multi_A0.001_db1_pwl1_vwl1_OH1.0_FN1000.0_HOM0_T1_RH1.input exists!
+b= ['samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod']
+njobs= 8
+rname = 20220801_multi_A0.001_db2_pwl1_vwl1_OH0.6_FN10_HOM0_T1_RH1
+YES - 20220801_multi_A0.001_db2_pwl1_vwl1_OH0.6_FN10_HOM0_T1_RH1.input exists!
+b= ['samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod']
+njobs= 9
+rname = 20220801_multi_A0.001_db2_pwl1_vwl1_OH0.6_FN100.0_HOM0_T1_RH1
+YES - 20220801_multi_A0.001_db2_pwl1_vwl1_OH0.6_FN100.0_HOM0_T1_RH1.input exists!
+b= ['samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod']
+njobs= 10
+rname = 20220801_multi_A0.001_db2_pwl1_vwl1_OH0.6_FN1000.0_HOM0_T1_RH1
+YES - 20220801_multi_A0.001_db2_pwl1_vwl1_OH0.6_FN1000.0_HOM0_T1_RH1.input exists!
+b= ['samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod']
+njobs= 11
+rname = 20220801_multi_A0.001_db2_pwl1_vwl1_OH0.8_FN10_HOM0_T1_RH1
+YES - 20220801_multi_A0.001_db2_pwl1_vwl1_OH0.8_FN10_HOM0_T1_RH1.input exists!
+b= ['samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod']
+njobs= 12
+rname = 20220801_multi_A0.001_db2_pwl1_vwl1_OH0.8_FN100.0_HOM0_T1_RH1
+YES - 20220801_multi_A0.001_db2_pwl1_vwl1_OH0.8_FN100.0_HOM0_T1_RH1.input exists!
+b= ['samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod']
+njobs= 13
+rname = 20220801_multi_A0.001_db2_pwl1_vwl1_OH0.8_FN1000.0_HOM0_T1_RH1
+YES - 20220801_multi_A0.001_db2_pwl1_vwl1_OH0.8_FN1000.0_HOM0_T1_RH1.input exists!
+b= ['samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod']
+njobs= 14
+rname = 20220801_multi_A0.001_db2_pwl1_vwl1_OH1.0_FN10_HOM0_T1_RH1
+YES - 20220801_multi_A0.001_db2_pwl1_vwl1_OH1.0_FN10_HOM0_T1_RH1.input exists!
+b= ['samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod']
+njobs= 15
+rname = 20220801_multi_A0.001_db2_pwl1_vwl1_OH1.0_FN100.0_HOM0_T1_RH1
+YES - 20220801_multi_A0.001_db2_pwl1_vwl1_OH1.0_FN100.0_HOM0_T1_RH1.input exists!
+b= ['samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod']
+njobs= 16
+rname = 20220801_multi_A0.001_db2_pwl1_vwl1_OH1.0_FN1000.0_HOM0_T1_RH1
+YES - 20220801_multi_A0.001_db2_pwl1_vwl1_OH1.0_FN1000.0_HOM0_T1_RH1.input exists!
+b= ['samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod']
+njobs= 17
+rname = 20220801_multi_A0.001_db3_pwl1_vwl1_OH0.6_FN10_HOM0_T1_RH1
+YES - 20220801_multi_A0.001_db3_pwl1_vwl1_OH0.6_FN10_HOM0_T1_RH1.input exists!
+b= ['samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod']
+njobs= 18
+rname = 20220801_multi_A0.001_db3_pwl1_vwl1_OH0.6_FN100.0_HOM0_T1_RH1
+YES - 20220801_multi_A0.001_db3_pwl1_vwl1_OH0.6_FN100.0_HOM0_T1_RH1.input exists!
+b= ['samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod']
+njobs= 19
+rname = 20220801_multi_A0.001_db3_pwl1_vwl1_OH0.6_FN1000.0_HOM0_T1_RH1
+YES - 20220801_multi_A0.001_db3_pwl1_vwl1_OH0.6_FN1000.0_HOM0_T1_RH1.input exists!
+b= ['samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod']
+njobs= 20
+Sleeping for 30 minutes
+Sleeping for 30 minutes
+Sleeping for 30 minutes
+Sleeping for 30 minutes
+Sleeping for 30 minutes
+Sleeping for 30 minutes
+Sleeping for 30 minutes
+Sleeping for 30 minutes
+Sleeping for 30 minutes
+Sleeping for 30 minutes
+rname = 20220801_multi_A0.001_db3_pwl1_vwl1_OH0.8_FN10_HOM0_T1_RH1
+b= ['samuelod']
+njobs= 1
+rname = 20220801_multi_A0.001_db3_pwl1_vwl1_OH0.8_FN100.0_HOM0_T1_RH1
+YES - 20220801_multi_A0.001_db3_pwl1_vwl1_OH0.8_FN100.0_HOM0_T1_RH1.input exists!
+b= ['samuelod', 'samuelod']
+njobs= 2
+rname = 20220801_multi_A0.001_db3_pwl1_vwl1_OH0.8_FN1000.0_HOM0_T1_RH1
+YES - 20220801_multi_A0.001_db3_pwl1_vwl1_OH0.8_FN1000.0_HOM0_T1_RH1.input exists!
+b= ['samuelod', 'samuelod', 'samuelod']
+njobs= 3
+rname = 20220801_multi_A0.001_db3_pwl1_vwl1_OH1.0_FN10_HOM0_T1_RH1
+b= ['samuelod', 'samuelod', 'samuelod', 'samuelod']
+njobs= 4
+rname = 20220801_multi_A0.001_db3_pwl1_vwl1_OH1.0_FN100.0_HOM0_T1_RH1
+YES - 20220801_multi_A0.001_db3_pwl1_vwl1_OH1.0_FN100.0_HOM0_T1_RH1.input exists!
+b= ['samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod']
+njobs= 5
+rname = 20220801_multi_A0.001_db3_pwl1_vwl1_OH1.0_FN1000.0_HOM0_T1_RH1
+YES - 20220801_multi_A0.001_db3_pwl1_vwl1_OH1.0_FN1000.0_HOM0_T1_RH1.input exists!
+b= ['samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod']
+njobs= 6
+rname = 20220801_multi_A0.001_db4_pwl1_vwl1_OH0.6_FN10_HOM0_T1_RH1
+b= ['samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod']
+njobs= 7
+rname = 20220801_multi_A0.001_db4_pwl1_vwl1_OH0.6_FN100.0_HOM0_T1_RH1
+YES - 20220801_multi_A0.001_db4_pwl1_vwl1_OH0.6_FN100.0_HOM0_T1_RH1.input exists!
+b= ['samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod']
+njobs= 8
+rname = 20220801_multi_A0.001_db4_pwl1_vwl1_OH0.6_FN1000.0_HOM0_T1_RH1
+YES - 20220801_multi_A0.001_db4_pwl1_vwl1_OH0.6_FN1000.0_HOM0_T1_RH1.input exists!
+b= ['samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod']
+njobs= 9
+rname = 20220801_multi_A0.001_db4_pwl1_vwl1_OH0.8_FN10_HOM0_T1_RH1
+b= ['samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod']
+njobs= 10
+rname = 20220801_multi_A0.001_db4_pwl1_vwl1_OH0.8_FN100.0_HOM0_T1_RH1
+YES - 20220801_multi_A0.001_db4_pwl1_vwl1_OH0.8_FN100.0_HOM0_T1_RH1.input exists!
+b= ['samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod']
+njobs= 11
+rname = 20220801_multi_A0.001_db4_pwl1_vwl1_OH0.8_FN1000.0_HOM0_T1_RH1
+YES - 20220801_multi_A0.001_db4_pwl1_vwl1_OH0.8_FN1000.0_HOM0_T1_RH1.input exists!
+b= ['samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod']
+njobs= 12
+rname = 20220801_multi_A0.001_db4_pwl1_vwl1_OH1.0_FN10_HOM0_T1_RH1
+b= ['samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod']
+njobs= 13
+rname = 20220801_multi_A0.001_db4_pwl1_vwl1_OH1.0_FN100.0_HOM0_T1_RH1
+YES - 20220801_multi_A0.001_db4_pwl1_vwl1_OH1.0_FN100.0_HOM0_T1_RH1.input exists!
+b= ['samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod']
+njobs= 14
+rname = 20220801_multi_A0.001_db4_pwl1_vwl1_OH1.0_FN1000.0_HOM0_T1_RH1
+YES - 20220801_multi_A0.001_db4_pwl1_vwl1_OH1.0_FN1000.0_HOM0_T1_RH1.input exists!
+b= ['samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod']
+njobs= 15
