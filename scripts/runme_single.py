@@ -88,10 +88,12 @@ queue = 'defaultfaculty.q'
 #identify = '100fn'
 #identify = 'noHOM'
 #identify = 'kp2.5'
-identify = 'A1e-3' 
+#identify = 'A1e-3' 
 #identify = '1.8kp' 
 #identify = 'y_mix' 
 #identify = 'n_mix' 
+#identify = 'cfrag' 
+identify = 'prfct' 
 #identify = 'debug' 
 #----------|+++++|----------
 
@@ -604,7 +606,7 @@ No_bg2 = str(float(Nobg2))
 No_bg3 = str(float(Nobg3))
 
 #rname = '%s_%s_vwl%1i_pwl%1i_hr%4.2e_nh3%s_orgfn%s_inorg%s_db%li'%(name,identify,vwl,pwl,endtime,NH3,org_nuc,inorg_nuc,db)
-rname = '%s_%s_db%s_pwl%1i_vwl%1i_OH%s_FN%s_HOM%li_T%li_RH%li'%(name,identify,dbk,pwl,vwl,OH_scale,fn_scale,HOM_switch,T_switch,RH_switch)
+rname = '%s_%s_A%s_db%s_pwl%1i_vwl%1i_OH%s_FN%s_HOM%li_T%li_RH%li'%(name,identify,A,dbk,pwl,vwl,OH_scale,fn_scale,HOM_switch,T_switch,RH_switch)
 
 index  = np.where(df_emiss_ML.iloc[:,0]!='')[0].shape[0] 
 spname = df_emiss_ML['species'].iloc[:index]

@@ -22,26 +22,29 @@ output_dir = '../outputs'
 
 # Sage image [True/False]
 #####################################################
-#save_png = False
-save_png = True
+save_png = False
+#save_png = True
 
 # 5 character name of run
 #####################################################
 #identify = 'tmbto'
-identify = 'multi'
+identify = 'cfrag'
 
-som_grids = ['BNZSOMG',
-   'TOLSOMG',
-   'XYLSOMG',
-   'ISPSOMG',
-   'TRPSOMG']
+#som_grids = ['BNZSOMG',
+#   'TOLSOMG',
+#   'XYLSOMG',
+#   'ISPSOMG',
+#   'TRPSOMG']
+
+som_grids = ['All']
+
 
 db = 1
 pwl = 1
 vwl = 1
-OH = 1.0
-fn = 100.0
-HOM = 1
+OH = 0.8
+fn = 1000.0
+HOM = 0
 T = 1
 RH = 1
 
@@ -68,6 +71,8 @@ time_pick = 8588
 time_low = dt.datetime(2022,8,6,10,45)
 time_up = dt.datetime(2022,8,6,16)
 
+#time_low = dt.datetime(2022,8,1,11)
+#time_up = dt.datetime(2022,8,7,1)
 
 # Parameters
 #####################################################
@@ -88,7 +93,7 @@ endtime = 144.0
 # file name(s)
 #####################################################
 #files = ['%s/20220801_%s_vwl1_pwl1_hr1.44e+02_nh35000_orgfn1_inorg1_db%s_aemass.dat'%(output_dir,identify,db[0])
-files = ['%s/20220801_%s_db%s_pwl%s_vwl%s_OH%s_FN%s_HOM%s_T%s_RH%s_aemass.dat'%(output_dir,
+files = ['%s/20220801_%s_A0.001_db%s_pwl%s_vwl%s_OH%s_FN%s_HOM%s_T%s_RH%s_aemass.dat'%(output_dir,
     identify,
     str(db),
     str(pwl),
@@ -155,14 +160,14 @@ for som_grid in som_grids:
       #print(i)
       #print(i,saprc_spname[i+102])
       #print(saprc_spname[i+103][11:13])
-      if saprc_spname[i+102][:7] == som_grid:
-        Cs = int(saprc_spname[i+102][8:10])-1
-        Os = int(saprc_spname[i+102][11:13])-1
-        #print('Cs and Os =',saprc_spname[i+102],Cs,Os,1e6*1e9/boxvol*np.average(saprc_gas[low_indx:up_indx,i],axis=0))
-        print('Cs and Os =',saprc_spname[i+102],saprc_cstar[i],saprc_mwcb[i],np.mean(saprc_gas[low_indx:up_indx,i],axis=0))
-        #OC_grid[Os,Cs] += saprc_gas[time_pick,i]*1000.0
-        #OC_grid[Os,Cs] += np.average(saprc_gas[:,i]*1000.0,axis=0)
-        OC_grid[Os,Cs] += np.average(saprc_gas[low_indx:up_indx,i],axis=0)
+      #if saprc_spname[i+102][:7] == som_grid:
+      Cs = int(saprc_spname[i+102][8:10])-1
+      Os = int(saprc_spname[i+102][11:13])-1
+      #print('Cs and Os =',saprc_spname[i+102],Cs,Os,1e6*1e9/boxvol*np.average(saprc_gas[low_indx:up_indx,i],axis=0))
+      print('Cs and Os =',saprc_spname[i+102],saprc_cstar[i],saprc_mwcb[i],np.mean(saprc_gas[low_indx:up_indx,i],axis=0))
+      #OC_grid[Os,Cs] += saprc_gas[time_pick,i]*1000.0
+      #OC_grid[Os,Cs] += np.average(saprc_gas[:,i]*1000.0,axis=0)
+      OC_grid[Os,Cs] += np.average(saprc_gas[low_indx:up_indx,i],axis=0)
       #print(saprc_spname[i][8:13])
   
     #OC_grid[-1,-1] += np.average(saprc_gas[low_indx:up_indx,-3],axis=0)
@@ -188,7 +193,8 @@ for som_grid in som_grids:
     #plt.grid(True)
     fig.colorbar(c1,format=mpl.ticker.FormatStrFormatter('$10^{%2.1f}$'),pad=0.01, shrink=0.6, aspect=14, label='$\mu$g /$m^{3}$')
     #fig.colorbar(c1,pad=0.01, shrink=0.6, aspect=14, label='$\mu$g /$m^{3}$')
-    c1.set_clim(-8,0)
+    #c1.set_clim(-8,0)
+    c1.set_clim(-2,0)
     #plt.yscale('log')
     #plt.legend()
     #plt.ylim(0.001,0.1)

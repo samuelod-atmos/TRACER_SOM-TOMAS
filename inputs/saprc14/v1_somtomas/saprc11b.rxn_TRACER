@@ -34,7 +34,7 @@ HONO      0.0    47.02    0.0   1   0
 HNO4      0.0    79.02    0.0   1   0
 SO2       0.0    64.06    0.0   0   1
 SULF      0.0    96.06    0.0   0   1
-NPHE      0.0   139.11    6.0   1   0 
+NPHE      0.0   139.11    6.0   1   0
 XN        0.0     0.0     0.0   1   0
 RNO3      0.0     0.0     0.0   1   0
 PAN       0.0   121.05    2.0   1   0
@@ -59,8 +59,9 @@ TERP      0.0     0.0    10.0   0   0   0   1
 SESQ      0.0     0.0    15.0   0   0   0   1
 ARO1      0.0    92.14    7.0   0   0   0   1
 ARO2      0.0   106.16    8.0   0   0   0   1
-IVOC      0.0    89.07    3.0   0   0   3   1
-SVOC      0.0   146.14    6.0   0   0   4   1
+IVOC      0.0   170.34   12.0   0   0   0   1
+SVOC      0.0   212.42   15.0   0   0   0   1
+STYRENE   0.0   104.15    8.0   0   0   0   1
 TOLSOMG   0.0     0.0     0.0   0   0   0   1
 XYLSOMG   0.0     0.0     0.0   0   0   0   1
 BNZSOMG   0.0     0.0     0.0   0   0   0   1
@@ -78,13 +79,13 @@ SVOSOMG   0.0     0.0     0.0   0   0   0   1
 !
 .SOM
 !SPEC       CSTART CSTOP OSTART OSTOP PF1    PF2    PF3    PF4     CFRAG
-BNZSOMG      1       9    0      7    0.5140 0.0870  0.2070 0.1930 0.0010
-TOLSOMG      1       7    0      7    0.6940 0.0310  0.0020 0.2730 0.0010
-XYLSOMG      1       8    0      7    0.4400 0.1280  0.0160 0.4160 0.0610
+BNZSOMG      1       9    0      7    0.0750 0.0040  0.8990 0.0220 0.8450
+TOLSOMG      1       9    0      7    0.0030 0.0010  0.9960 0.0010 0.2630
+XYLSOMG      1       9    0      7    0.2960 0.3230  0.3500 0.0310 0.0800
 ISPSOMG      1       5    0      7    0.5760 0.0530  0.3560 0.0160 0.0150
-TRPSOMG      1      15    0      7    0.3610 0.0070  0.6060 0.0260 0.0870
-IVOSOMG      1      15    0      7    0.3610 0.0070  0.6060 0.0260 0.0870
-SVOSOMG      1      15    0      7    0.3610 0.0070  0.6060 0.0260 0.0870
+TRPSOMG      1      15    0      7    0.4540 0.2510  0.2470 0.0480 0.2360
+IVOSOMG      1      12    0      7    0.9657 0.0010  0.0020 0.0314 0.2360
+SVOSOMG      1      15    0      7    0.9657 0.0010  0.0020 0.0314 0.2360
 .STS
 !        ---- Defaults for ----
 !       Conc(0)  Mwt   #C    #N  #S  #O  #X
@@ -793,7 +794,7 @@ BL18) 1.28e-12 -0.974        ;TERP + NO3 = #.162 xHO2 + #.421 xNO2 + &
 BL19) 3.71e-11               ;TERP + O3P = #.147 RCHO + #.853 PROD2 + #4.441 XC
 ! modified by Mike Kleeman and Jianlin Hu 11/03/10 for CMAQ SOA
 BL20) 1.22e-12	   	     ;BENZENE + OH = BNZSOMG
-BL21) 3.27e-11	   	     ;TRIMBNZ + OH = BNZSOMG
+BL21) 3.27e-11	   	     ;TRIMBNZ + OH = TOLSOMG
 BL22) 5.63e-12	   	     ;TOLUENE + OH = TOLSOMG
 BL23) 1.36e-11	   	     ;XYLENE  + OH = XYLSOMG
 BL24) 5.23e-11	   	     ;TERPENE + OH = TRPSOMG
@@ -801,6 +802,7 @@ BL25) 3.00e-10	   	     ;SESQTRP + OH = TRPSOMG
 BL26) 1.00e-10	   	     ;ISOPRENE+ OH = ISPSOMG
 BL27) 5.93e-11	   	     ;IVOC    + OH = IVOSOMG
 BL28) 1.04e-10	   	     ;SVOC    + OH = SVOSOMG
+BL29) 1.70e-11	   	     ;STYRENE + OH = TOLSOMG
 .
 ! Base Chlorine Mechanism
 ! Created from Mech09.XLS 25-Jan-2010 11:08

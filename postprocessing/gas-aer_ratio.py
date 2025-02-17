@@ -44,8 +44,8 @@ inorgnuc = 1
 db = 1
 pwl = 1
 vwl = 1
-OH_scale = 0.8
-FN_scale = 1000.0
+OH_scale = 1.0
+FN_scale = 100.0
 HOM = 0
 T_switch = 1
 RH_switch = 1
@@ -208,9 +208,9 @@ larges = larges[:length]
 
 
 axes.plot(x,(sulf*1e9/boxvol*1e6)/sulfate,color='b',linestyle='--',label='H2SO4/Sulfate Ratio')
-axes.plot(x,(sulf*1e9/boxvol*1e6)/smalls,linestyle='--',label='Small Particles')
-axes.plot(x,(sulf*1e9/boxvol*1e6)/meds,linestyle='--',label='Medium Particles')
-axes.plot(x,(sulf*1e9/boxvol*1e6)/larges,linestyle='--',label='Large Particles')
+#axes.plot(x,(sulf*1e9/boxvol*1e6)/smalls,linestyle='--',label='Small Particles')
+#axes.plot(x,(sulf*1e9/boxvol*1e6)/meds,linestyle='--',label='Medium Particles')
+#axes.plot(x,(sulf*1e9/boxvol*1e6)/larges,linestyle='--',label='Large Particles')
 
 for i in range(int(ibins/4)):
   G_A = (1./cs_array[:length])*(kpar[i*4] + 1./inst_flow[:length])
@@ -235,10 +235,12 @@ for i in range(int(ibins/4)):
 
 axes.set_ylabel('Gas/Aer. Ratio')
 axes.set_yscale('log')
-axes.set_ylim(0.001,10000)
-axes.legend(loc=1,fontsize=10)
+axes.set_xlabel('Date')
+axes.set_ylabel('Ratio')
+axes.set_ylim(0.01,2000)
+axes.legend(loc=2,fontsize=10)
 axes.grid(True)
-axes.xaxis.set_major_formatter(mdates.DateFormatter('%m/%d'))
+axes.xaxis.set_major_formatter(mdates.DateFormatter('%m/%d %H'))
 
 plt.show()
 

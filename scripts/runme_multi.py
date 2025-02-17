@@ -44,7 +44,9 @@ queue = 'defaultfaculty.q'
 
 #----------|+++++|----------
 #5 character identifier
-identify = 'multi' 
+identify = 'frag2' # cfrag 1.000 for all
+identify = 'frag3' # cfrag 0.000 for all
+identify = 'frag4' # cfrag 9.000 for all
 #----------|+++++|----------
 
 # ====================================================================================================
@@ -60,14 +62,14 @@ PWL  =  [1] # [0 or 1] the switch for On/Off particle wall loss
 
 NOx = 5.0                             # NOx concentration for OH proxy #3
 nh3_ppt = 5000.0                    # NH3 concentration [ppt]
-OH_multi = [0.6, 0.8, 1.0]            # multiplier for OH concentration
+OH_multi = [0.8]            # multiplier for OH concentration
 OH_proxy = 'Rad'
 boxvol  = 2000000.0                   # teflon [cm3] - [CalTech 24 m3, CSU 10 m3, CMU ?? m3]
 
 orgfrac_bg = 0.8                                   # Organic fraction of background aerosols  
 density_bg = orgfrac_bg*1400.0+(1-orgfrac_bg)*1770 # [kg/m3] - density of aerosol originally in the chamber
 
-db     = [1,2,3,4]                    # switch for dynamic [1] or constant [0] particle-phase diffusion coefficient [m2/s] 
+db     = [1]                    # switch for dynamic [1] or constant [0] particle-phase diffusion coefficient [m2/s] 
 alpha   = 1.0                     # accommodation coefficient 
 storg   = 0.025                   # [N/m] surface tension
 kc      = 0.0                     # first-order loss rate of species in the particle phase [1/s]
@@ -78,7 +80,7 @@ stppres = 101325.0                # STP pressure
 fion = 8.0           # Ion recombination coefficient [cm-3 s-]
 organic_nuc = 1      # switch for organic nucleation [0 or 1]
 inorganic_nuc = 1    # switch for inorganic nucleation [0 or 1]
-fn_multi = [10, 100.0, 1000.0]
+fn_multi = [1000.0]
 
 HOM_switch = [0]
 T_switch = [1]
@@ -284,8 +286,10 @@ if OH_proxy == 'Rad':
   
       
       f4.write('%s\n'%str(writer)) #Comment out to not overwrite
-  
+
+
   radfid.close()
+f4.close()
 #===================================================================================
 print('making temperature and RH files')
 f5 = open('../inputs/timeseries/%s%s%s_%s_Temp'%(str(start_t.year).zfill(4),str(start_t.month).zfill(2),str(start_t.day).zfill(2),identify),'w')
@@ -621,7 +625,7 @@ for dbk in db:
                 c = os.popen('squeue').read()
                 b=re.findall('samuelod', c)
                 njobs=len(b)
-                print('b=',b)
+                #print('b=',b)
                 print('njobs=',len(b))
                 
                 while njobs >= maxjobs:
@@ -631,14 +635,12 @@ for dbk in db:
                    b = re.findall('%s.sh'%identify, c)
                    njobs=len(b)
                 # ************************************************
-                
-                os.system('sleep 5')
-            
+               
                 df4 = open('../inputs/raw_runme.sh', mode='r') # reading the default header file of TOMAS
                 runme_line = []
                 for i in df4.readlines():
                  runme_line.append(i.strip('\n'))
-                 df4.close()
+                df4.close()
                          
                 ind1 = np.where(np.array(runme_line)=='cd run_direct')[0][0]
                 runme_line[ind1] = 'cd %s/%s'%(run_directory, rname)
@@ -664,6 +666,10 @@ for dbk in db:
             
                 #os.system('cd ../runs/%s/; qsub -cwd -V -pe MPI 1 -q %s ./runme.sh'%(rname, queue))
                 os.system('cd ../runs/%s/; sbatch ./%s.sh'%(rname,identify))
+                
+                print('sleeping for a few seconds')
+                os.system('sleep 5')
+            
                 #os.system('cd ../runs/%s/; sbatch ./runme.sh'%(rname))
             
                 #os.system('sleep 1')

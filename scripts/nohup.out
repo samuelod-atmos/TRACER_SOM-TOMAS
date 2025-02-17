@@ -794,3 +794,95 @@ rname = 20220801_multi_A0.001_db4_pwl1_vwl1_OH1.0_FN1000.0_HOM0_T1_RH1
 YES - 20220801_multi_A0.001_db4_pwl1_vwl1_OH1.0_FN1000.0_HOM0_T1_RH1.input exists!
 b= ['samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod', 'samuelod']
 njobs= 15
+Submitted batch job 329560
+Submitted batch job 329561
+Submitted batch job 329562
+Submitted batch job 329563
+Submitted batch job 329564
+Submitted batch job 329565
+Submitted batch job 329566
+Submitted batch job 329567
+Submitted batch job 329568
+Submitted batch job 329569
+Submitted batch job 329570
+Submitted batch job 329571
+Submitted batch job 329572
+Submitted batch job 329573
+Submitted batch job 329574
+Submitted batch job 329575
+making aerosol injection file
+making chamber flow file
+making OH file
+making temperature and RH files
+General information for the following simulations
+======================================================
+Simulation: 20220801
+inbins = 40
+COAG = 1
+boxvol = 2000000.0 [cm3]
+alpha = 1.0
+nh3_ppt = 5000.0
+rname = 20220801_multi_A0.001_db1_pwl1_vwl1_OH0.8_FN100.0_HOM0_T1_RH1
+YES - 20220801_multi_A0.001_db1_pwl1_vwl1_OH0.8_FN100.0_HOM0_T1_RH1.input exists!
+njobs= 1
+sleeping for a few seconds
+rname = 20220801_multi_A0.001_db1_pwl1_vwl1_OH0.8_FN1000.0_HOM0_T1_RH1
+YES - 20220801_multi_A0.001_db1_pwl1_vwl1_OH0.8_FN1000.0_HOM0_T1_RH1.input exists!
+njobs= 2
+sleeping for a few seconds
+rname = 20220801_multi_A0.001_db1_pwl1_vwl1_OH1.0_FN100.0_HOM0_T1_RH1
+YES - 20220801_multi_A0.001_db1_pwl1_vwl1_OH1.0_FN100.0_HOM0_T1_RH1.input exists!
+njobs= 3
+sleeping for a few seconds
+rname = 20220801_multi_A0.001_db1_pwl1_vwl1_OH1.0_FN1000.0_HOM0_T1_RH1
+YES - 20220801_multi_A0.001_db1_pwl1_vwl1_OH1.0_FN1000.0_HOM0_T1_RH1.input exists!
+njobs= 4
+sleeping for a few seconds
+rname = 20220801_multi_A0.001_db1_pwl1_vwl0_OH0.8_FN100.0_HOM0_T1_RH1
+YES - 20220801_multi_A0.001_db1_pwl1_vwl0_OH0.8_FN100.0_HOM0_T1_RH1.input exists!
+njobs= 5
+sleeping for a few seconds
+rname = 20220801_multi_A0.001_db1_pwl1_vwl0_OH0.8_FN1000.0_HOM0_T1_RH1
+YES - 20220801_multi_A0.001_db1_pwl1_vwl0_OH0.8_FN1000.0_HOM0_T1_RH1.input exists!
+njobs= 6
+sleeping for a few seconds
+rname = 20220801_multi_A0.001_db1_pwl1_vwl0_OH1.0_FN100.0_HOM0_T1_RH1
+YES - 20220801_multi_A0.001_db1_pwl1_vwl0_OH1.0_FN100.0_HOM0_T1_RH1.input exists!
+njobs= 7
+sleeping for a few seconds
+rname = 20220801_multi_A0.001_db1_pwl1_vwl0_OH1.0_FN1000.0_HOM0_T1_RH1
+YES - 20220801_multi_A0.001_db1_pwl1_vwl0_OH1.0_FN1000.0_HOM0_T1_RH1.input exists!
+njobs= 8
+sleeping for a few seconds
+rname = 20220801_multi_A0.001_db1_pwl0_vwl1_OH0.8_FN100.0_HOM0_T1_RH1
+YES - 20220801_multi_A0.001_db1_pwl0_vwl1_OH0.8_FN100.0_HOM0_T1_RH1.input exists!
+njobs= 9
+sleeping for a few seconds
+rname = 20220801_multi_A0.001_db1_pwl0_vwl1_OH0.8_FN1000.0_HOM0_T1_RH1
+YES - 20220801_multi_A0.001_db1_pwl0_vwl1_OH0.8_FN1000.0_HOM0_T1_RH1.input exists!
+njobs= 10
+sleeping for a few seconds
+rname = 20220801_multi_A0.001_db1_pwl0_vwl1_OH1.0_FN100.0_HOM0_T1_RH1
+YES - 20220801_multi_A0.001_db1_pwl0_vwl1_OH1.0_FN100.0_HOM0_T1_RH1.input exists!
+njobs= 11
+sleeping for a few seconds
+rname = 20220801_multi_A0.001_db1_pwl0_vwl1_OH1.0_FN1000.0_HOM0_T1_RH1
+YES - 20220801_multi_A0.001_db1_pwl0_vwl1_OH1.0_FN1000.0_HOM0_T1_RH1.input exists!
+njobs= 12
+sleeping for a few seconds
+rname = 20220801_multi_A0.001_db1_pwl0_vwl0_OH0.8_FN100.0_HOM0_T1_RH1
+YES - 20220801_multi_A0.001_db1_pwl0_vwl0_OH0.8_FN100.0_HOM0_T1_RH1.input exists!
+njobs= 13
+sleeping for a few seconds
+rname = 20220801_multi_A0.001_db1_pwl0_vwl0_OH0.8_FN1000.0_HOM0_T1_RH1
+YES - 20220801_multi_A0.001_db1_pwl0_vwl0_OH0.8_FN1000.0_HOM0_T1_RH1.input exists!
+njobs= 14
+sleeping for a few seconds
+rname = 20220801_multi_A0.001_db1_pwl0_vwl0_OH1.0_FN100.0_HOM0_T1_RH1
+YES - 20220801_multi_A0.001_db1_pwl0_vwl0_OH1.0_FN100.0_HOM0_T1_RH1.input exists!
+njobs= 15
+sleeping for a few seconds
+rname = 20220801_multi_A0.001_db1_pwl0_vwl0_OH1.0_FN1000.0_HOM0_T1_RH1
+YES - 20220801_multi_A0.001_db1_pwl0_vwl0_OH1.0_FN1000.0_HOM0_T1_RH1.input exists!
+njobs= 16
+sleeping for a few seconds

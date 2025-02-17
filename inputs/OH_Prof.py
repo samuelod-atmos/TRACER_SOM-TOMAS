@@ -27,6 +27,7 @@ for line in oh_fid.readlines():
  OH.append(float(line))
 
 OH = np.array(OH)
+print(len(OH[::30]))
 oh_fid.close()
 
 ####################################################
@@ -38,6 +39,7 @@ for line in oh_fid2.readlines():
  OH2.append(float(line))
 
 OH2 = np.array(OH2)
+print(len(OH2))
 oh_fid2.close()
 
 ####################################################
@@ -49,6 +51,7 @@ for line in oh_fid3.readlines():
  OH3.append(float(line))
 
 OH3 = np.array(OH3)
+print(len(OH3))
 oh_fid3.close()
 
 #=====================================================================

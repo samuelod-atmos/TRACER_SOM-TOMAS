@@ -1008,11 +1008,12 @@ C==============================================================================
       CTRW = 0
 
  10   continue  !beginning of new time step
-     
-      READ(39,*) ohc
-      print*,'ohc=',ohc
+    
+      print*,'time stepping' 
       READ(52,*) o3
       print*,'o3=',o3
+      READ(39,*) ohc
+      print*,'ohc=',ohc
       
       IF (CTRW.gt.0) THEN
         IF (T_switch.eq.1) THEN

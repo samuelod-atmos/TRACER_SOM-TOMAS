@@ -388,7 +388,8 @@ OH = OH[::30]
 #plt.ticklabel_format(axis='y',style='sci')
 
 #x = np.linspace(0,len(OH),len(OH))/360.
-axes[1].plot(x,OH,color='purple')
+print('len(x)',len(x),'len(OH',len(OH))
+axes[1].plot(x,OH[:len(x)],color='purple')
 #axes[2].set_xlabel('Time [hours]')
 axes[1].set_ylabel('OH \n[molec/cm^3]',color='purple')
 #axes[2].set_title('OH') 
@@ -416,7 +417,7 @@ o3 = o3[::30]
 
 #x = np.linspace(0,len(OH),len(OH))/360.
 
-ax2.plot(x,o3,color='r')
+ax2.plot(x,o3[:len(x)],color='r')
 ax2.set_ylabel('Ozone [ppb]',color='r')
 ax2.set_ylim(0,)
 
@@ -440,7 +441,7 @@ RH = RH[::30]
 #plt.ticklabel_format(axis='y',style='sci')
 
 #x = np.linspace(0,len(RH),len(RH))/360.
-axes[2].plot(x[:len(RH)],RH*100.,color='green')
+axes[2].plot(x,RH[:len(x)]*100.,color='green')
 axes[2].set_xlabel('Date')
 axes[2].set_ylabel('RH [%]',color='green')
 #axes[2].set_ylim(0,2)
@@ -461,7 +462,7 @@ Temp = Temp[::30]
 #plt.ticklabel_format(axis='y',style='sci')
 
 #x = np.linspace(0,len(RH),len(RH))/360.
-ax2.plot(x,Temp,color='blue')
+ax2.plot(x,Temp[:len(x)],color='blue')
 #ax2.set_xlabel('Time [hours]')
 ax2.set_ylabel('T [K]',color='blue')
 

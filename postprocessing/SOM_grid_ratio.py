@@ -34,21 +34,21 @@ save_png = False
 #identify = 'tmbto'
 identify = 'multi'
 
-som_grids = ['All']
+#som_grids = ['All']
 
-#som_grids = ['BNZSOMG',
-#   'TOLSOMG',
-#   'XYLSOMG',
-#   'ISPSOMG',
-#   'TRPSOMG']
+som_grids = ['BNZSOMG',
+   'TOLSOMG',
+   'XYLSOMG',
+   'ISPSOMG',
+   'TRPSOMG']
 
 
 db = 1
 pwl = 1
 vwl = 1
-OH = 1.0
+OH = 0.8
 fn = 100.0
-HOM = 1
+HOM = 0
 T = 1
 RH = 1
 
@@ -61,8 +61,8 @@ RH = 1
 #####################################################
 time_pick = 8588
 
-time_low = dt.datetime(2022,8,2,9,45)
-time_up = dt.datetime(2022,8,2,14,15)
+#time_low = dt.datetime(2022,8,2,9,45)
+#time_up = dt.datetime(2022,8,2,14,15)
 
 #time_low = dt.datetime(2022,8,3,10,15)
 #time_up = dt.datetime(2022,8,3,14,30)
@@ -73,8 +73,8 @@ time_up = dt.datetime(2022,8,2,14,15)
 #time_low = dt.datetime(2022,8,5,10)
 #time_up = dt.datetime(2022,8,5,15)
 
-#time_low = dt.datetime(2022,8,6,10,45)
-#time_up = dt.datetime(2022,8,6,16)
+time_low = dt.datetime(2022,8,6,10,45)
+time_up = dt.datetime(2022,8,6,16)
 
 
 # Parameters
@@ -97,7 +97,7 @@ endtime = 144.0
 # Aerosol mass file name(s)
 #####################################################
 #files = ['%s/20220801_%s_vwl1_pwl1_hr1.44e+02_nh35000_orgfn1_inorg1_db%s_aemass.dat'%(output_dir,identify,db[0])
-files = ['%s/20220801_%s_db%s_pwl%s_vwl%s_OH%s_FN%s_HOM%s_T%s_RH%s_aemass.dat'%(output_dir,
+files = ['%s/20220801_%s_A0.001_db%s_pwl%s_vwl%s_OH%s_FN%s_HOM%s_T%s_RH%s_aemass.dat'%(output_dir,
     identify,
     str(db),
     str(pwl),
@@ -260,7 +260,7 @@ for som_grid in som_grids:
     c1 = axes.pcolormesh(Cs,Os,OC_grid_a/(OC_grid_a+OC_grid_g))
     #c1 = axes.pcolormesh(Cs,Os,OC_grid)
     
-    plt.title('Gas/Aerosol')
+    plt.title('%s Gas/Aerosol'%som_grid)
     plt.ylabel('Oxygen #')
     plt.xlabel('Carbon #')
     #fig.colorbar(c1,format=mpl.ticker.FormatStrFormatter('$10^{%2.1f}$'),pad=0.01, shrink=0.6, aspect=14, label='Gas/Aer. Ratio')
@@ -273,6 +273,6 @@ for som_grid in som_grids:
     ############################################################ 
     if save_png==True:
       #fig.savefig('NPF_event5_Aer_OCgrid_ratio.png',bbox_inches='tight')
-      fig.savefig('NPF1_%s_%s_OCgrid_ratio.png'%(file[11:-11],som_grid),bbox_inches='tight')
+      fig.savefig('NPF5_%s_%s_OCgrid_ratio.png'%(file[11:-11],som_grid),bbox_inches='tight')
     
     ############################################################ 
