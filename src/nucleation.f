@@ -283,7 +283,7 @@ Cjrpc         frac = 1.d0
          mnuc = (4.d0/3.d0*pi*(rnuc*1D-9)**3)*1350.d0
          if (mnuc.lt.xk(1))then
             print*,'mnuc < xk(1) in nucleation',mnuc
-            stop
+            !stop
          endif
          nuc_bin = 1
          do while (mnuc .gt. xk(nuc_bin+1))

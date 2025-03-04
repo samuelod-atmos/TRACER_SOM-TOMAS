@@ -9,7 +9,7 @@ comp = gfortran
 # to debug, remove -O2 and add -g flag
 #o_flags = -c -O1 -fcheck=all -fbounds-check #-v # flags for the compiling of *.o files [O = optimization] 
 #exe_flags = -O1 -dynamic -fcheck=all -fbounds-check # flags for the compiling of *.exe files
-o_flags = -c -O3
+o_flags = -c -O3 
 exe_flags = -O3 -dynamic
 
 
@@ -17,7 +17,7 @@ exe_flags = -O3 -dynamic
 box_obj  = box.o	boxinit.o	getlen.o	wallloss.o
 cond_obj = tmcond.o 	dmdt_int.o  ezcond.o    ezmass.o    \
            getCondSink.o      getMassSink.o     soacond.o \
-					 homcond.o
+					 homcond.o  big_particle.o tmcond_big_particle.o
 coag_obj = multicoag.o
 nuc_obj  = nucleation.o	ricco_nucl.o	dunne_inorg_nucl.o
 size_obj = initbounds.o	loginit.o	loginit_bg.o	report.o	\
@@ -41,6 +41,8 @@ boxinit.o : boxinit.f sizecode.COM Makefile
 	$(comp) $(o_flags) boxinit.f
 tmcond.o : tmcond.f sizecode.COM Makefile
 	$(comp) $(o_flags) tmcond.f
+tmcond_big_particle.o : tmcond_big_particle.f sizecode.COM Makefile
+	$(comp) $(o_flags) tmcond_big_particle.f
 ezcond.o : ezcond.f sizecode.COM Makefile
 	$(comp) $(o_flags) ezcond.f
 ezmass.o : ezmass.f sizecode.COM Makefile
@@ -107,6 +109,8 @@ r_step_autoox.o : r_step_autoox.f sizecode.COM modlspc.h common.inc gaskin.h Mak
 	$(comp) $(o_flags) r_step_autoox.f
 f_calc_db.o : f_calc_db.f sizecode.COM modlspc.h gaskin.h Makefile 
 	$(comp) $(o_flags) f_calc_db.f
+big_particle.o : big_particle.f sizecode.COM Makefile
+	$(comp) $(o_flags) big_particle.f
 
 # Other Utilities 
 # ===============================================================================

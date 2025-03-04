@@ -56,7 +56,7 @@ db = [1E-15]
 #files = ['%s/20220801_%s_vwl1_pwl1_hr1.44e+02_bg10_aemass.dat'%(output_dir,identify)
 #files = ['%s/20220801_%s_vwl1_pwl1_hr1.44e+02_nh35000_orgfn1_inorg1_db%s_aemass.dat'%(output_dir,identify,db[0])]
 
-files = ['%s/20220801_%s_A0.001_db1_pwl1_vwl1_OH1.0_FN1000.0_HOM0_T1_RH1_aemass.dat'%(output_dir,identify)]
+files = ['%s/20220801_%s_A0.001_db1_pwl1_vwl1_OH0.8_FN1000.0_HOM0_T1_RH1_aemass.dat'%(output_dir,identify)]
 
 for file in files:
   print('Running file:',file)
@@ -103,6 +103,7 @@ for file in files:
   xyleindx = []
   ivocindx = []
   svocindx = []
+  nonvolindx = []
  
   # Loop through SOM names and find indexes for each category 
   ############################################################ 
@@ -126,11 +127,14 @@ for file in files:
       ivocindx.append(i-1)
     elif temp[0:7] == 'SVOSOMG':
       svocindx.append(i-1)
+    elif temp[0:7] == 'NONVOLA':
+      nonvolindx.append(i-1)
 
+  print('nonvolindx=',nonvolindx)
   # Make non-volatile, SO4, and H2O arrays
   ############################################################ 
   #nonvol = np.sum(fid[1:,srtorglast2,:],axis=1)/boxvol*1e9*100**3
-  nonvol = Mk[0:,-3]#/boxvol*1e9*100**3
+  nonvol = Mk[0:,nonvolindx]#/boxvol*1e9*100**3
   so4 = Mk[0:,srtSO4]#/boxvol*1e9*100**3
   #organic = np.sum(fid[1:,srtorg1:srtorglast,:],axis=2)
   #organic = np.sum(organic, axis=1)/boxvol*1e9*100**3

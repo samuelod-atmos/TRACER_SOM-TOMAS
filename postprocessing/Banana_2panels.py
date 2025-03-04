@@ -2,6 +2,7 @@ from pylab import *
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import cm
+import matplotlib.patches as patches
 import matplotlib as mpl
 import datetime as dt
 import matplotlib.dates as mdates 
@@ -16,8 +17,8 @@ import sys
 #===========================================================================================================
 
 output_dir = '../outputs'
-#save_png = False 
-save_png = True
+save_png = False 
+#save_png = True
 
 #===========================================================================================================
 
@@ -58,8 +59,9 @@ save_png = True
 #identify = '10xkp'
 #identify = '300KT'
 #identify = 'kflat'
-#identify = 'multi'
-identify = 'frag4'
+identify = 'multi'
+#identify = 'bigDp'
+#identify = 'frag4'
 #identify = 'frag4'
 #identify = 'prfct'
 #identify = 'debug'
@@ -293,7 +295,7 @@ if len(x) < 300:
   axes.xaxis.set_major_locator(mdates.HourLocator(interval = 3))
 else:
   axes.xaxis.set_major_formatter(mdates.DateFormatter('%m/%d'))
-#axes.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M'))
+axes.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M'))
 
 axes.set_yscale('log')
 #axes.locator_params(axis='x',nbins=3)
@@ -322,7 +324,18 @@ axes.set_ylim(12,100)
 #time_low = dt.datetime(2022,8,6,5)
 #time_up = dt.datetime(2022,8,6,19)
 
-#axes.set_xlim(mdates.date2num(time_low),mdates.date2num(time_up))
+time_low = dt.datetime(2022,8,6,7)
+time_up = dt.datetime(2022,8,6,22)
+
+axes.set_xlim(mdates.date2num(time_low),mdates.date2num(time_up))
+
+#--------------------------------------------------------
+#box_time = dt.datetime(2022,8,6,21)
+#rect = patches.Rectangle((mdates.date2num(box_time), 12), 1/24, 88, linewidth=5, edgecolor='k', facecolor='none')
+
+# Add the patch to the Axes
+#axes.add_patch(rect)
+
 #--------------------------------------------------------
 
 cb1 = fig.colorbar(c1, format=mpl.ticker.FormatStrFormatter('$10^{%2.1f}$'),ax=axes,pad=0.0061, label='$ dN/dlog_{10}(D_p) $')
@@ -332,4 +345,4 @@ plt.show()
 if save_png==True:
   #fig.savefig('%s_full_SizeDist.png'%identify,bbox_inches='tight')
   #fig.savefig('%s_A2e-4_SizeDist.png'%identify,bbox_inches='tight')
-  fig.savefig('%s_SizeDist_.png'%rname[11:-11],bbox_inches='tight')
+  fig.savefig('August_6th_SizeDist_hour%s.png'%(str(box_time.hour).zfill(2) ),bbox_inches='tight')

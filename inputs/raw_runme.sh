@@ -1,5 +1,5 @@
 #!/bin/sh
-#SBATCH -p pie_all
+#SBATCH -p aer_all
 
 echo started at `date`
 
