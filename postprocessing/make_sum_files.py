@@ -20,19 +20,19 @@ endtime = 144.0   # Length of model run
 aadt = 300         # microphysics timestep [s]
 nbins = 40          # number of size bins
 
-VWL  =  [1] # [0 or 1] the switch for On/Off vapor wall loss
-PWL  =  [1] # [0 or 1] the switch for On/Off particle wall loss 
+VWL  =  [1,0] # [0 or 1] the switch for On/Off vapor wall loss
+PWL  =  [1,0] # [0 or 1] the switch for On/Off particle wall loss 
 OH_multi = [0.8]            # multiplier for OH concentration
 boxvol  = 2000000.0                   # teflon [cm3] - [CalTech 24 m3, CSU 10 m3, CMU ?? m3]
 db     = [1]  # particle-phase diffusion coefficient [m2/s] (could try 3.4e-15 from Charles) 
-RH_switch = [1]
-T_switch = [1]
+RH_switch = [1,0]
+T_switch = [1,0]
 fn_multi = [100.0]
 HOM_switch = [0]
 
 # ====================================================================================================
-low_date = dt.datetime(2022,8,4,7)
-up_date = dt.datetime(2022,8,4,22)
+low_date = dt.datetime(2022,8,4,1)
+up_date = dt.datetime(2022,8,4,23)
 # ====================================================================================================
 
 Time = []
@@ -121,7 +121,6 @@ for dbk in db:
                     #f1.write('%s'%str(Y[i]))
                 
                 f1.close()
-                sys.exit()
                 
                 #==========================================================================================================
 
