@@ -144,8 +144,10 @@ def get_settings(experiment_name):
             "orgfrac_bg": 0.8,    # initial organic fraction of aerosols
             "boxvol": 2000000.0,  # box/bag volume [cm^3]
             "sfcpres": 101325.0,  # surface pressure 
-            "kpar": ''.join([k_par + '0.00001440 ' for i in range(ibins)]), # size dependent wall loss coefficient 
-            #"kvap_on": 2.50000e-03, # vapor wall loss coefficient 
+            "fn_scale": 100.0,
+            "T_switch": 1,
+            "RH_switch": 1,
+            "HOM_switch": 0,
            
             },
 
@@ -166,8 +168,10 @@ def get_settings(experiment_name):
             "orgfrac_bg": 0.8,    # initial organic fraction of aerosols
             "boxvol": 2000000.0,  # box/bag volume [cm^3]
             "sfcpres": 101325.0,  # surface pressure 
-            "kpar": ''.join([k_par + '0.00001440 ' for i in range(ibins)]), # size dependent wall loss coefficient 
-            #"kvap_on": 2.50000e-03, # vapor wall loss coefficient 
+            "fn_scale": 100.0,
+            "T_switch": 1,
+            "RH_switch": 1,
+            "HOM_switch": 0,
            
             },
 
@@ -188,8 +192,10 @@ def get_settings(experiment_name):
             "orgfrac_bg": 0.8,    # initial organic fraction of aerosols
             "boxvol": 2000000.0,  # box/bag volume [cm^3]
             "sfcpres": 101325.0,  # surface pressure 
-            "kpar": ''.join([k_par + '0.00001440 ' for i in range(ibins)]), # size dependent wall loss coefficient 
-            #"kvap_on": 2.50000e-03, # vapor wall loss coefficient 
+            "fn_scale": 100.0,
+            "T_switch": 1,
+            "RH_switch": 1,
+            "HOM_switch": 0,
            
             },
 

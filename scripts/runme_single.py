@@ -77,7 +77,7 @@ queue = 'defaultfaculty.q'
 #identify = 'splic' 
 #identify = 'wiMDL' 
 #identify = 'minOH' 
-#identify = 'NPF_1'
+identify = 'NPF_5'
 #identify = 'sclOH'
 #identify = 'sclfn'
 #identify = 'GC_OH'
@@ -94,7 +94,7 @@ queue = 'defaultfaculty.q'
 #identify = 'n_mix' 
 #identify = 'cfrag' 
 #identify = 'prfct' 
-identify = 'bigDp' 
+#identify = 'bigDp' 
 #identify = 'debug' 
 #----------|+++++|----------
 
@@ -113,7 +113,7 @@ OH_proxy = 'Rad'
 #OH_proxy = 'GC'
 density_bg = orgfrac_bg*1400.0+(1-orgfrac_bg)*1770 # [kg/m3] - density of aerosol originally in the chamber
 
-start_t = dt.datetime(2022,8,1,11)  # start date [CST]
+start_t = dt.datetime(2022,8,4,1)  # start date [CST]
 #start_t = dt.datetime(2022,8,1,11)  # start date [CST]
 name = '%s%s%s'%(str(start_t.year).zfill(4),str(start_t.month).zfill(2),str(start_t.day).zfill(2))  # date string 
 
