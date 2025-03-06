@@ -42,6 +42,18 @@ T_switch = [1]
 fn_multi = [100.0]
 HOM_switch = [0]
 
+colors = ['orange','purple','gold','skyblue','darkgreen']
+labels = ['"Base"','PWL off', 'VWL off','Const. T', 'Const. RH']
+
+names = [
+  '20220801_multi_A0.001_db1_pwl1_vwl1_OH0.8_FN100.0_HOM0_T1_RH1_noconc.dat',
+  '20220801_multi_A0.001_db1_pwl0_vwl1_OH0.8_FN100.0_HOM0_T1_RH1_noconc.dat',
+  '20220801_multi_A0.001_db1_pwl1_vwl0_OH0.8_FN100.0_HOM0_T1_RH1_noconc.dat',
+  '20220801_multi_A0.001_db1_pwl1_vwl1_OH0.8_FN100.0_HOM0_T0_RH1_noconc.dat',
+  '20220801_multi_A0.001_db1_pwl1_vwl1_OH0.8_FN100.0_HOM0_T1_RH0_noconc.dat'
+]
+
+
 # ====================================================================================================
 Time = []
 #for i in range(int(endtime[0]*3600/delt+1)):
@@ -52,7 +64,6 @@ Time = np.array(Time)
 
 startT = dt.datetime(2022,8,1,11)
 print(startT)
-name = '%s%s%s'%(str(startT.year).zfill(4),str(startT.month).zfill(2),str(startT.day).zfill(2))  # date string 
 
 date = []
 date.append(startT)
@@ -153,81 +164,39 @@ totalN = np.interp(x, x1[np.where(low < x1)[0][0]:np.where(up < x1)[0][0]], tota
 
 fig, axes = plt.subplots(nrows=1, ncols=1,sharex=True)
 
-fig.set_size_inches(14,4)
+fig.set_size_inches(14,3)
 axes.grid(True)
 axes.set_title('SOM-TOMAS and SMPS Tot. Num. Compare') 
 axes.set_ylabel('Total Number',fontsize=14)
 axes.set_xlabel('Date',fontsize=14)
 axes.set_xlim(low,up)
-axes.xaxis.set_major_formatter(mdates.DateFormatter('%m/%d'))
-#axes.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M'))
 axes.set_yscale('log')
-#plt.subplots_adjust(hspace=0.02)
-
+axes.set_ylim(1e0,1e5)
 axes.locator_params(axis='x', nbins=6)
-#axes.set_ylim(0,6000)
+axes.plot(x,totalN,color='k',label='SMPS')
 
-#OH_scale = 1.0
-#vwl = 1
-#pwl = 1
-#NH3 = 500.0
-#org_nuc = 0
-#inorg_nuc = 0
-r_square1 = 0.0
-r_square2 = 0.0
+time_low = dt.datetime(2022,8,4,7)
+time_up = dt.datetime(2022,8,6,22)
 
-mae1 = 1.0e10
-mae2 = 1.0e10
+axes.set_xlim(mdates.date2num(time_low),mdates.date2num(time_up))
+#axes.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M'))
+axes.xaxis.set_major_formatter(mdates.DateFormatter('%m/%d'))
+axes.xaxis.set_major_locator(mdates.DayLocator(interval = 1))
 
-mse1 = 1.0e20
-mse2 = 1.0e20
 
-for dbk in db:
-  for pwl in PWL:
-    for vwl in VWL:
-      for fn_scale in fn_multi:
-        for HOMs in HOM_switch:
-          for OH_scale in OH_multi:
-            for Temp in T_switch:
-              for RH in RH_switch:
-            
-                rname = '%s_%s_A0.001_db%s_pwl%1i_vwl%1i_OH%s_FN%s_HOM%li_T%li_RH%li'%(name,identify,dbk,pwl,vwl,OH_scale,fn_scale,HOMs,Temp,RH)
-                print(rname)
-                
-                color='grey'
-                z = 1
-                label=''
+cntr = 0
+for rname in names:            
+  #rname = '%s_%s_A0.001_db%s_pwl%1i_vwl%1i_OH%s_FN%s_HOM%li_T%li_RH%li'%(name,identify,dbk,pwl,vwl,OH_scale,fn_scale,HOMs,Temp,RH)
+  print(rname)
   
-                df_no = np.array(pd.read_csv(output_dir + rname + '_noconc.dat',header=None, delim_whitespace=True))
-                number_conc = df_no[:,1:]
-                #Y = (number_conc[:,:])/BinsE[:]
-               
-                Y1 = np.sum(number_conc[:,10:],axis=1)
-                c1 = axes.plot(x,Y1,color=color,zorder=z,label=label)
-                
-                #r_square1 = pearsonr(totalN,Y1)[0]
-                r_square1 = Pearson_correlation(totalN,Y1)
-                mae1 = np.mean(abs(Y1 - totalN))
-                mse1 = (sum((totalN-Y1)**2.0))/len(totalN)
-                #print(r_square1,Pearson_correlation(totalN,Y1))
-                if r_square1 > r_square2:
-                  r_square2 = r_square1
-                  best_run = rname
-                if mae1 < mae2:
-                  mae2 = mae1
-                  best_run_mae = rname
-                if mse1 < mse2:
-                  mse2 = mse1
-                  best_run_mse = rname
-                #print(r_square)
-                #cb1 = fig.colorbar(c1, format=mpl.ticker.FormatStrFormatter('$10^{%2.1f}$'),ax=axes,pad=0.0061, label='$ dN/dlog_{10}(D_p) $')
-                #c1.set_clim(1,4.3)
+  df_no = np.array(pd.read_csv(output_dir + rname,header=None, delim_whitespace=True))
+  number_conc = df_no[:,1:]
+ 
+  Y1 = np.sum(number_conc[:,10:],axis=1)
+  c1 = axes.plot(x,Y1,color=colors[cntr],label=labels[cntr])
+  cntr = cntr + 1
 
-print('best run according to correlation:        ',best_run)
-print('best run according to mean absolute error:',best_run_mae)
-print('best run according to mean squared error: ',best_run_mse)
 
-axes.plot(x,totalN,color='r',label='SMPS')
-plt.legend()
+#plt.legend()
 
 plt.show()

@@ -23,7 +23,7 @@ def Pearson_correlation(X,Y):
 #----------|+++++|----------
 #5 character identifier
 identify = 'multi' 
-output_dir = '../outputs/'
+output_dir = '../outputs'
 #----------|+++++|----------
 
 # ====================================================================================================
@@ -32,15 +32,13 @@ endtime = 144.0   # Length of model run
 aadt = 300         # microphysics timestep [s]
 ibins = 40        # number of bins
 
-VWL  =  [1,0] # [0 or 1] the switch for On/Off vapor wall loss
-PWL  =  [1,0] # [0 or 1] the switch for On/Off particle wall loss 
-OH_multi = [0.6, 0.8, 1.0]            # multiplier for OH concentration
+VWL  =  [1] # [0 or 1] the switch for On/Off vapor wall loss
+PWL  =  [1] # [0 or 1] the switch for On/Off particle wall loss 
+
+OH_multi = [1.0]            # multiplier for OH concentration
 boxvol  = 2000000.0                   # teflon [cm3] - [CalTech 24 m3, CSU 10 m3, CMU ?? m3]
-db     = [1]  # particle-phase diffusion coefficient [m2/s] (could try 3.4e-15 from Charles) 
-RH_switch = [1]
-T_switch = [1]
-fn_multi = [100.0]
-HOM_switch = [0]
+
+db     = [1]   # particle-phase diffusion coefficient [m2/s] (could try 3.4e-15 from Charles) 
 
 # ====================================================================================================
 Time = []
@@ -81,7 +79,8 @@ for line in bin_fid.readlines():
   # for i in range(len(spl_line)):
   #     print('line=',line)
   Bins.append(float(line))
-Bins = np.array(Bins)
+Bins = np.array(Bins)*1e-6
+
 bin_fid.close()
 
 
@@ -119,7 +118,10 @@ Dp_bounds[-1] = 418.0
 #sys.exit()
 
 totalN = sizedist*(np.log10(Dp_bounds[1:])-np.log10(Dp_bounds[:-1]))
+Surf = totalN*np.pi/6.0*Bins**3
 totalN = np.sum(totalN[:,:60],axis=1)
+Surf = np.sum(Surf[:,:60],axis=1)
+
 
 fid.close()
 ##############################################
@@ -146,6 +148,7 @@ print(date[np.where(low < x1)[0][0]])
 print(date[np.where(up < x1)[0][0]])
 
 totalN = np.interp(x, x1[np.where(low < x1)[0][0]:np.where(up < x1)[0][0]], totalN[np.where(low < x1)[0][0]:np.where(up < x1)[0][0]])
+Surf = np.interp(x, x1[np.where(low < x1)[0][0]:np.where(up < x1)[0][0]], Surf[np.where(low < x1)[0][0]:np.where(up < x1)[0][0]])
 
 #sys.exit()
 
@@ -155,8 +158,8 @@ fig, axes = plt.subplots(nrows=1, ncols=1,sharex=True)
 
 fig.set_size_inches(14,4)
 axes.grid(True)
-axes.set_title('SOM-TOMAS and SMPS Tot. Num. Compare') 
-axes.set_ylabel('Total Number',fontsize=14)
+axes.set_title('SOM-TOMAS and SMPS Sfc. Area') 
+axes.set_ylabel('Total Sfc. Area [m^2]',fontsize=14)
 axes.set_xlabel('Date',fontsize=14)
 axes.set_xlim(low,up)
 axes.xaxis.set_major_formatter(mdates.DateFormatter('%m/%d'))
@@ -182,52 +185,47 @@ mae2 = 1.0e10
 mse1 = 1.0e20
 mse2 = 1.0e20
 
-for dbk in db:
-  for pwl in PWL:
-    for vwl in VWL:
-      for fn_scale in fn_multi:
-        for HOMs in HOM_switch:
-          for OH_scale in OH_multi:
-            for Temp in T_switch:
-              for RH in RH_switch:
-            
-                rname = '%s_%s_A0.001_db%s_pwl%1i_vwl%1i_OH%s_FN%s_HOM%li_T%li_RH%li'%(name,identify,dbk,pwl,vwl,OH_scale,fn_scale,HOMs,Temp,RH)
-                print(rname)
-                
-                color='grey'
-                z = 1
-                label=''
-  
-                df_no = np.array(pd.read_csv(output_dir + rname + '_noconc.dat',header=None, delim_whitespace=True))
-                number_conc = df_no[:,1:]
-                #Y = (number_conc[:,:])/BinsE[:]
-               
-                Y1 = np.sum(number_conc[:,10:],axis=1)
-                c1 = axes.plot(x,Y1,color=color,zorder=z,label=label)
-                
-                #r_square1 = pearsonr(totalN,Y1)[0]
-                r_square1 = Pearson_correlation(totalN,Y1)
-                mae1 = np.mean(abs(Y1 - totalN))
-                mse1 = (sum((totalN-Y1)**2.0))/len(totalN)
-                #print(r_square1,Pearson_correlation(totalN,Y1))
-                if r_square1 > r_square2:
-                  r_square2 = r_square1
-                  best_run = rname
-                if mae1 < mae2:
-                  mae2 = mae1
-                  best_run_mae = rname
-                if mse1 < mse2:
-                  mse2 = mse1
-                  best_run_mse = rname
-                #print(r_square)
-                #cb1 = fig.colorbar(c1, format=mpl.ticker.FormatStrFormatter('$10^{%2.1f}$'),ax=axes,pad=0.0061, label='$ dN/dlog_{10}(D_p) $')
-                #c1.set_clim(1,4.3)
 
-print('best run according to correlation:        ',best_run)
-print('best run according to mean absolute error:',best_run_mae)
-print('best run according to mean squared error: ',best_run_mse)
+xk = np.zeros(ibins+1) 
+xk[0]=1E-21*2**-10 
+for k in range(1,ibins+1):
+   xk[k] = xk[k-1]*2.
+pdens=1400. # fixed density for simplicity
+xkm=np.sqrt(xk[:-1]*xk[1:])
+Dp=((6.*xkm/pdens/np.pi)**(1.0/3.0)) # [m] average particle diameter of bin
 
-axes.plot(x,totalN,color='r',label='SMPS')
+
+ 
+rname = '%s/20220801_%s_A0.001_db1_pwl1_vwl1_OH0.8_FN1000.0_HOM0_T1_RH1_noconc.dat'%(output_dir,identify)
+print(rname)
+#if rname == '../outputs/20220801_multi_vwl1_pwl1_nh315000.0_orgfn0_inorg1_db1e-15_ohscale0.5_noconc.dat':
+color = 'blue'
+#  label='Best Correlation'
+##elif rname == '../outputs/20220801_multi_vwl0_pwl1_nh3500.0_orgfn1_inorg0_db1e-15_ohscale2.0_noconc.dat':
+#elif rname == '../outputs/20220801_multi_vwl0_pwl1_nh3500.0_orgfn1_inorg0_db1e-15_ohscale2.0_noconc.dat':
+#  color = 'orange'
+#  z = 4
+#  label='Best MAE'
+##elif rname == '../outputs/20220801_multi_vwl1_pwl0_nh3500.0_orgfn1_inorg0_db1e-15_ohscale2.0_noconc.dat':
+#elif rname == '../outputs/20220801_multi_vwl1_pwl0_nh3500.0_orgfn1_inorg0_db1e-15_ohscale2.0_noconc.dat':
+#  color = 'green'
+#  z = 5
+#  label='Best MSE'
+
+df_no = np.array(pd.read_csv(rname,header=None, delim_whitespace=True))
+number_conc = df_no[:,1:]
+#Y = (number_conc[:,:])/BinsE[:]
+
+Surf2 = number_conc*np.pi/6.0*Dp**3
+Surf2 = np.sum(Surf2[:,10:],axis=1)
+Y1 = np.sum(number_conc[:,10:],axis=1)
+c1 = axes.plot(x,Surf2,color=color)
+
+#cb1 = fig.colorbar(c1, format=mpl.ticker.FormatStrFormatter('$10^{%2.1f}$'),ax=axes,pad=0.0061, label='$ dN/dlog_{10}(D_p) $')
+#c1.set_clim(1,4.3)
+
+
+axes.plot(x,Surf,color='r',label='SMPS')
 plt.legend()
 
 plt.show()

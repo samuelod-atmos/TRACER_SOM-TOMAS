@@ -62,7 +62,7 @@ PWL  =  [1] # [0 or 1] the switch for On/Off particle wall loss
 
 NOx = 5.0                             # NOx concentration for OH proxy #3
 nh3_ppt = 5000.0                    # NH3 concentration [ppt]
-OH_multi = [0.8]            # multiplier for OH concentration
+OH_multi = [0.6,0.8]            # multiplier for OH concentration
 OH_proxy = 'Rad'
 boxvol  = 2000000.0                   # teflon [cm3] - [CalTech 24 m3, CSU 10 m3, CMU ?? m3]
 
@@ -129,7 +129,7 @@ Dp=((6.*xkm/pdens/np.pi)**(1.0/3.0))*1E9 # [m] average particle diameter of bin
 # Particle and vapor wall loss rates
 # ====================================================================================================
 
-As = [5.0e-4, 2.0e-3]    #nm/s
+As = [5.0e-4,1.5e-3, 2.0e-3]    #nm/s
 #As = [1.0e-3]    #nm/s
 kflat = 6.9e-5
 
