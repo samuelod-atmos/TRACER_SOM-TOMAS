@@ -138,8 +138,8 @@ def get_settings(experiment_name):
             "org_nuc": 1,         # organic nucleation switch
             "inorg_nuc": 1,       # inorganic nucleation switch
             "COAG": 1,            # coagulation switch
-            "vwl": 1,             # vapor wall loss switch
-            "pwl": 1,             # particle wall loss switch
+            "vwl": 0,             # vapor wall loss switch
+            "pwl": 0,             # particle wall loss switch
             "A": 1.0e-3,          # loss constant for particle wall losses
             "orgfrac_bg": 0.8,    # initial organic fraction of aerosols
             "boxvol": 2000000.0,  # box/bag volume [cm^3]
@@ -162,8 +162,8 @@ def get_settings(experiment_name):
             "org_nuc": 1,         # organic nucleation switch
             "inorg_nuc": 1,       # inorganic nucleation switch
             "COAG": 1,            # coagulation switch
-            "vwl": 1,             # vapor wall loss switch
-            "pwl": 1,             # particle wall loss switch
+            "vwl": 0,             # vapor wall loss switch
+            "pwl": 0,             # particle wall loss switch
             "A": 1.0e-3,          # loss constant for particle wall losses
             "orgfrac_bg": 0.8,    # initial organic fraction of aerosols
             "boxvol": 2000000.0,  # box/bag volume [cm^3]
@@ -186,8 +186,8 @@ def get_settings(experiment_name):
             "org_nuc": 1,         # organic nucleation switch
             "inorg_nuc": 1,       # inorganic nucleation switch
             "COAG": 1,            # coagulation switch
-            "vwl": 1,             # vapor wall loss switch
-            "pwl": 1,             # particle wall loss switch
+            "vwl": 0,             # vapor wall loss switch
+            "pwl": 0,             # particle wall loss switch
             "A": 1.0e-3,          # loss constant for particle wall losses
             "orgfrac_bg": 0.8,    # initial organic fraction of aerosols
             "boxvol": 2000000.0,  # box/bag volume [cm^3]
