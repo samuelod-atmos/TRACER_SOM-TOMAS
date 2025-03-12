@@ -46,6 +46,10 @@ year = 2022
 month = 8
 day = 1
 
+xlow = mdates.date2num(dt.datetime(2022,8,4,0))
+xhigh = mdates.date2num(dt.datetime(2022,8,7,0))
+
+
 # Particle phase diffusivity
 #####################################################
 db = [1E-15]
@@ -56,7 +60,7 @@ db = [1E-15]
 #files = ['%s/20220801_%s_vwl1_pwl1_hr1.44e+02_bg10_aemass.dat'%(output_dir,identify)
 #files = ['%s/20220801_%s_vwl1_pwl1_hr1.44e+02_nh35000_orgfn1_inorg1_db%s_aemass.dat'%(output_dir,identify,db[0])]
 
-files = ['%s/20220801_%s_A0.001_db1_pwl1_vwl1_OH0.8_FN1000.0_HOM0_T1_RH1_aemass.dat'%(output_dir,identify)]
+files = ['%s/20220801_%s_A0.001_db1_pwl1_vwl1_OH0.8_FN100.0_HOM0_T1_RH1_aemass.dat'%(output_dir,identify)]
 
 for file in files:
   print('Running file:',file)
@@ -194,16 +198,18 @@ for file in files:
   plt.plot(x,xyle,color='cyan',label='m-Xylene')
   plt.plot(x,isop,color='green',label='Isoprene')
   plt.plot(x,terp,color='lime',label='Terpene')
-  plt.plot(x,nonvol,color='k',label='Non-Volatile')
+  #plt.plot(x,nonvol,color='k',label='Non-Volatile')
   
   plt.title('Aerosol Mass by SOM grid',fontsize=28)
   plt.xlabel('Date',fontsize=24)
   plt.ylabel('$ \mu g $ $ m^{-3} $',fontsize=24)
   ax.xaxis.set_major_formatter(mdates.DateFormatter('%m/%d'))
+  ax.xaxis.set_major_locator(mdates.DayLocator(interval = 1))
   plt.grid(True)
   plt.yscale('log')
   plt.legend()
   plt.ylim(0.0000001,2.0)
+  plt.xlim(xlow,xhigh)
   plt.show()
   
   # Save the figure

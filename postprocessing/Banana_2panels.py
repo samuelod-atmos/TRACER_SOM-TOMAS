@@ -46,7 +46,7 @@ save_png = False
 #identify = 'multi'
 #identify = 'noinj'
 #identify = 'wiMDL'
-identify = 'NPF_5'
+#identify = 'NPF_5'
 #identify = 'sclOH'
 #identify = 'GC_OH'
 #identify = 'sclfn'
@@ -59,7 +59,7 @@ identify = 'NPF_5'
 #identify = '10xkp'
 #identify = '300KT'
 #identify = 'kflat'
-#identify = 'multi'
+identify = 'multi'
 #identify = 'bigDp'
 #identify = 'frag4'
 #identify = 'frag4'
@@ -67,14 +67,14 @@ identify = 'NPF_5'
 #identify = 'debug'
 #==========================================================================================================
 
-#endtime = 144.0
-endtime = 23.0
+endtime = 144.0
+#endtime = 23.0
 
 #rname = '%s/20220808_vwl0_pwl1_hr1.00e+01_no_particle_flow_bg10_noconc.dat'%output_dir
 #rname = '%s/20220801_vwl0_pwl0_hr7.20e+01_Pfunc_bg10_noconc.dat'%output_dir
 #rname = '%s/20220801_%s_vwl1_pwl1_hr1.44e+02_bg10_noconc.dat'%(output_dir,identify)
 #rname = '%s/20220801_%s_vwl1_pwl1_hr%4.2e_nh35000_orgfn1_inorg1_db1e-14_noconc.dat'%(output_dir,identify,endtime)
-rname = '%s/20220806_%s_A0.001_db1_pwl1_vwl1_OH1.0_FN100.0_HOM0_T1_RH1_noconc.dat'%(output_dir,identify)
+rname = '%s/20220801_%s_A0.001_db1_pwl0_vwl0_OH0.8_FN100.0_HOM0_T1_RH1_noconc.dat'%(output_dir,identify)
 #rname = '%s/20220801_multi_vwl0_pwl0_nh35000.0_orgfn1_inorg1_db1e-15_ohscale1.0_noconc.dat'%output_dir
 #rname = '../outputs/20220801_multi_vwl1_pwl1_nh35000.0_orgfn1_inorg1_db1e-15_ohscale1.0_noconc.dat'
 
@@ -97,7 +97,7 @@ Time = np.array(Time)
 year = int(rname[11:15])
 month = int(rname[15:17])
 day = int(rname[17:19])
-startT = dt.datetime(year,month,day,1)
+startT = dt.datetime(year,month,day,11)
 print(startT)
 
 date = []
@@ -284,7 +284,7 @@ if nuc==True:
   smps_gr, model_gr, model_indx, smps_indx = [],[],[],[] 
 
 
-fig.set_size_inches(12,2)
+fig.set_size_inches(12,3)
 axes.grid(True)
 axes.set_title('Model') 
 axes.set_ylabel('Dp (nm)',fontsize=22)
@@ -324,15 +324,15 @@ axes.set_ylim(12,100)
 #time_low = dt.datetime(2022,8,6,5)
 #time_up = dt.datetime(2022,8,6,19)
 
-#time_low = dt.datetime(2022,8,4,7)
-#time_up = dt.datetime(2022,8,6,22)
+time_low = dt.datetime(2022,8,4,0)
+time_up = dt.datetime(2022,8,7,0)
 
-#axes.set_xlim(mdates.date2num(time_low),mdates.date2num(time_up))
-axes.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M'))
-axes.xaxis.set_major_locator(mdates.HourLocator(interval = 3))
+axes.set_xlim(mdates.date2num(time_low),mdates.date2num(time_up))
+#axes.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M'))
+#axes.xaxis.set_major_locator(mdates.HourLocator(interval = 3))
 
-#axes.xaxis.set_major_formatter(mdates.DateFormatter('%m/%d'))
-#axes.xaxis.set_major_locator(mdates.DayLocator(interval = 1))
+axes.xaxis.set_major_formatter(mdates.DateFormatter('%m/%d'))
+axes.xaxis.set_major_locator(mdates.DayLocator(interval = 1))
 
 #--------------------------------------------------------
 #box_time = dt.datetime(2022,8,6,21)

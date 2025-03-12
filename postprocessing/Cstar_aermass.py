@@ -41,7 +41,7 @@ db = 1
 pwl = 1
 vwl = 1
 OH = 0.8
-fn = 1000.0
+fn = 100.0
 HOM = 0
 T = 1
 RH = 1
@@ -358,12 +358,13 @@ axes.plot(x,aer_3_4,  color='gainsboro',linestyle='-',label='C*=%s-%s'%(str(l6),
 
 #axes.set_ylabel('Gas/Aerosol')
 axes.set_ylabel('Aerosol Mass [ug/m^3]')
-#axes.xaxis.set_major_formatter(mdates.DateFormatter('%m/%d'))
-axes.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M'))
-axes.xaxis.set_major_locator(mdates.HourLocator(interval = 3))
+axes.xaxis.set_major_formatter(mdates.DateFormatter('%m/%d'))
+axes.xaxis.set_major_locator(mdates.DayLocator(interval = 1))
+#axes.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M'))
+#axes.xaxis.set_major_locator(mdates.HourLocator(interval = 3))
 axes.set_yscale('log')
 axes.set_ylim(1e-8,)
-axes.set_xlim(mdates.date2num(dt.datetime(2022,8,4,7)),mdates.date2num(dt.datetime(2022,8,4,22)))
+axes.set_xlim(mdates.date2num(dt.datetime(2022,8,4,0)),mdates.date2num(dt.datetime(2022,8,7,0)))
 axes.legend(loc=2,fontsize=10)
 
 #ax2.set_ylabel('Gas/Aer. Ratio')

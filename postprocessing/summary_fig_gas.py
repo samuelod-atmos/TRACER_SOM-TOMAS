@@ -77,7 +77,8 @@ RH_switch = 1
 A = 1.0e-3
 #endtime = 144.0
 
-
+xlow = mdates.date2num(dt.datetime(2022,8,4,0))
+xhigh = mdates.date2num(dt.datetime(2022,8,7,0))
 
 
 #rname = '%s/%s%s%s_%s_vwl1_pwl1_hr%4.2e_nh35000_orgfn%s_inorg%s_db%s_noconc.dat'%(output_dir,str(startT.year),str(startT.month).zfill(2),str(startT.day).zfill(2),identify,endtime,orgnuc,inorgnuc,db[0])
@@ -245,6 +246,7 @@ plt.subplots_adjust(hspace=0.1)
 
 axes[0].locator_params(axis='x', nbins=6)
 axes[0].set_ylim(12,100)
+axes[0].set_xlim(xlow,xhigh)
 #axes[0].set_ylim(1.2,600)
 #cb1 = fig.colorbar(c1, format=mpl.ticker.FormatStrFormatter('$10^{%2.1f}$'),ax=axes,shrink=0.9,pad=0.061, label='$ dN/dlog_{10}(D_p) $')
 c1.set_clim(1,4.3)

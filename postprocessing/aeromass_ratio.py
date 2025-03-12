@@ -219,11 +219,20 @@ for dbk in db:
 plt.title('Total Mass',fontsize=20)
 plt.xlabel('Date',fontsize=24)
 plt.ylabel('$ \mu g $ $ m^{-3} $',fontsize=24)
+
+time_low = dt.datetime(2022,8,4,0)
+time_up = dt.datetime(2022,8,7,0)
+
+ax.set_xlim(mdates.date2num(time_low),mdates.date2num(time_up))
+#ax.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M'))
+#ax.xaxis.set_major_locator(mdates.HourLocator(interval = 3))
 ax.xaxis.set_major_formatter(mdates.DateFormatter('%m/%d'))
+ax.xaxis.set_major_locator(mdates.DayLocator(interval = 1))
+
 plt.grid(True)
 #plt.yscale('log')
 plt.legend()
-plt.ylim(0.0,1.5)
+plt.ylim(0.0,1.0)
 plt.show()
               
 # Save the figure
