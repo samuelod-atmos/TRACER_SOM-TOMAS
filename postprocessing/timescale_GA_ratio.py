@@ -1,0 +1,475 @@
+#=================================================================
+import numpy as np
+import matplotlib.pyplot as plt
+import datetime as dt
+import matplotlib.dates as mdates 
+import pandas as pd 
+import sys
+import matplotlib.patches as patches
+import matplotlib as mpl
+
+#=================================================================
+# Update default parameters
+mpl.rcParams.update({
+    "figure.figsize": (10, 6),
+    "axes.titlesize": 16,
+    "axes.labelsize": 14,
+    "xtick.labelsize": 12,
+    "ytick.labelsize": 12,
+    "legend.fontsize": 12,
+    "lines.linewidth": 2,
+    "grid.linestyle": "--",
+    "grid.linewidth": 0.7,
+    "axes.grid": False,
+    "font.family": "sans-serif",
+    "font.sans-serif": ["Arial", "Helvetica", "DejaVu Sans"],
+})
+
+#=================================================================
+output_dir = '../outputs'
+boxvol = 2000000.0
+srtSO4 = 0
+srtorg1 = 1
+iorg = 456
+icomp = iorg + 3
+srtorglast = srtorg1+iorg
+nbins = 40
+delt = 300.0
+
+#=================================================================
+#identify = 'styre'
+#identify = 'tmbxy'
+#identify = 'A2e-3'
+#identify = 'A7e-6'
+#identify = 'HiNOx'
+#identify = 'A7e-4'
+#identify = 'dbk_0'
+#identify = 'v2pwl'
+#identify = 'sm_OH'
+#identify = 'noHOM'
+#identify = 'x1000'
+#identify = 'frag3'
+identify = 'multi'
+
+#=================================================================
+orgnuc = 1
+inorgnuc = 1
+db = 1
+pwl = 1
+vwl = 1
+OH = 0.8
+fn = 1000.0
+HOM = 0
+T = 1
+RH = 1
+
+
+# C* bin bounds 
+#=================================================================
+l0,u0 = 0,3.2e-3
+l1,u1 = 3.2e-3,3.2e-2
+l2,u2 = 3.2e-2,3.2e-1
+l3,u3 = 3.2e-1,3.2e0
+l4,u4 = 3.2e0,3.2e1
+l5,u5 = 3.2e1,3.2e2
+l6,u6 = 3.2e2,3.2e3
+
+
+#=================================================================
+som_grids = ['BNZSOMG',
+           'TOLSOMG',
+           'XYLSOMG',
+           'ISPSOMG',
+           'TRPSOMG']
+
+mfrag = [0.8450,
+    0.2630,
+    0.0800,
+    0.0150,
+    0.2360]
+
+#=================================================================
+#gc_file = '%s/20220801_%s_vwl1_pwl1_hr1.44e+02_nh35000_orgfn%s_inorg%s_db%s_gc.dat'%(output_dir,identify,orgnuc,inorgnuc,db[0])
+gc_file = '%s/20220801_%s_A0.001_db%s_pwl%s_vwl%s_OH%s_FN%s_HOM%s_T%s_RH%s_gc.dat'%(output_dir,
+    identify,
+    str(db),
+    str(pwl),
+    str(vwl),
+    str(OH),
+    str(fn),
+    str(HOM),
+    str(T),
+    str(RH))
+
+#print(gc_file[11:-7])
+#sys.exit()
+#=================================================================
+df_somgc = pd.read_csv(gc_file,header=None,delim_whitespace=True)
+som_gas = np.array(df_somgc)
+
+sulf = som_gas[:,1]
+
+Time = []
+for i in range(len(df_somgc)):
+  sec = int(i*delt)
+  Time.append(sec)
+Time = np.array(Time)
+
+#print(len(som_gas[1]))
+#print(np.shape(som_gas))
+
+df_spec = pd.read_csv('%s_spec.dat'%(gc_file[:-7]), header=None, delim_whitespace=True)
+som_spname = np.array(df_spec.iloc[2,1:iorg+2])
+som_cstar = np.array(df_spec.iloc[7,1:iorg+2])
+
+cntr = 0
+pfrag = np.empty([len(som_grids),len(Time)])
+
+for som_grid in som_grids:
+
+  OC = []
+  gas_list = []
+  
+  for i in np.arange(1,len(som_gas[0])-3):
+    if som_spname[i][:7] == som_grid:
+      gas_list.append(i)
+      OC.append(int(som_spname[i+102][11:13])/int(som_spname[i+102][8:10]))
+  
+  OC = np.array(OC)
+  #sys.exit('you are bad at this')
+  
+  #OC_weighted = np.empty([len(Time)])
+  
+  for i in range(len(Time)):
+    #OC_weighted[i] = np.mean(OC*(10.0**saprc_gas[i,1:-2]/np.max(10.0**saprc_gas[i,1:-2])))
+    OC_weighted = np.mean(OC*(som_gas[i,gas_list]/np.max(som_gas[i,gas_list])))
+    #print('OC_weighted',OC_weighted)
+    pfrag[cntr,i] = OC_weighted**mfrag[cntr]
+  
+  cntr = cntr + 1
+
+pfrag_mean = np.mean(pfrag,axis=0)
+#print(np.nanmax(pfrag_mean))
+#sys.exit('you are bad at this')
+#=================================================================
+
+som_gas = som_gas[:,1:-1]
+som_spname = som_spname[1:]
+som_cstar = som_cstar[:-1]
+#print(som_spname)
+
+
+for i in range(len(som_cstar)):
+  som_cstar[i] = float(som_cstar[i])
+#print(som_cstar)
+#print(som_spname[np.where(som_cstar < l1)[0]])
+#sys.exit()
+
+#=================================================================
+
+year = int(gc_file[11:15])
+month = int(gc_file[15:17])
+day = int(gc_file[17:19])
+startT = dt.datetime(year,month,day,11)
+print(startT)
+
+date = []
+date.append(startT)
+
+temp_date = startT
+
+for i in range(len(Time)-1):
+  #print(Time[i+1])
+  temp_date = temp_date + dt.timedelta(seconds=delt)
+  date.append(temp_date)
+#print(len(date))
+date = np.array(date)
+
+#=================================================================
+
+switchfile = open('../inputs/TRACER_flow_switches/Interp_flows.txt')
+
+inst_flow = []
+for line in switchfile.readlines():
+  spl_line = line.split(',') 
+  dates = dt.datetime.strptime(spl_line[0],'%Y-%m-%d %H:%M:%S')
+  switch = float(spl_line[1]) #/1000.  #conversion to ppm is done in box.f 
+ 
+  if dates >= date[0] and dates <= date[-1]:
+    inst_flow.append(switch*133.0*60.0)
+
+inst_flow = np.array(inst_flow)
+inst_flow = inst_flow[::30]
+inst_flow = inst_flow[:-1]
+switchfile.close()
+
+#cs_fid = '%s/20220801_%s_vwl1_pwl1_hr1.44e+02_nh35000_orgfn1_inorg1_db%s_cs.dat'%(output_dir,identify,db[0])
+cs_fid = '%s/20220801_%s_A0.001_db%s_pwl%s_vwl%s_OH%s_FN%s_HOM%s_T%s_RH%s_cs.dat'%(output_dir,
+    identify,
+    str(db),
+    str(pwl),
+    str(vwl),
+    str(OH),
+    str(fn),
+    str(HOM),
+    str(T),
+    str(RH))
+
+cs_array = np.array(pd.read_csv(cs_fid,header=None,delim_whitespace=True))
+#print('initial shape of array:',np.shape(cs_array))
+cs_array = cs_array[:-1,1]
+
+print(np.shape(cs_array),np.shape(inst_flow))
+
+#kpwl = 60.0*2.53E-5
+kpwl = 1.27E-4
+#kpwl = 60.0*1.27E-6
+#kpwl = 1.97E-7
+
+
+oh_fid = open('../inputs/timeseries/%s%s%s_%s_OH'%(str(startT.year),str(startT.month).zfill(2),str(startT.day).zfill(2),identify),'r')
+
+OH_ts = []
+for line in oh_fid.readlines():
+ OH_ts.append(float(line))
+
+OH_ts = np.array(OH_ts)
+
+OH_ts = OH_ts[::30]
+OH_ts = OH_ts[:-1]
+
+#pfrag = 0.7
+koh = 8e-13
+
+
+G_A_frag = (1.0/cs_array*(1e9*koh*OH_ts*pfrag_mean[1:]))*(kpwl + 1./inst_flow)
+G_A = (1.0/cs_array)*(kpwl + 1./inst_flow)
+#G_A_frag = ((1.0/cs_array)*(kpwl + 1./inst_flow))/(cs_array + 4.8e-4 + koh*OH_ts*pfrag_mean[1:])
+
+
+#=================================================================
+#for i in range(len(som_cstar)):
+#  som_cstar[i] = float(som_cstar[i])
+
+#=================================================================
+cstar_n3_n2 = som_gas[:,np.where((som_cstar > l0) & (som_cstar < u0))[0]]
+cstar_n2_n1 = som_gas[:,np.where((som_cstar > l1) & (som_cstar < u1))[0]]
+cstar_n1_0 = som_gas[:,np.where((som_cstar > l2) & (som_cstar < u2))[0]]
+cstar_0_1 = som_gas[:,np.where((som_cstar > l3) & (som_cstar < u3))[0]]
+cstar_1_2 = som_gas[:,np.where((som_cstar > l4) & (som_cstar < u4))[0]]
+cstar_2_3 = som_gas[:,np.where((som_cstar > l5) & (som_cstar < u5))[0]]
+cstar_3_4 = som_gas[:,np.where((som_cstar > l6) & (som_cstar < u6))[0]]
+
+#=================================================================
+cstar_n3_n2 = np.sum(cstar_n3_n2,axis=1)/boxvol*1E6*1E9
+cstar_n2_n1 = np.sum(cstar_n2_n1,axis=1)/boxvol*1E6*1E9
+cstar_n1_0 = np.sum(cstar_n1_0,axis=1)/boxvol*1E6*1E9
+cstar_0_1 = np.sum(cstar_0_1,axis=1)/boxvol*1E6*1E9
+cstar_1_2 = np.sum(cstar_1_2,axis=1)/boxvol*1E6*1E9
+cstar_2_3 = np.sum(cstar_2_3,axis=1)/boxvol*1E6*1E9
+cstar_3_4 = np.sum(cstar_3_4,axis=1)/boxvol*1E6*1E9
+sulf = sulf/boxvol*1E6*1E9
+
+
+# Aerosol mass file name(s)
+#####################################################
+#amass_file = '%s/20220801_%s_vwl1_pwl1_hr1.44e+02_nh35000_orgfn1_inorg1_db%s_aemass.dat'%(output_dir,identify,db[0])
+amass_file = '%s/20220801_%s_A0.001_db%s_pwl%s_vwl%s_OH%s_FN%s_HOM%s_T%s_RH%s_aemass.dat'%(output_dir,
+    identify,
+    str(db),
+    str(pwl),
+    str(vwl),
+    str(OH),
+    str(fn),
+    str(HOM),
+    str(T),
+    str(RH))
+#
+#df_ae = np.array(pd.read_csv(amass_file,header=None, delim_whitespace=True))
+#Mk = df_ae[:,1:]
+#print(np.shape(df_ae),int(len(Mk)/(icomp)))
+#Mk = np.reshape(Mk, (int(len(Mk)/(icomp)), icomp,nbins))
+#print(np.shape(Mk))
+#Mk = np.sum(Mk,axis=-1)
+#print(np.shape(Mk))
+#Mk = Mk[:,1:-2]
+#print(np.shape(Mk),np.shape(som_spname),np.shape(som_cstar),np.shape(som_gas))
+#cstar_aer = Mk[:,np.where(som_cstar < l1)[0]]
+#
+#cstar_aer = np.sum(cstar_aer, axis=1)
+##sys.exit()
+
+#==================================================================================
+#file = '%s/20220801_%s_A0.001_db1_pwl0_vwl0_OH1.0_FN1000.0_HOM0_T1_RH1_aemass.dat'%(output_dir,identify)
+
+print('amass_file=',amass_file)
+df_somaer = np.array(pd.read_csv(amass_file,header=None,delim_whitespace=True))
+
+Mk = df_somaer[:,1:]
+Mk = np.reshape(Mk, (int(len(Mk)/(icomp)),icomp,nbins))
+Mk = np.sum(Mk,axis=-1)
+sulfate = Mk[:,0]
+
+Mk = Mk[:,1:-2]
+print('shape of Mk =',np.shape(Mk))
+
+som_aer = Mk #[:,1:]
+print('Shape of aer file:',np.shape(som_aer))
+
+#    # ----------------------------------------------------------------------------
+#print(file)
+#print('%s_spec.dat'%(file[:-7]))
+#print('len(som_cstar) =',len(som_cstar))
+
+#aer_n3_n2 = som_aer[low_indx:up_indx,np.where(som_cstar < l1)[0]]
+aer_n3_n2 = som_aer[:,np.where((som_cstar > l0) & (som_cstar < u0))[0]]
+aer_n2_n1 = som_aer[:,np.where((som_cstar > l1) & (som_cstar < u1))[0]]
+aer_n1_0 = som_aer[:,np.where((som_cstar > l2) & (som_cstar < u2))[0]]
+aer_0_1 = som_aer[:,np.where((som_cstar > l3) & (som_cstar < u3))[0]]
+aer_1_2 = som_aer[:,np.where((som_cstar > l4) & (som_cstar < u4))[0]]
+aer_2_3 = som_aer[:,np.where((som_cstar > l5) & (som_cstar < u5))[0]]
+aer_3_4 = som_aer[:,np.where((som_cstar > l6) & (som_cstar < u6))[0]]
+
+
+aer_n3_n2 = np.sum(aer_n3_n2,axis=1)#/boxvol*1E6*1E9
+aer_n2_n1 = np.sum(aer_n2_n1,axis=1)#/boxvol*1E6*1E9
+aer_n1_0 = np.sum(aer_n1_0,axis=1)#/boxvol*1E6*1E9
+aer_0_1 = np.sum(aer_0_1,axis=1)#/boxvol*1E6*1E9
+aer_1_2 = np.sum(aer_1_2,axis=1)#/boxvol*1E6*1E9
+aer_2_3 = np.sum(aer_2_3,axis=1)#/boxvol*1E6*1E9
+aer_3_4 = np.sum(aer_3_4,axis=1)#/boxvol*1E6*1E9
+
+#=================================================================
+
+#switchfile = open('../inputs/TRACER_flow_switches/Interp_flows.txt')
+#
+#inst_flow = []
+#for line in switchfile.readlines():
+#  spl_line = line.split(',') 
+#  dates = dt.datetime.strptime(spl_line[0],'%Y-%m-%d %H:%M:%S')
+#  switch = float(spl_line[1]) #/1000.  #conversion to ppm is done in box.f 
+# 
+#  if dates >= date[0] and dates <= date[-1]:
+#    inst_flow.append(switch*133.0*60.0)
+#
+#inst_flow = np.array(inst_flow)
+##inst_flow = inst_flow[:-1]
+#switchfile.close()
+
+#cs_fid = '%s/20220801_%s_A0.001_db%s_pwl%s_vwl%s_OH%s_FN%s_HOM%s_T%s_RH%s_cs.dat'%(output_dir,
+#    identify,
+#    str(db),
+#    str(pwl),
+#    str(vwl),
+#    str(OH),
+#    str(fn),
+#    str(HOM),
+#    str(T),
+#    str(RH))
+#
+#cs_array = np.array(pd.read_csv(cs_fid,header=None,delim_whitespace=True))
+#cs_array = cs_array[:,1]
+#
+#print(np.shape(cs_array),np.shape(inst_flow))
+#
+t_pwl = np.empty([len(date)])
+t_pwl.fill(kpwl)
+#
+##G_A = (1./cs_array)*(kpwl + 1./inst_flow)
+
+#=================================================================
+fig, axes = plt.subplots(nrows=2, ncols=1,sharex=True)
+fig.set_size_inches(10,6)
+#ax2 = axes.twinx()
+
+x = mdates.date2num(date)
+
+#--------------------------------------------------------
+#--------------------------------------------------------
+box_time = dt.datetime(2022,8,3,22,51) - dt.timedelta(hours=1)
+rect = patches.Rectangle((mdates.date2num(box_time), 0.001), 1/3, 1e9, linewidth=2, color='goldenrod',alpha=0.3)# edgecolor='green', facecolor='none')
+axes[0].add_patch(rect)
+
+box_time = dt.datetime(2022,8,4,22,54) - dt.timedelta(hours=1)
+rect = patches.Rectangle((mdates.date2num(box_time), 0.001), 1/3, 1e9, linewidth=2, color='goldenrod',alpha=0.3)#edgecolor='green', facecolor='none')
+axes[0].add_patch(rect)
+
+box_time = dt.datetime(2022,8,5,17,40) - dt.timedelta(hours=1)
+rect = patches.Rectangle((mdates.date2num(box_time), 0.001), 1/3, 1e9, linewidth=2, color='goldenrod',alpha=0.3)#edgecolor='green', facecolor='none')
+axes[0].add_patch(rect)
+
+box_time = dt.datetime(2022,8,6,22,14) - dt.timedelta(hours=1)
+rect = patches.Rectangle((mdates.date2num(box_time), 0.001), 1/3, 1e9, linewidth=2, color='goldenrod',alpha=0.3)#edgecolor='green', facecolor='none')
+axes[0].add_patch(rect)
+
+box_time = dt.datetime(2022,8,7,21,46) - dt.timedelta(hours=1)
+rect = patches.Rectangle((mdates.date2num(box_time), 0.001), 1/3, 1e9, linewidth=2, color='goldenrod',alpha=0.3, label='Injections')#edgecolor='green', facecolor='none')
+axes[0].add_patch(rect)
+#--------------------------------------------------------
+#--------------------------------------------------------
+
+#--------------------------------------------------------
+box_time = dt.datetime(2022,8,3,20,18)
+rect = patches.Rectangle((mdates.date2num(box_time), 150.0), (1/24)*10.33, 4e6, linewidth=2, linestyle='--', color='gray', alpha=0.3)
+axes[1].add_patch(rect)
+
+box_time = dt.datetime(2022,8,4,20,18)
+rect = patches.Rectangle((mdates.date2num(box_time), 150.0), (1/24)*10.33, 4e6, linewidth=2, linestyle='--', color='gray', alpha=0.3)
+axes[1].add_patch(rect)
+
+box_time = dt.datetime(2022,8,5,20,18)
+rect = patches.Rectangle((mdates.date2num(box_time), 150.0), (1/24)*10.33, 4e6, linewidth=2, linestyle='--', color='gray', alpha=0.3)
+axes[1].add_patch(rect)
+
+box_time = dt.datetime(2022,8,6,20,18)
+rect = patches.Rectangle((mdates.date2num(box_time), 150.0), (1/24)*10.33, 4e6, linewidth=2, linestyle='--', color='gray', alpha=0.3, label='Nighttime')
+axes[1].add_patch(rect)
+
+#--------------------------------------------------------
+
+
+axes[0].plot(x[:-1],G_A, color='green',linestyle='-',label='Ratio (simple theory)')
+
+axes[0].plot(x,cstar_n3_n2/aer_n3_n2,  color='k',  linestyle='--', alpha=1.0, label='C* $\leq$ $ 10^{-3} $ [$\mu$$g$ $m^{-3}$]')
+#axes.plot(x,cstar_n2_n1/aer_n2_n1,  color='k',  linestyle='-', alpha=0.7 , label='C*= $ 10^{-2} $')
+#axes.plot(x,cstar_n1_0/aer_n1_0,   color='k',  linestyle='--', alpha=0.6, label='C*= $ 10^{-1} $')
+#axes.plot(x,cstar_0_1/aer_0_1,    color='k',  linestyle='-', alpha=0.4, label='C*= $ 10^{0} $')
+#axes.plot(x,cstar_1_2/aer_1_2,    color='k',  linestyle='--', alpha=0.3, label='C*= $ 10^{1} $')
+#axes.plot(x,cstar_2_3/aer_2_3,    color='k',  linestyle='-', alpha=0.2, label='C*= $ 10^{2} $')
+#axes.plot(x,cstar_3_4/aer_3_4,    color='k',  linestyle='--', alpha=0.1, label='C*= $ 10^{3} $')
+axes[0].plot(x,sulf/sulfate,  color='r',linestyle='-',label='H2SO4/Sulfate')
+
+#=================================================================
+
+axes[0].set_title('Gas/Aerosol')
+axes[0].set_ylabel('Gas/Aerosol',fontsize=16)
+axes[1].set_ylabel('Timescale [s]',fontsize=16)
+
+axes[1].xaxis.set_major_formatter(mdates.DateFormatter('%m/%d'))
+axes[1].xaxis.set_major_locator(mdates.DayLocator(interval = 1))
+axes[1].xaxis.set_minor_formatter(mdates.DateFormatter('%H:%M'))
+axes[1].xaxis.set_minor_locator(mdates.HourLocator(interval = 12))
+
+axes[0].set_yscale('log')
+axes[0].set_ylim(0.007,7000.0)
+axes[0].set_xlim(mdates.date2num(dt.datetime(2022,8,4,0)),mdates.date2num(dt.datetime(2022,8,7,0)))
+#axes[0].legend(prop={'size': 10},bbox_to_anchor=(0.82, 0., 0.5, 1.0),loc=1)
+axes[0].legend(loc=2,prop={'size': 10})
+#axes[0].grid(True)
+
+axes[1].set_yscale('log')
+axes[1].set_ylim(150.0,4e6)
+axes[1].set_xlim(mdates.date2num(dt.datetime(2022,8,4,0)),mdates.date2num(dt.datetime(2022,8,7,0)))
+#axes[1].grid(True)
+
+axes[1].plot(x[:-1], 1./cs_array, label='Condensation Sink')
+axes[1].plot(x[:-1], inst_flow + 1/4.82e-4, label='Instruments + Vapor Wall Losses')
+axes[1].plot(x, 1./t_pwl, label='Particle Wall Losses')
+#axes[1].legend(prop={'size': 10},bbox_to_anchor=(0.5, 0., 0.5, 1.0),loc=1)
+axes[1].legend(loc=2,prop={'size': 10})
+axes[1].set_xlabel('Date',fontsize=16)
+
+plt.show()
+
+#fig.savefig('%s_gas-aer.png'%gc_file[11:-7],bbox_inches='tight')
+
