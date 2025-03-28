@@ -20,7 +20,7 @@ import pandas as pd
 boxvol = 2000000.0
 srtSO4 = 0
 srtorg1 = 1
-iorg = 477
+iorg = 456
 icomp = iorg + 3
 srtorglast = srtorg1+iorg
 nbins = 40
@@ -50,14 +50,14 @@ endtime = 144.0
 
 # Particle phase diffusivity
 #####################################################
-db = [1,0]
-VWL  =  [1,0] # [0 or 1] the switch for On/Off vapor wall loss
-PWL  =  [1,0] # [0 or 1] the switch for On/Off particle wall loss 
-OH_multi = [0.1, 1.0, 10.0]            # multiplier for OH concentration
-HOM_switch = [1,0]
-T_switch = [1,0]
-RH_switch = [1,0]
-fn_multi = [1.0, 10.0, 100.0]
+db = [1,2,3,4]
+VWL  =  [1] # [0 or 1] the switch for On/Off vapor wall loss
+PWL  =  [1] # [0 or 1] the switch for On/Off particle wall loss 
+OH_multi = [0.8]            # multiplier for OH concentration
+HOM_switch = [0]
+T_switch = [1]
+RH_switch = [1]
+fn_multi = [100.0]
 
 # Aerosol mass file name(s)
 #####################################################
@@ -80,7 +80,7 @@ for dbk in db:
               for RH in RH_switch:
 
                 #rname = '%s/20220801_%s_vwl%1i_pwl%1i_nh3%s_orgfn%s_inorg%s_db%s_ohscale%s_aemass.dat'%(output_dir,identify,vwl,pwl,NH3,org_nuc,inorg_nuc,dbk,OH_scale)
-                rname = '%s/20220801_%s_db%s_pwl%1i_vwl%1i_OH%s_FN%s_HOM%li_T%li_RH%li'%(output_dir,identify,dbk,pwl,vwl,OH_scale,fn_scale,HOMs,Temp,RH)
+                rname = '%s/20220801_%s_A0.001_db%s_pwl%1i_vwl%1i_OH%s_FN%s_HOM%li_T%li_RH%li'%(output_dir,identify,dbk,pwl,vwl,OH_scale,fn_scale,HOMs,Temp,RH)
                 
                 year = 2022
                 month = 8
@@ -105,11 +105,11 @@ for dbk in db:
                 ############################################################ 
                 #spname_file = '../outputs/20220801_styre_vwl1_pwl1_hr1.44e+02_nh35000_orgfn1_inorg1_db1e-15_spec.dat'
                 #df_spec = pd.read_csv(spname_file, header=None, delim_whitespace=True)
-                df_spec = pd.read_csv('%s_spec.dat'%(rname[:-11]), header=None, delim_whitespace=True)
+                df_spec = pd.read_csv('%s_spec.dat'%(rname), header=None, delim_whitespace=True)
                 saprc_spname = np.array(df_spec.iloc[2,:])
                 #sys.exit('You suck')
                 
-                df_ae = np.array(pd.read_csv(rname,header=None, delim_whitespace=True))
+                df_ae = np.array(pd.read_csv(rname+'_aemass.dat',header=None, delim_whitespace=True))
                 Mk = df_ae[:,1:]
                 Mk = np.reshape(Mk, (int(len(Mk)/(icomp)), icomp,nbins))
                 Mk = np.sum(Mk,axis=-1)
@@ -201,7 +201,7 @@ for dbk in db:
                 #plt.plot(x/360,organic,label='Organics')
                 #plt.plot(x/360,NH4,label='NH4')
                 #plt.plot(x,H2O,label='Water')
-                plt.plot(x,total,label='Total')
+                plt.plot(x,total,label='dbk =%s'%str(dbk))
   #              plt.plot(x,so4,color='r',label='Sulfate')
   #              plt.plot(x,benz,color='y',label='Benzene')
   #              plt.plot(x,tolu,color='b',label='Toluene')
@@ -216,8 +216,8 @@ plt.ylabel('$ \mu g $ $ m^{-3} $',fontsize=24)
 ax.xaxis.set_major_formatter(mdates.DateFormatter('%m/%d'))
 plt.grid(True)
 plt.yscale('log')
-#plt.legend()
-plt.ylim(0.000001,10.0)
+plt.legend()
+plt.ylim(0.0001,1.0)
 plt.show()
               
 # Save the figure

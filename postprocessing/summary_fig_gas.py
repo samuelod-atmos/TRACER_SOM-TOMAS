@@ -6,13 +6,12 @@ import matplotlib as mpl
 import datetime as dt
 import matplotlib.dates as mdates 
 import pandas as pd 
-#from BG_sizedist import SD_smps
 from matplotlib.gridspec import GridSpec
 from functions import h,closest
 from scipy.optimize import curve_fit
 import sys
 from scipy import signal
-#import pygsheets as pyg
+from plot_cage import get_smps
 
 #===========================================================================================================
 def smoothdist(dist):
@@ -24,8 +23,8 @@ def smoothdist(dist):
 #===========================================================================================================
 
 output_dir = '../outputs'
-save_png = False 
-#save_png = True
+#save_png = False 
+save_png = True
 
 boxvol = 2000000.0
 srtSO4 = 0
@@ -119,13 +118,32 @@ date = np.array(date)
 
 #sys.exit()
 
-   #=============================================================================
+plt.rcParams.update({'font.size': 11})
 
-#SMPS_sheetname = 'HiScaleSMPSb_SGP_20160424_R0'
-#low_bin, up_bin, upperbin,lowerbin = 0, 85, 10, 0
-#low_bin, up_bin, upperbin,lowerbin = 0, 85, 10, 4
-#model_counter,smps_counter = 8,100 
-#nuc = True
+fig, axes = plt.subplots(nrows=6, ncols=1,sharex=True)
+fig.set_size_inches(8,7)
+
+cntr = 0
+
+#=============================================================================
+# Get the smps data
+#=============================================================================
+smps_date, smps_bins, smps_SD = get_smps()
+
+smps_x = mdates.date2num(smps_date)
+
+c = axes[cntr].pcolormesh(smps_x,smps_bins*1000., np.log10(np.transpose(smps_SD)), cmap='rainbow')
+
+axes[cntr].grid(True)
+#axes[cntr].set_xlim(low,up)
+axes[cntr].set_ylim(12,100)
+#axes[cntr].set_title("CAGE",fontsize=11)
+axes[cntr].set_ylabel("Dp [nm]",fontsize=11, color='k')
+axes[cntr].set_yscale('log')
+c.set_clim(1,4.3)
+
+
+#=============================================================================
 
 ####################################################################
 
@@ -219,40 +237,41 @@ Bins = Bins*100
 n=3;m=3
 Y = (number_conc[:,:])/BinsE[:]
 
-plt.rcParams.update({'font.size': 11})
-
-fig, axes = plt.subplots(nrows=5, ncols=1,sharex=True)
-fig.set_size_inches(15,8)
-
+cntr = 1
 #x = mdates.date2num(date-dt.timedelta(hours=6))
 x = mdates.date2num(date)
-print('len(x) =',len(x))
-c1 = axes[0].pcolormesh(x,Bins[:],np.log10(np.transpose(Y)),cmap='rainbow')
+c1 = axes[cntr].pcolormesh(x,Bins[:],np.log10(np.transpose(Y)),cmap='rainbow')
 
-axes[0].grid(True)
-axes[0].set_title('Model') 
-axes[0].set_ylabel('Dp (nm)')
+axes[cntr].grid(True)
+#axes[cntr].set_title('Model') 
+axes[cntr].set_ylabel('Dp (nm)')
 #axes[0].set_xlabel('Date',fontsize=22)
 
 if len(x) < 300:
-  axes[0].xaxis.set_major_formatter(mdates.DateFormatter('%H:%M'))
-  axes[0].xaxis.set_major_locator(mdates.HourLocator(interval = 3))
+  axes[cntr].xaxis.set_major_formatter(mdates.DateFormatter('%H:%M'))
+  axes[cntr].xaxis.set_major_locator(mdates.HourLocator(interval = 3))
 else:
-  axes[0].xaxis.set_major_formatter(mdates.DateFormatter('%m/%d'))
+  axes[cntr].xaxis.set_major_formatter(mdates.DateFormatter('%m/%d'))
+  axes[cntr].xaxis.set_major_locator(mdates.DayLocator(interval = 1))
+  axes[cntr].xaxis.set_minor_formatter(mdates.DateFormatter('%H:%M'))
+  axes[cntr].xaxis.set_minor_locator(mdates.HourLocator(interval = 12))
+  axes[cntr].tick_params(axis='x', which='major', labelsize=16)
+  axes[cntr].tick_params(axis='x', which='minor', labelsize=10)
 
-axes[0].set_yscale('log')
+
+axes[cntr].set_yscale('log')
 #axes.locator_params(axis='x',nbins=3)
 plt.subplots_adjust(hspace=0.1)
 
-axes[0].locator_params(axis='x', nbins=6)
-axes[0].set_ylim(12,100)
-axes[0].set_xlim(xlow,xhigh)
+axes[cntr].locator_params(axis='x', nbins=6)
+axes[cntr].set_ylim(12,100)
+axes[cntr].set_xlim(xlow,xhigh)
 #axes[0].set_ylim(1.2,600)
 #cb1 = fig.colorbar(c1, format=mpl.ticker.FormatStrFormatter('$10^{%2.1f}$'),ax=axes,shrink=0.9,pad=0.061, label='$ dN/dlog_{10}(D_p) $')
 c1.set_clim(1,4.3)
 
-
-ax2 = axes[0].twinx()
+'''
+ax2 = axes[cntr].twinx()
 
 #cs_file = '%s/20220801_%s_vwl1_pwl1_hr1.44e+02_nh35000_orgfn%s_inorg%s_db%s_cs.dat'%(output_dir,identify,orgnuc,inorgnuc,db[0])
 #cs_file = '%s/%s%s%s_%s_vwl1_pwl1_hr%4.2e_nh35000_orgfn%s_inorg%s_db%s_cs.dat'%(output_dir,str(startT.year),str(startT.month).zfill(2),str(startT.day).zfill(2),identify,endtime,orgnuc,inorgnuc,db[0])
@@ -268,7 +287,7 @@ ax2.plot(x[:len(cs_array)],cs_array,color='k')
 ax2.set_yscale('log')
 ax2.set_ylabel('CS [$s^{-1}$]')
 ax2.set_ylim(0.00001,0.01)
-
+'''
 #=============================================================================================
 
 #spname_file = '%s/20220801_%s_vwl1_pwl1_hr1.44e+02_nh35000_orgfn%s_inorg%s_db%s_spec.dat'%(output_dir,identify,orgnuc,inorgnuc,db[0])
@@ -316,24 +335,28 @@ svoc    = saprc_gas[:,svocindx]*1000
 styr    = saprc_gas[:,styrindx]*1000
 print('benz shape =',np.shape(benz),np.shape(isop))
 
-axes[4].plot(x,benz,color='y',label='Benzene')
-axes[4].plot(x,isop,color='g',label='Isoprene')
-axes[4].plot(x,tolu,color='brown',label='Toluene')
-axes[4].plot(x,terp,color='m',label='Terpenes')
-axes[4].plot(x,trimeth,color='c',label='Trimethylbenzene')
-axes[4].plot(x,xylene,color='lime',label='M-Xylene')
-axes[4].plot(x,styr,color='blue',label='Styrene')
-axes[3].plot(x,so2,color='orange',linestyle='--',label='SO2')
-axes[3].set_ylabel('[ppbv]',color='orange')
-axes[3].legend(loc=4,prop={'size': 6})
-axes[3].set_ylim(0,)
+cntr = 5
 
-axes[4].set_ylabel('[ppbv]')
-axes[4].legend(loc=2,prop={'size': 5})
-axes[4].set_ylim(0,)
+axes[cntr].plot(x,benz,color='y',label='Benzene')
+axes[cntr].plot(x,isop,color='g',label='Isoprene')
+axes[cntr].plot(x,tolu,color='brown',label='Toluene')
+axes[cntr].plot(x,terp,color='m',label='Terpenes')
+axes[cntr].plot(x,trimeth,color='c',label='Trimethylbenzene')
+axes[cntr].plot(x,xylene,color='lime',label='M-Xylene')
+axes[cntr].plot(x,styr,color='blue',label='Styrene')
+
+axes[cntr].set_ylabel('[ppbv]')
+axes[cntr].legend(loc='upper center',prop={'size': 8},ncol=4)
+axes[cntr].set_ylim(0,)
 #=============================================================================================
 
-ax2 = axes[3].twinx()
+cntr = 4
+axes[cntr].plot(x,so2,color='orange',linestyle='--',label='SO2')
+axes[cntr].set_ylabel('$SO_2$ [ppbv]',color='orange')
+#axes[cntr].legend(loc=1,prop={'size': 8},bbox_to_anchor=(0.1,0.0,0.9,0.81))
+axes[cntr].set_ylim(0,)
+
+ax2 = axes[cntr].twinx()
 
 #gc_file = '%s/20220801_%s_vwl1_pwl1_hr1.44e+02_nh35000_orgfn%s_inorg%s_db%s_gc.dat'%(output_dir,identify,orgnuc,inorgnuc,db[0])
 #gc_file = '%s/%s%s%s_%s_vwl1_pwl1_hr%4.2e_nh35000_orgfn%s_inorg%s_db%s_gc.dat'%(output_dir,str(startT.year),str(startT.month).zfill(2),str(startT.day).zfill(2),identify,endtime,orgnuc,inorgnuc,db[0])
@@ -360,13 +383,13 @@ sulf = sulf/boxvol*1000.0/98.0*6.022e23
 ax2.plot(x,sulf,color='r',linestyle='--',label='H2SO4')
 ax2.set_yscale('log')
 ax2.set_ylim(10**6,10**8)
-ax2.set_ylabel('H2SO4 \n [molec/cm^3]',color='r')
-ax2.legend(loc=1,prop={'size':6})
+ax2.set_ylabel('$H_2SO_4$ \n [$molec$ $cm^{-3}$]',color='r')
+#ax2.legend(loc=1,prop={'size':8})
 ax2.grid(True)
 
 #=============================================================================================
-
-ax2 = axes[1].twinx()
+cntr = 2
+ax2 = axes[cntr].twinx()
 
 #oh_fid = open('../inputs/timeseries/20220801_%s_OH'%identify,'r')
 oh_fid = open('../inputs/timeseries/%s%s%s_%s_OH'%(str(startT.year),str(startT.month).zfill(2),str(startT.day).zfill(2),identify),'r')
@@ -391,11 +414,11 @@ OH = OH[::30]
 
 #x = np.linspace(0,len(OH),len(OH))/360.
 print('len(x)',len(x),'len(OH',len(OH))
-axes[1].plot(x,OH[:len(x)],color='purple')
+axes[cntr].plot(x,OH[:len(x)],color='purple')
 #axes[2].set_xlabel('Time [hours]')
-axes[1].set_ylabel('OH \n[molec/cm^3]',color='purple')
+axes[cntr].set_ylabel('OH \n [$molec$ $cm^{-3}$]',color='purple')
 #axes[2].set_title('OH') 
-axes[1].set_yscale('log')
+axes[cntr].set_yscale('log')
 
 #o3_fid = open('../inputs/timeseries/20220801_%s_o3'%identify,'r')
 o3_fid = open('../inputs/timeseries/%s%s%s_%s_o3'%(str(startT.year),str(startT.month).zfill(2),str(startT.day).zfill(2),identify),'r')
@@ -426,8 +449,8 @@ ax2.set_ylim(0,)
 #axes[2].set_title('') 
 
 #=============================================================================================
-
-ax2 = axes[2].twinx()
+cntr = 3
+ax2 = axes[cntr].twinx()
 
 #rh_fid = open('../inputs/timeseries/20220801_%s_RH'%identify,'r')
 rh_fid = open('../inputs/timeseries/%s%s%s_%s_RH'%(str(startT.year),str(startT.month).zfill(2),str(startT.day).zfill(2),identify),'r')
@@ -443,9 +466,9 @@ RH = RH[::30]
 #plt.ticklabel_format(axis='y',style='sci')
 
 #x = np.linspace(0,len(RH),len(RH))/360.
-axes[2].plot(x,RH[:len(x)]*100.,color='green')
-axes[2].set_xlabel('Date')
-axes[2].set_ylabel('RH [%]',color='green')
+axes[cntr].plot(x,RH[:len(x)]*100.,color='green')
+axes[cntr].set_xlabel('Date')
+axes[cntr].set_ylabel('RH [%]',color='green')
 #axes[2].set_ylim(0,2)
 
 #T_fid = open('../inputs/timeseries/20220801_%s_Temp'%identify,'r')
@@ -467,6 +490,7 @@ Temp = Temp[::30]
 ax2.plot(x,Temp[:len(x)],color='blue')
 #ax2.set_xlabel('Time [hours]')
 ax2.set_ylabel('T [K]',color='blue')
+
 
 #=============================================================================================
 '''
@@ -637,4 +661,4 @@ axes[6].legend(loc='best',fontsize=5)
 
 plt.show()
 if save_png==True:
-  fig.savefig('%s_gas_summary_fig.png'%rname[len(output_dir)+1:-11],bbox_inches='tight')
+  fig.savefig('%s_gas_summary_fig.png'%rname[len(output_dir)+1:-11],bbox_inches='tight',dpi=800)

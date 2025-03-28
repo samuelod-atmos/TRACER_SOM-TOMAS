@@ -8,6 +8,7 @@ import matplotlib.dates as mdates
 import pandas as pd 
 from matplotlib import rcParams
 rcParams.update({'figure.autolayout': True})
+plt.rcParams.update({'font.size': 14})
 
 #==================================================================================
 #==================================================================================
@@ -23,7 +24,7 @@ boxvol  = 2000000.0
 nbins = 40
 
 #===========================================================================================================
-identify = 'multi'
+identify = 'frag3'
 db = 1
 pwl = 1
 vwl = 1
@@ -40,23 +41,31 @@ A = 1.0e-3
 #file = '%s/20220801_%s_A%s_db%i_pwl%i_vwl%i_OH%s_FN%s_HOM%i_T%i_RH1_gc.dat'%(output_dir,identify)
 file = '%s/20220801_%s_A%s_db%i_pwl%i_vwl%i_OH%s_FN%s_HOM%i_T%i_RH%i_gc.dat'%(output_dir,identify,A,db,pwl,vwl,OH_scale,FN_scale,HOM,T_switch,RH_switch)
 
-save_png = False
+save_png = True
 delt = 300.0
+
+
+#time_low = dt.datetime(2022,8,6,7)
+#time_up = dt.datetime(2022,8,6,10)
+
+#time_low = dt.datetime(2022,8,6,13)
+#time_up = dt.datetime(2022,8,6,16)
 
 time_low = dt.datetime(2022,8,6,19)
 time_up = dt.datetime(2022,8,6,22)
+
 
 #time_low = dt.datetime(2022,8,1,11)
 #time_up = dt.datetime(2022,8,1,16)
 #==================================================================================
 # C* bin bounds 
-l0,u0 = 0,5e-3
-l1,u1 = 5e-3,5e-2
-l2,u2 = 5e-2,5e-1
-l3,u3 = 5e-1,5e0
-l4,u4 = 5e0,5e1
-l5,u5 = 5e1,5e2
-l6,u6 = 5e2,5e3
+l0,u0 = 0,3.2e-3
+l1,u1 = 3.2e-3,3.2e-2
+l2,u2 = 3.2e-2,3.2e-1
+l3,u3 = 3.2e-1,3.2e0
+l4,u4 = 3.2e0,3.2e1
+l5,u5 = 3.2e1,3.2e2
+l6,u6 = 3.2e2,3.2e3
 #==================================================================================
 
 year = 2022
@@ -202,6 +211,7 @@ Cstar = np.array([1e-3,1e-2,1e-1,1e0,1e1,1e2,1e3])
 # ----------------------------------------------------------------------------
 
 
+
 df = pd.DataFrame()
 
 df['Particle Phase'] = Caer
@@ -213,16 +223,30 @@ df['C* Bin'] = pd.to_numeric(df['C* Bin'])
 
 # df.plot.bar(x='Cstar', y='Caer', rot=0)
 # df.plot.bar(x='Cstar', y='Ci', rot=0)
-ax = df.plot.bar('C* Bin',['Particle Phase','Gas Phase'],stacked=True,color=['green','white'],edgecolor='black')
+#ax = df.plot.bar('C* Bin',['Particle Phase','Gas Phase'],stacked=True,color=['green','white'],edgecolor='black')
+ax = df.plot.bar('C* Bin',stacked=True,color=['green','white'],edgecolor='black',legend=False)
+
+#ax.legend(fontsize=16)
+
+fig = ax.get_figure()
+fig.set_size_inches(4,5)
+
+#ax.set_title(time_low.strftime('%x') + ', ' + time_low.strftime('%H') + ':00-' + time_up.strftime('%H') + ':00')
+ax.set_title(time_low.strftime('%H') + ':00-' + time_up.strftime('%H') + ':00')
 # ax = df.plot.bar(Cstar,[Caer,Ci-Caer],stacked=True,color=['green','white'],edgecolor='black')
 ax.set_yscale('log')
-ax.set_ylim(0.000001,10.0)
-ax.set_ylabel('$\mu g$ $m^{-3}$')
+ax.set_ylim(0.0000000001,0.001)
+#ax.set_ylim(0.000001,10.0)
+
+#ax.set_ylim(0.0,1.5)
+ax.set_ylabel('$\mu g$ $m^{-3}$',fontsize=16)
+ax.set_xlabel('C* [$\mu g$ $m^{-3}$]',fontsize=16)
+
 
 plt.show()
 
-fig = ax.get_figure()
 
 if save_png == True:
-  fig.savefig('%s_hour%s_VBS.png'%(file[len(output_dir)+1:-11],str(time_low.hour).zfill(2)),bbox_inches='tight')
+  #fig.savefig('%s%s%s%s_hour%s_VBS.png'%(str(time_low.year).zfill(4),str(time_low.month).zfill(2),str(time_low.day).zfill(2),file[len(output_dir)+9:-11],str(time_low.hour).zfill(2)),bbox_inches='tight')
+  fig.savefig('%s%s%s%s_hour%s_Log10VBS.png'%(str(time_low.year).zfill(4),str(time_low.month).zfill(2),str(time_low.day).zfill(2),file[len(output_dir)+9:-11],str(time_low.hour).zfill(2)),bbox_inches='tight')
 

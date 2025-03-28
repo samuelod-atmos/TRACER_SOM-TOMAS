@@ -5,8 +5,24 @@ import datetime as dt
 import matplotlib.dates as mdates 
 import pandas as pd 
 import sys
+import matplotlib.patches as patches
+import matplotlib as mpl
 #=================================================================
-
+# Update default parameters
+mpl.rcParams.update({
+    "figure.figsize": (10, 6),
+    "axes.titlesize": 16,
+    "axes.labelsize": 14,
+    "xtick.labelsize": 12,
+    "ytick.labelsize": 12,
+    "legend.fontsize": 12,
+    "lines.linewidth": 2,
+    "grid.linestyle": "--",
+    "grid.linewidth": 0.7,
+    "axes.grid": False,
+    "font.family": "sans-serif",
+    "font.sans-serif": ["Arial", "Helvetica", "DejaVu Sans"],
+})
 
 #=================================================================
 output_dir = '../outputs'
@@ -49,14 +65,13 @@ RH = 1
 
 # C* bin bounds 
 #=================================================================
-l0,u0 = 0,5e-3
-l1,u1 = 5e-3,5e-2
-l2,u2 = 5e-2,5e-1
-l3,u3 = 5e-1,5e0
-l4,u4 = 5e0,5e1
-l5,u5 = 5e1,5e2
-l6,u6 = 5e2,5e3
-
+l0,u0 = 0,3.2e-3
+l1,u1 = 3.2e-3,3.2e-2
+l2,u2 = 3.2e-2,3.2e-1
+l3,u3 = 3.2e-1,3.2e0
+l4,u4 = 3.2e0,3.2e1
+l5,u5 = 3.2e1,3.2e2
+l6,u6 = 3.2e2,3.2e3
 
 #=================================================================
 som_grids = ['BNZSOMG',
@@ -343,13 +358,53 @@ x = mdates.date2num(date)
 #axes.plot(x,cstar_3_4/aer_3_4,  color='gainsboro',linestyle='-',label='C*=%s-%s'%(str(l6),str(u6)))
 
 
-axes.plot(x,aer_n2_n1,  color='black',linestyle='-',label='C*=%s - %s'%(str(l1),str(u1)))
-axes.plot(x,aer_n1_0,  color='dimgray',linestyle='-',label='C*=%s - %s'%(str(l2),str(u2)))
-axes.plot(x,aer_0_1,  color='gray',linestyle='-',label='C*=%s - %s'%(str(l3),str(u3)))
-axes.plot(x,aer_1_2,  color='darkgray',linestyle='-',label='C*=%s-%s'%(str(l4),str(u4)))
-axes.plot(x,aer_2_3,  color='silver',linestyle='-',label='C*=%s-%s'%(str(l5),str(u5)))
-axes.plot(x,aer_3_4,  color='gainsboro',linestyle='-',label='C*=%s-%s'%(str(l6),str(u6)))
+#axes.plot(x,aer_n3_n2,  color='black',linestyle='-',label='C*= $ 10^{-3} $')
+#axes.plot(x,aer_n2_n1,  color='black',linestyle='-',label='C*= $ 10^{-2} $')
+#axes.plot(x,aer_n1_0,  color='dimgray',linestyle='-',label='C*= $ 10^{-1} $')
+#axes.plot(x,aer_0_1,  color='gray',linestyle='-',label='C*= $ 10^{0} $')
+#axes.plot(x,aer_1_2,  color='darkgray',linestyle='-',label='C*= $ 10^{1} $')
+#axes.plot(x,aer_2_3,  color='silver',linestyle='-',label='C*= $ 10^{2} $')
+#axes.plot(x,aer_3_4,  color='gainsboro',linestyle='-',label='C*= $ 10^{3} $')
 
+#--------------------------------------------------------
+
+box_time = dt.datetime(2022,8,3,22,51) - dt.timedelta(hours=1)
+#rect = patches.Rectangle((mdates.date2num(box_time), 0.00000001), 1/3, 1.0,linestyle='--', linewidth=2, edgecolor='green', facecolor='none')
+rect = patches.Rectangle((mdates.date2num(box_time), 0.00000001), 1/3, 1.0, linewidth=2, color='goldenrod',alpha=0.3)# edgecolor='green', facecolor='none')
+axes.add_patch(rect)
+
+box_time = dt.datetime(2022,8,4,22,54) - dt.timedelta(hours=1)
+#rect = patches.Rectangle((mdates.date2num(box_time), 0.00000001), 1/3, 1.0,linestyle='--', linewidth=2, edgecolor='green', facecolor='none')
+rect = patches.Rectangle((mdates.date2num(box_time), 0.00000001), 1/3, 1.0, linewidth=2, color='goldenrod',alpha=0.3)# edgecolor='green', facecolor='none')
+axes.add_patch(rect)
+
+box_time = dt.datetime(2022,8,5,17,40) - dt.timedelta(hours=1)
+#rect = patches.Rectangle((mdates.date2num(box_time), 0.00000001), 1/3, 1.0,linestyle='--', linewidth=2, edgecolor='green', facecolor='none')
+rect = patches.Rectangle((mdates.date2num(box_time), 0.00000001), 1/3, 1.0, linewidth=2, color='goldenrod',alpha=0.3)# edgecolor='green', facecolor='none')
+axes.add_patch(rect)
+
+box_time = dt.datetime(2022,8,6,22,14) - dt.timedelta(hours=1)
+#rect = patches.Rectangle((mdates.date2num(box_time), 0.00000001), 1/3, 1.0,linestyle='--', linewidth=2, edgecolor='green', facecolor='none')
+rect = patches.Rectangle((mdates.date2num(box_time), 0.00000001), 1/3, 1.0, linewidth=2, color='goldenrod',alpha=0.3)# edgecolor='green', facecolor='none')
+axes.add_patch(rect)
+
+box_time = dt.datetime(2022,8,7,21,46) - dt.timedelta(hours=1)
+#rect = patches.Rectangle((mdates.date2num(box_time), 0.00000001), 1/3, 1.0,linestyle='--', linewidth=2, edgecolor='green', facecolor='none')
+rect = patches.Rectangle((mdates.date2num(box_time), 0.00000001), 1/3, 1.0, linewidth=2, color='goldenrod',alpha=0.3, label='Injections')# edgecolor='green', facecolor='none')
+axes.add_patch(rect)
+
+
+#--------------------------------------------------------
+
+
+
+axes.plot(x,aer_n3_n2,  color='k',  linestyle='--', alpha=1.0, label='C*= $ 10^{-3} $')
+axes.plot(x,aer_n2_n1,  color='k',  linestyle='-', alpha=0.7 , label='C*= $ 10^{-2} $')
+axes.plot(x,aer_n1_0,   color='k',  linestyle='--', alpha=0.6, label='C*= $ 10^{-1} $')
+axes.plot(x,aer_0_1,    color='k',  linestyle='-', alpha=0.4, label='C*= $ 10^{0} $')
+axes.plot(x,aer_1_2,    color='k',  linestyle='--', alpha=0.3, label='C*= $ 10^{1} $')
+axes.plot(x,aer_2_3,    color='k',  linestyle='-', alpha=0.2, label='C*= $ 10^{2} $')
+axes.plot(x,aer_3_4,    color='k',  linestyle='--', alpha=0.1, label='C*= $ 10^{3} $')
 
 #axes.plot(x,cstar_n2_n1,color='green',label='Gas C*= <= %s'%str(l1))
 #axes.plot(x,cstar_aer,color='k',label='Aer C*= <= %s'%str(l1))
@@ -357,13 +412,13 @@ axes.plot(x,aer_3_4,  color='gainsboro',linestyle='-',label='C*=%s-%s'%(str(l6),
 #=================================================================
 
 #axes.set_ylabel('Gas/Aerosol')
-axes.set_ylabel('Aerosol Mass [ug/m^3]')
+axes.set_ylabel('Aerosol Mass [$\mu g$ $m^{-3}$]')
 axes.xaxis.set_major_formatter(mdates.DateFormatter('%m/%d'))
 axes.xaxis.set_major_locator(mdates.DayLocator(interval = 1))
 #axes.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M'))
 #axes.xaxis.set_major_locator(mdates.HourLocator(interval = 3))
 axes.set_yscale('log')
-axes.set_ylim(1e-8,)
+axes.set_ylim(1e-8,1.0)
 axes.set_xlim(mdates.date2num(dt.datetime(2022,8,4,0)),mdates.date2num(dt.datetime(2022,8,7,0)))
 axes.legend(loc=2,fontsize=10)
 
@@ -371,7 +426,7 @@ axes.legend(loc=2,fontsize=10)
 #ax2.set_yscale('log')
 #ax2.set_ylim(0.1,10000)
 #ax2.legend(loc=1,fontsize=10)
-axes.grid(True)
+#axes.grid(True)
 
 plt.show()
 

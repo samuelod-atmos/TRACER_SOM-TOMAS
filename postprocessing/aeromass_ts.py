@@ -13,6 +13,7 @@ import sys
 import datetime as dt
 import matplotlib.dates as mdates 
 import pandas as pd
+import matplotlib.patches as patches
 
 
 # Parameters
@@ -32,8 +33,8 @@ output_dir = '../outputs'
 
 # Sage image [True/False]
 #####################################################
-save_png = False
-#save_png = True
+#save_png = False
+save_png = True
 
 # 5 character name of run
 #####################################################
@@ -157,7 +158,7 @@ for file in files:
   ivoc = Mk[0:,ivocindx]
   svoc = Mk[0:,svocindx]
   total_org = Mk[0:,srtorg1:srtorglast]
-  total = Mk[0:,:]
+  total = Mk[0:,:-1]
   #total = Mk[0:,:-1]
   total = np.sum(total, axis=1)#/boxvol*1e9*100**3
   total_org = np.sum(total_org, axis=1)#/boxvol*1e9*100**3
@@ -173,6 +174,13 @@ for file in files:
   ivoc = np.sum(ivoc, axis=1)#/boxvol*1e9*100**3
   svoc = np.sum(svoc, axis=1)#/boxvol*1e9*100**3
 
+  benz_frac = benz/total
+  tolu_frac = tolu/total
+  xyle_frac = xyle/total
+  isop_frac = isop/total
+  terp_frac = terp/total
+  so4_frac = so4/total
+  
 
   #sys.exit('you will bever graduate')
  
@@ -183,33 +191,97 @@ for file in files:
   # Plotting! 
   ############################################################ 
   x = mdates.date2num(Time[0:len(total)])
-  plt.figure()
-  fig = plt.gcf()
-  ax = plt.gca()
-  fig.set_size_inches(10,4)
+  #plt.figure()
+  fig, axes = plt.subplots(nrows=2, ncols=1,sharex=True)
+  fig.set_size_inches(10,6)
+
+  #--------------------------------------------------------
+  
+  box_time = dt.datetime(2022,8,3,22,51) - dt.timedelta(hours=1)
+  #rect = patches.Rectangle((mdates.date2num(box_time), 0.00000001), 1/3, 1.0,linestyle='--', linewidth=2, edgecolor='green', facecolor='none')
+  rect = patches.Rectangle((mdates.date2num(box_time), 0.00000001), 1/3, 10.0, linewidth=2, color='goldenrod',alpha=0.3)# edgecolor='green', facecolor='none')
+  axes[0].add_patch(rect)
+  
+  box_time = dt.datetime(2022,8,4,22,54) - dt.timedelta(hours=1)
+  #rect = patches.Rectangle((mdates.date2num(box_time), 0.00000001), 1/3, 1.0,linestyle='--', linewidth=2, edgecolor='green', facecolor='none')
+  rect = patches.Rectangle((mdates.date2num(box_time), 0.00000001), 1/3, 10.0, linewidth=2, color='goldenrod',alpha=0.3)# edgecolor='green', facecolor='none')
+  axes[0].add_patch(rect)
+  
+  box_time = dt.datetime(2022,8,5,17,40) - dt.timedelta(hours=1)
+  #rect = patches.Rectangle((mdates.date2num(box_time), 0.00000001), 1/3, 1.0,linestyle='--', linewidth=2, edgecolor='green', facecolor='none')
+  rect = patches.Rectangle((mdates.date2num(box_time), 0.00000001), 1/3, 10.0, linewidth=2, color='goldenrod',alpha=0.3)# edgecolor='green', facecolor='none')
+  axes[0].add_patch(rect)
+  
+  box_time = dt.datetime(2022,8,6,22,14) - dt.timedelta(hours=1)
+  #rect = patches.Rectangle((mdates.date2num(box_time), 0.00000001), 1/3, 1.0,linestyle='--', linewidth=2, edgecolor='green', facecolor='none')
+  rect = patches.Rectangle((mdates.date2num(box_time), 0.00000001), 1/3, 10.0, linewidth=2, color='goldenrod',alpha=0.3)# edgecolor='green', facecolor='none')
+  axes[0].add_patch(rect)
+  
+  box_time = dt.datetime(2022,8,7,21,46) - dt.timedelta(hours=1)
+  #rect = patches.Rectangle((mdates.date2num(box_time), 0.00000001), 1/3, 1.0,linestyle='--', linewidth=2, edgecolor='green', facecolor='none')
+  rect = patches.Rectangle((mdates.date2num(box_time), 0.00000001), 1/3, 10.0, linewidth=2, color='goldenrod',alpha=0.3, label='Injections')# edgecolor='green', facecolor='none')
+  axes[0].add_patch(rect)
+   
+  rect = patches.Rectangle((mdates.date2num(box_time), 0.0), 0.0, 1, linewidth=2, linestyle='--', color='gray', alpha=0.3, label='Nighttime')
+  axes[0].add_patch(rect)
+  #--------------------------------------------------------
+
+
   #plt.plot(x/360,(benz+tolu+xyle+isop+terp+nonvol)/(benz+tolu+xyle+isop+terp+nonvol+so4),label='Org. Frac.')
   #plt.plot(x/360,organic,label='Organics')
   #plt.plot(x/360,NH4,label='NH4')
   #plt.plot(x,H2O,label='Water')
-  plt.plot(x,total_org,label='Total Org.')
-  plt.plot(x,so4,color='r',label='Sulfate')
-  plt.plot(x,benz,color='y',label='Benzene')
-  plt.plot(x,tolu,color='b',label='Toluene')
-  plt.plot(x,xyle,color='cyan',label='m-Xylene')
-  plt.plot(x,isop,color='green',label='Isoprene')
-  plt.plot(x,terp,color='lime',label='Terpene')
+  #axes[0].plot(x,total,color='k',label='Total')
+  axes[0].plot(x,total_org,color='k',label='Total Org.')
+  axes[0].plot(x,so4,color='r',label='Sulfate')
+  axes[0].plot(x,benz,color='y',label='Benzene')
+  axes[0].plot(x,tolu,color='b',label='Toluene + \n TMB + \n Styrene')
+  axes[0].plot(x,xyle,color='cyan',label='m-Xylene')
+  axes[0].plot(x,isop,color='green',label='Isoprene')
+  axes[0].plot(x,terp,color='lime',label='Terpenes')
   #plt.plot(x,nonvol,color='k',label='Non-Volatile')
   
-  plt.title('Aerosol Mass by SOM grid',fontsize=28)
-  plt.xlabel('Date',fontsize=24)
-  plt.ylabel('$ \mu g $ $ m^{-3} $',fontsize=24)
-  ax.xaxis.set_major_formatter(mdates.DateFormatter('%m/%d'))
-  ax.xaxis.set_major_locator(mdates.DayLocator(interval = 1))
-  plt.grid(True)
-  plt.yscale('log')
-  plt.legend()
-  plt.ylim(0.0000001,2.0)
-  plt.xlim(xlow,xhigh)
+  axes[0].set_title('Aerosol Mass by SOM grid',fontsize=24)
+  axes[0].set_ylabel('$ \mu g $ $ m^{-3} $',fontsize=22)
+
+  color_map = ['r','y','b','cyan','green','lime']
+  axes[1].stackplot(x,so4_frac,benz_frac,tolu_frac,xyle_frac,isop_frac,terp_frac, colors=color_map)
+  axes[1].set_xlabel('Date',fontsize=24)
+  axes[1].set_ylabel('Mass Fraction',fontsize=22)
+  axes[1].set_ylim(0.0,1.0)
+  axes[1].xaxis.set_major_formatter(mdates.DateFormatter('%m/%d'))
+  axes[1].xaxis.set_major_locator(mdates.DayLocator(interval = 1))
+  axes[1].xaxis.set_minor_formatter(mdates.DateFormatter('%H:%M'))
+  axes[1].xaxis.set_minor_locator(mdates.HourLocator(interval = 12))
+  
+  
+  axes[0].grid(True)
+  axes[0].set_yscale('log')
+  axes[0].legend(prop={'size': 12},bbox_to_anchor=(0.71, 0., 0.5, 1.0),loc=1)
+  #axes[0].legend()
+  axes[0].set_ylim(0.0000001,2.0)
+  axes[0].set_xlim(xlow,xhigh)
+
+
+#--------------------------------------------------------
+  box_time = dt.datetime(2022,8,3,20,18)
+  rect = patches.Rectangle((mdates.date2num(box_time), 0.0), (1/24)*10.33, 1, linewidth=2, linestyle='--', color='gray', alpha=0.3)
+  axes[1].add_patch(rect)
+
+  box_time = dt.datetime(2022,8,4,20,18)
+  rect = patches.Rectangle((mdates.date2num(box_time), 0.0), (1/24)*10.33, 1, linewidth=2, linestyle='--', color='gray', alpha=0.3)
+  axes[1].add_patch(rect)
+
+  box_time = dt.datetime(2022,8,5,20,18)
+  rect = patches.Rectangle((mdates.date2num(box_time), 0.0), (1/24)*10.33, 1, linewidth=2, linestyle='--', color='gray', alpha=0.3)
+  axes[1].add_patch(rect)
+
+  box_time = dt.datetime(2022,8,6,20,18)
+  rect = patches.Rectangle((mdates.date2num(box_time), 0.0), (1/24)*10.33, 1, linewidth=2, linestyle='--', color='gray', alpha=0.3, label='Nighttime')
+  axes[1].add_patch(rect)
+
+#--------------------------------------------------------
+  
   plt.show()
   
   # Save the figure

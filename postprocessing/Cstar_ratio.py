@@ -5,6 +5,7 @@ import datetime as dt
 import matplotlib.dates as mdates 
 import pandas as pd 
 import sys
+import matplotlib.patches as patches
 #=================================================================
 
 
@@ -31,7 +32,7 @@ delt = 300.0
 #identify = 'sm_OH'
 #identify = 'noHOM'
 #identify = 'x1000'
-#identify = 'tmbto'
+#identify = 'frag3'
 identify = 'multi'
 
 #=================================================================
@@ -49,13 +50,13 @@ RH = 1
 
 # C* bin bounds 
 #=================================================================
-l0,u0 = 0,5e-3
-l1,u1 = 5e-3,5e-2
-l2,u2 = 5e-2,5e-1
-l3,u3 = 5e-1,5e0
-l4,u4 = 5e0,5e1
-l5,u5 = 5e1,5e2
-l6,u6 = 5e2,5e3
+l0,u0 = 0,3.2e-3
+l1,u1 = 3.2e-3,3.2e-2
+l2,u2 = 3.2e-2,3.2e-1
+l3,u3 = 3.2e-1,3.2e0
+l4,u4 = 3.2e0,3.2e1
+l5,u5 = 3.2e1,3.2e2
+l6,u6 = 3.2e2,3.2e3
 
 
 #=================================================================
@@ -84,6 +85,8 @@ gc_file = '%s/20220801_%s_A0.001_db%s_pwl%s_vwl%s_OH%s_FN%s_HOM%s_T%s_RH%s_gc.da
     str(T),
     str(RH))
 
+#print(gc_file[11:-7])
+#sys.exit()
 #=================================================================
 df_somgc = pd.read_csv(gc_file,header=None,delim_whitespace=True)
 som_gas = np.array(df_somgc)
@@ -124,12 +127,13 @@ for som_grid in som_grids:
   for i in range(len(Time)):
     #OC_weighted[i] = np.mean(OC*(10.0**saprc_gas[i,1:-2]/np.max(10.0**saprc_gas[i,1:-2])))
     OC_weighted = np.mean(OC*(som_gas[i,gas_list]/np.max(som_gas[i,gas_list])))
+    #print('OC_weighted',OC_weighted)
     pfrag[cntr,i] = OC_weighted**mfrag[cntr]
   
   cntr = cntr + 1
 
 pfrag_mean = np.mean(pfrag,axis=0)
-#print(np.shape(pfrag_mean))
+#print(np.nanmax(pfrag_mean))
 #sys.exit('you are bad at this')
 #=================================================================
 
@@ -219,14 +223,12 @@ OH_ts = OH_ts[::30]
 OH_ts = OH_ts[:-1]
 
 #pfrag = 0.7
-koh = 8e-9
+koh = 8e-13
 
-print(np.shape(cs_array))
-print(np.shape(inst_flow))
 
-G_A_frag = (1.0/cs_array/(koh*OH_ts*pfrag_mean[1:]))*(kpwl + 1./inst_flow)
+G_A_frag = (1.0/cs_array*(1e9*koh*OH_ts*pfrag_mean[1:]))*(kpwl + 1./inst_flow)
 G_A = (1.0/cs_array)*(kpwl + 1./inst_flow)
-#G_A = (cs_array + kpwl + 1./inst_flow)**2.0 * 1.0/cs_array * 1.0/kpwl * inst_flow
+#G_A_frag = ((1.0/cs_array)*(kpwl + 1./inst_flow))/(cs_array + 4.8e-4 + koh*OH_ts*pfrag_mean[1:])
 
 
 #=================================================================
@@ -234,7 +236,8 @@ G_A = (1.0/cs_array)*(kpwl + 1./inst_flow)
 #  som_cstar[i] = float(som_cstar[i])
 
 #=================================================================
-cstar_n2_n1 = som_gas[:,np.where(som_cstar < l1)[0]]
+cstar_n3_n2 = som_gas[:,np.where((som_cstar > l0) & (som_cstar < u0))[0]]
+cstar_n2_n1 = som_gas[:,np.where((som_cstar > l1) & (som_cstar < u1))[0]]
 cstar_n1_0 = som_gas[:,np.where((som_cstar > l2) & (som_cstar < u2))[0]]
 cstar_0_1 = som_gas[:,np.where((som_cstar > l3) & (som_cstar < u3))[0]]
 cstar_1_2 = som_gas[:,np.where((som_cstar > l4) & (som_cstar < u4))[0]]
@@ -242,6 +245,7 @@ cstar_2_3 = som_gas[:,np.where((som_cstar > l5) & (som_cstar < u5))[0]]
 cstar_3_4 = som_gas[:,np.where((som_cstar > l6) & (som_cstar < u6))[0]]
 
 #=================================================================
+cstar_n3_n2 = np.sum(cstar_n3_n2,axis=1)/boxvol*1E6*1E9
 cstar_n2_n1 = np.sum(cstar_n2_n1,axis=1)/boxvol*1E6*1E9
 cstar_n1_0 = np.sum(cstar_n1_0,axis=1)/boxvol*1E6*1E9
 cstar_0_1 = np.sum(cstar_0_1,axis=1)/boxvol*1E6*1E9
@@ -323,14 +327,41 @@ aer_3_4 = np.sum(aer_3_4,axis=1)#/boxvol*1E6*1E9
 #=================================================================
 
 fig, axes = plt.subplots(nrows=1, ncols=1,sharex=True)
-fig.set_size_inches(10,5)
+fig.set_size_inches(10,6)
 #ax2 = axes.twinx()
 
 x = mdates.date2num(date)
 
+
+#--------------------------------------------------------
+#--------------------------------------------------------
+box_time = dt.datetime(2022,8,3,22,51)
+rect = patches.Rectangle((mdates.date2num(box_time), 0.001), 1/3, 1e9, linewidth=2, color='lightgrey',alpha=0.3)# edgecolor='green', facecolor='none')
+axes.add_patch(rect)
+
+box_time = dt.datetime(2022,8,4,22,54)
+rect = patches.Rectangle((mdates.date2num(box_time), 0.001), 1/3, 1e9, linewidth=2, color='lightgrey',alpha=0.3)#edgecolor='green', facecolor='none')
+axes.add_patch(rect)
+
+box_time = dt.datetime(2022,8,5,17,40)
+rect = patches.Rectangle((mdates.date2num(box_time), 0.001), 1/3, 1e9, linewidth=2, color='lightgrey',alpha=0.3)#edgecolor='green', facecolor='none')
+axes.add_patch(rect)
+
+box_time = dt.datetime(2022,8,6,22,14)
+rect = patches.Rectangle((mdates.date2num(box_time), 0.001), 1/3, 1e9, linewidth=2, color='lightgrey',alpha=0.3)#edgecolor='green', facecolor='none')
+axes.add_patch(rect)
+
+box_time = dt.datetime(2022,8,7,21,46)
+rect = patches.Rectangle((mdates.date2num(box_time), 0.001), 1/3, 1e9, linewidth=2, color='lightgrey',alpha=0.3, label='Injections')#edgecolor='green', facecolor='none')
+axes.add_patch(rect)
+#--------------------------------------------------------
+#--------------------------------------------------------
+
+
+
 #ax2.plot(x,cstar_n2_n1/cstar_aer,color='b',linestyle='--',label='Ratio')
 axes.plot(x[:-1],G_A, color='green',linestyle='-',label='Ratio (simple theory)')
-axes.plot(x[:-1],G_A_frag, color='blue',linestyle='-',label='Ratio (with fragmentation)')
+#axes.plot(x[:-1],G_A_frag, color='blue',linestyle='-',label='Ratio (with fragmentation)')
 
 #axes.plot(x,aer_n2_n1/(aer_n2_n1+cstar_n2_n1),  color='b',linestyle='--',label='C*=%s - %s'%(str(l1),str(u1)))
 #axes.plot(x,aer_n1_0/(aer_n1_0+cstar_n1_0),  color='k',linestyle='--',label='C*=%s - %s'%(str(l2),str(u2)))
@@ -339,14 +370,21 @@ axes.plot(x[:-1],G_A_frag, color='blue',linestyle='-',label='Ratio (with fragmen
 #axes.plot(x,aer_2_3/(aer_2_3+cstar_2_3),  color='m',linestyle='--',label='C*=%s-%s'%(str(l5),str(u5)))
 #axes.plot(x,aer_3_4/(aer_3_4+cstar_3_4),  color='y',linestyle='--',label='C*=%s-%s'%(str(l6),str(u6)))
 
-axes.plot(x,cstar_n2_n1/aer_n2_n1,  color='black',linestyle='-',label='C*=%s - %s'%(str(l1),str(u1)))
-axes.plot(x,cstar_n1_0/aer_n1_0,  color='dimgray',linestyle='-',label='C*=%s - %s'%(str(l2),str(u2)))
-axes.plot(x,cstar_0_1/aer_0_1,  color='gray',linestyle='-',label='C*=%s - %s'%(str(l3),str(u3)))
-axes.plot(x,cstar_1_2/aer_1_2,  color='darkgray',linestyle='-',label='C*=%s-%s'%(str(l4),str(u4)))
-axes.plot(x,cstar_2_3/aer_2_3,  color='silver',linestyle='-',label='C*=%s-%s'%(str(l5),str(u5)))
-axes.plot(x,cstar_3_4/aer_3_4,  color='gainsboro',linestyle='-',label='C*=%s-%s'%(str(l6),str(u6)))
-axes.plot(x,sulf/sulfate,  color='r',linestyle='-',label='H2SO4/Sulfate')
+#axes.plot(x,cstar_n2_n1/aer_n2_n1,  color='black',linestyle='-',label='C*=%s - %s'%(str(l1),str(u1)))
+#axes.plot(x,cstar_n1_0/aer_n1_0,  color='dimgray',linestyle='-',label='C*=%s - %s'%(str(l2),str(u2)))
+#axes.plot(x,cstar_0_1/aer_0_1,  color='gray',linestyle='-',label='C*=%s - %s'%(str(l3),str(u3)))
+#axes.plot(x,cstar_1_2/aer_1_2,  color='darkgray',linestyle='-',label='C*=%s-%s'%(str(l4),str(u4)))
+#axes.plot(x,cstar_2_3/aer_2_3,  color='silver',linestyle='-',label='C*=%s-%s'%(str(l5),str(u5)))
+#axes.plot(x,cstar_3_4/aer_3_4,  color='gainsboro',linestyle='-',label='C*=%s-%s'%(str(l6),str(u6)))
 
+axes.plot(x,cstar_n3_n2/aer_n3_n2,  color='k',  linestyle='--', alpha=1.0, label='C*= $ 10^{-3} $')
+#axes.plot(x,cstar_n2_n1/aer_n2_n1,  color='k',  linestyle='-', alpha=0.7 , label='C*= $ 10^{-2} $')
+#axes.plot(x,cstar_n1_0/aer_n1_0,   color='k',  linestyle='--', alpha=0.6, label='C*= $ 10^{-1} $')
+#axes.plot(x,cstar_0_1/aer_0_1,    color='k',  linestyle='-', alpha=0.4, label='C*= $ 10^{0} $')
+#axes.plot(x,cstar_1_2/aer_1_2,    color='k',  linestyle='--', alpha=0.3, label='C*= $ 10^{1} $')
+#axes.plot(x,cstar_2_3/aer_2_3,    color='k',  linestyle='-', alpha=0.2, label='C*= $ 10^{2} $')
+#axes.plot(x,cstar_3_4/aer_3_4,    color='k',  linestyle='--', alpha=0.1, label='C*= $ 10^{3} $')
+axes.plot(x,sulf/sulfate,  color='r',linestyle='-',label='H2SO4/Sulfate')
 
 #axes.plot(x,aer_n2_n1,  color='black',linestyle='-',label='C*=%s - %s'%(str(l1),str(u1)))
 #axes.plot(x,aer_n1_0,  color='dimgray',linestyle='-',label='C*=%s - %s'%(str(l2),str(u2)))
@@ -361,16 +399,19 @@ axes.plot(x,sulf/sulfate,  color='r',linestyle='-',label='H2SO4/Sulfate')
 
 #=================================================================
 
-axes.set_ylabel('Gas/Aerosol')
+axes.set_title('Gas/Aerosol, kOH = %s [$ s^{-1} $]'%str(koh))
+axes.set_ylabel('Gas/Aerosol',fontsize=16)
+axes.set_xlabel('Date',fontsize=16)
 #axes.set_ylabel('Aerosol Mass [ug/m^3]')
 axes.xaxis.set_major_formatter(mdates.DateFormatter('%m/%d'))
 axes.xaxis.set_major_locator(mdates.DayLocator(interval = 1))
 #axes.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M'))
 #axes.xaxis.set_major_locator(mdates.HourLocator(interval = 3))
 axes.set_yscale('log')
-axes.set_ylim(0.01,)
+axes.set_ylim(0.007,7000.0)
 axes.set_xlim(mdates.date2num(dt.datetime(2022,8,4,0)),mdates.date2num(dt.datetime(2022,8,7,0)))
-axes.legend(loc=2,fontsize=10)
+#axes.legend(loc=2,fontsize=10)
+axes.legend(prop={'size': 10},bbox_to_anchor=(0.82, 0., 0.5, 1.0),loc=1)
 
 #ax2.set_ylabel('Gas/Aer. Ratio')
 #ax2.set_yscale('log')
@@ -380,6 +421,5 @@ axes.grid(True)
 
 plt.show()
 
-#fig.savefig('%s_gas-aer_kpwl%s_Cstar%s.png'%(identify,str(kpwl),str(l1)),bbox_inches='tight')
-
+#fig.savefig('%s_gas-aer.png'%gc_file[11:-7],bbox_inches='tight')
 

@@ -23,7 +23,7 @@ for line in bin_fid.readlines():
 Bins = np.array(Bins)
 bin_fid.close()
 print(Bins)
-sys.exit()
+#sys.exit()
 
 
 sizedist = []

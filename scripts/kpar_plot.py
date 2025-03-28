@@ -7,7 +7,7 @@ ibins = 40
 
 fig  = plt.gcf()
 
-fig.set_size_inches(9,3)
+fig.set_size_inches(9,5)
 
 A = 1.0E-3    #nm/s
 xk = np.zeros(ibins+1) 
@@ -34,7 +34,9 @@ for i in range(len(Dp)):
 kpar = np.array(kpar)
 
 
-plt.semilogx(Dp,kpar,c='k',label='kflat+A/Dp')
+plt.semilogx(Dp,kpar,c='k',label='k_par')
+plt.semilogx(Dp,kpar/2.0,c='lightblue',label='k_par/2.0')
+plt.semilogx(Dp,kpar*2.0,c='darkblue',label='k_par*2.0')
 
 #plt.scatter(80.0, 1.51579e-4, marker = '*')
 #plt.scatter(150.0, 1.28315e-4, marker = '*')

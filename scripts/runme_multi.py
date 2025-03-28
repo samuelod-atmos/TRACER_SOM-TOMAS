@@ -62,14 +62,14 @@ PWL  =  [1] # [0 or 1] the switch for On/Off particle wall loss
 
 NOx = 5.0                             # NOx concentration for OH proxy #3
 nh3_ppt = 5000.0                    # NH3 concentration [ppt]
-OH_multi = [0.6,0.8]            # multiplier for OH concentration
+OH_multi = [0.8]            # multiplier for OH concentration
 OH_proxy = 'Rad'
 boxvol  = 2000000.0                   # teflon [cm3] - [CalTech 24 m3, CSU 10 m3, CMU ?? m3]
 
 orgfrac_bg = 0.8                                   # Organic fraction of background aerosols  
 density_bg = orgfrac_bg*1400.0+(1-orgfrac_bg)*1770 # [kg/m3] - density of aerosol originally in the chamber
 
-db     = [1]                    # switch for dynamic [1] or constant [0] particle-phase diffusion coefficient [m2/s] 
+db     = [1,2,3,4]                    # switch for dynamic [1] or constant [0] particle-phase diffusion coefficient [m2/s] 
 alpha   = 1.0                     # accommodation coefficient 
 storg   = 0.025                   # [N/m] surface tension
 kc      = 0.0                     # first-order loss rate of species in the particle phase [1/s]
@@ -129,8 +129,8 @@ Dp=((6.*xkm/pdens/np.pi)**(1.0/3.0))*1E9 # [m] average particle diameter of bin
 # Particle and vapor wall loss rates
 # ====================================================================================================
 
-As = [5.0e-4,1.5e-3, 2.0e-3]    #nm/s
-#As = [1.0e-3]    #nm/s
+#As = [5.0e-4,1.5e-3, 2.0e-3]    #nm/s
+As = [1.0e-3]    #nm/s
 kflat = 6.9e-5
 
 #kpar = ''
