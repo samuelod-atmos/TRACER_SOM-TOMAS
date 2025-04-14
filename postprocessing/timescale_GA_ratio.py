@@ -457,6 +457,7 @@ axes[0].set_xlim(mdates.date2num(dt.datetime(2022,8,4,0)),mdates.date2num(dt.dat
 axes[0].legend(loc=2,prop={'size': 10})
 #axes[0].grid(True)
 
+axes[1].set_title('Timescales')
 axes[1].set_yscale('log')
 axes[1].set_ylim(150.0,4e6)
 axes[1].set_xlim(mdates.date2num(dt.datetime(2022,8,4,0)),mdates.date2num(dt.datetime(2022,8,7,0)))
@@ -464,7 +465,7 @@ axes[1].set_xlim(mdates.date2num(dt.datetime(2022,8,4,0)),mdates.date2num(dt.dat
 
 axes[1].plot(x[:-1], 1./cs_array, label='Condensation Sink')
 axes[1].plot(x[:-1], inst_flow + 1/4.82e-4, label='Instruments + Vapor Wall Losses')
-axes[1].plot(x, 1./t_pwl, label='Particle Wall Losses')
+axes[1].plot(x, 1./t_pwl, label='$D_p$=10 [nm] Particle Wall Losses')
 #axes[1].legend(prop={'size': 10},bbox_to_anchor=(0.5, 0., 0.5, 1.0),loc=1)
 axes[1].legend(loc=2,prop={'size': 10})
 axes[1].set_xlabel('Date',fontsize=16)
