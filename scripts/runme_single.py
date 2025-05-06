@@ -77,7 +77,7 @@ queue = 'defaultfaculty.q'
 #identify = 'splic' 
 #identify = 'wiMDL' 
 #identify = 'minOH' 
-identify = 'NPF_5'
+#identify = 'NPF_5'
 #identify = 'sclOH'
 #identify = 'sclfn'
 #identify = 'GC_OH'
@@ -88,7 +88,7 @@ identify = 'NPF_5'
 #identify = '100fn'
 #identify = 'noHOM'
 #identify = 'kp2.5'
-#identify = 'A1e-3' 
+identify = 'A2e-3' 
 #identify = '1.8kp' 
 #identify = 'y_mix' 
 #identify = 'n_mix' 
@@ -113,8 +113,8 @@ OH_proxy = 'Rad'
 #OH_proxy = 'GC'
 density_bg = orgfrac_bg*1400.0+(1-orgfrac_bg)*1770 # [kg/m3] - density of aerosol originally in the chamber
 
-start_t = dt.datetime(2022,8,6,1)  # start date [CST]
-#start_t = dt.datetime(2022,8,1,11)  # start date [CST]
+#start_t = dt.datetime(2022,8,6,1)  # start date [CST]
+start_t = dt.datetime(2022,8,1,11)  # start date [CST]
 name = '%s%s%s'%(str(start_t.year).zfill(4),str(start_t.month).zfill(2),str(start_t.day).zfill(2))  # date string 
 
 # make an array of dates for the simulation

@@ -12,7 +12,6 @@ plt.rcParams.update({'font.size': 14})
 
 #==================================================================================
 #==================================================================================
-
 srtSO4 = 0
 srtorg1 = 1
 iorg = 456
@@ -22,9 +21,11 @@ output_dir = '../outputs'
 endtime = 144.0
 boxvol  = 2000000.0 
 nbins = 40
+R = 8.314
+MWORG = 200.0
 
 #===========================================================================================================
-identify = 'frag3'
+identify = 'frag4'
 db = 1
 pwl = 1
 vwl = 1
@@ -44,15 +45,23 @@ file = '%s/20220801_%s_A%s_db%i_pwl%i_vwl%i_OH%s_FN%s_HOM%i_T%i_RH%i_gc.dat'%(ou
 save_png = True
 delt = 300.0
 
-
 #time_low = dt.datetime(2022,8,6,7)
 #time_up = dt.datetime(2022,8,6,10)
+#t_cs = 2.3
+#t_cs = 2.1
+#t_cs = 326.
 
 #time_low = dt.datetime(2022,8,6,13)
 #time_up = dt.datetime(2022,8,6,16)
+#t_cs = 0.5
+#t_cs = 3.4
+#t_cs = 0.3
 
 time_low = dt.datetime(2022,8,6,19)
 time_up = dt.datetime(2022,8,6,22)
+#t_cs = 4.9
+#t_cs = 4.0
+t_cs = 3.7
 
 
 #time_low = dt.datetime(2022,8,1,11)
@@ -88,17 +97,19 @@ low_indx = np.where(Time>time_low)[0][0]
 up_indx = np.where(Time<time_up)[0][-1]
 
 #    # ----------------------------------------------------------------------------
-print('file=',file)
+
+#print('file=',file)
 df_somgc = pd.read_csv(file,header=None,delim_whitespace=True)
 
 som_gas = np.array(df_somgc)
+h2so4 = np.mean(som_gas[low_indx:up_indx,1])/boxvol*1E6*1E9
 #h2so4 = 
 som_gas = som_gas[:,1:-1]
-print('Shape of gas file:',np.shape(som_gas))
+#print('Shape of gas file:',np.shape(som_gas))
 
 #    # ----------------------------------------------------------------------------
-print(file)
-print('%s_spec.dat'%(file[:-7]))
+#print(file)
+#print('%s_spec.dat'%(file[:-7]))
 #sys.exit('Sucker')
 
 #df_spec = pd.read_csv('%s_spec.dat'%(file[:72]), header=None, delim_whitespace=True)
@@ -112,7 +123,7 @@ som_cstar = som_cstar[:-1]
 for i in range(len(som_cstar)):
   som_cstar[i] = float(som_cstar[i])
 
-print('len(som_cstar) =',len(som_cstar))
+#print('len(som_cstar) =',len(som_cstar))
 
 #cstar_n3_n2 = som_gas[low_indx:up_indx,np.where(som_cstar < l1)[0]]
 cstar_n3_n2 = som_gas[low_indx:up_indx,np.where((som_cstar > l0) & (som_cstar < u0))[0]]
@@ -147,24 +158,25 @@ cstar_3_4 = np.mean(cstar_3_4)
 #file = '%s/20220801_%s_A0.001_db1_pwl1_vwl1_OH0.8_FN1000.0_HOM0_T1_RH1_aemass.dat'%(output_dir,identify)
 file = '%s/20220801_%s_A%s_db%i_pwl%i_vwl%i_OH%s_FN%s_HOM%i_T%i_RH%i_aemass.dat'%(output_dir,identify,A,db,pwl,vwl,OH_scale,FN_scale,HOM,T_switch,RH_switch)
 
-print('file=',file)
+#print('file=',file)
 df_somaer = np.array(pd.read_csv(file,header=None,delim_whitespace=True))
 
 Mk = df_somaer[:,1:]
 Mk = np.reshape(Mk, (int(len(Mk)/(icomp)),icomp,nbins))
 Mk = np.sum(Mk,axis=-1)
+so4 = np.mean(Mk[low_indx:up_indx,0])
 Mk = Mk[:,1:-2]
-print('shape of Mk =',np.shape(Mk))
-
+#print('shape of Mk =',np.shape(Mk))
+#print('shape of so4=',np.shape(so4))
 #som_aer = np.array(df_somaer)
 #h2so4 = 
 som_aer = Mk
-print('Shape of aer file:',np.shape(som_aer))
+#print('Shape of aer file:',np.shape(som_aer))
 
 #    # ----------------------------------------------------------------------------
 #print(file)
 #print('%s_spec.dat'%(file[:-7]))
-print('len(som_cstar) =',len(som_cstar))
+#print('len(som_cstar) =',len(som_cstar))
 
 #aer_n3_n2 = som_aer[low_indx:up_indx,np.where(som_cstar < l1)[0]]
 aer_n3_n2 = som_aer[low_indx:up_indx,np.where((som_cstar > l0) & (som_cstar < u0))[0]]
@@ -194,50 +206,112 @@ aer_1_2 = np.mean(aer_1_2)
 aer_2_3 = np.mean(aer_2_3)
 aer_3_4 = np.mean(aer_3_4)
 
+#===================================================================================
+T_fid = open('../inputs/timeseries/%s%s%s_%s_Temp'%(str(startT.year),str(startT.month).zfill(2),str(startT.day).zfill(2),identify),'r')
 
-print(cstar_n2_n1,cstar_n1_0,cstar_0_1,cstar_1_2)
-print(aer_n2_n1,aer_n1_0,aer_0_1,aer_1_2)
+T_list = []
+for line in T_fid.readlines():
+ T_list.append(float(line))
+
+T_list = np.array(T_list)
+#T_list = signal.savgol_filter(T_list,101,2)
+T_list = T_list[::30]
+Temp = np.mean(T_list[low_indx:up_indx])
+print('Temp =',Temp)
+#===================================================================================
 
 
-Caer = np.array([aer_n3_n2,aer_n2_n1,aer_n1_0,aer_0_1,aer_1_2,aer_2_3,aer_3_4])
-Ci = np.array([cstar_n3_n2,cstar_n2_n1,cstar_n1_0,cstar_0_1,cstar_1_2,cstar_2_3,cstar_3_4])
-print('total aerosol =',np.sum(Caer))
-print('total gas phase =',np.sum(Ci))
-Cstar = np.array([1e-3,1e-2,1e-1,1e0,1e1,1e2,1e3])
+C_star_bins = np.array([1e-6, 1e-3, 1e-2, 1e-1, 1.0, 10.0, 100.0, 1000.0])
+for i in range(len(C_star_bins)):
+  HVAP = -11.0*np.log10(C_star_bins[i]) + 131.0 
+  PSTAR = C_star_bins[i]*R*300.0/MWORG/1.0e6
+  psatorg = PSTAR*np.exp(HVAP*1.e3*(1.0/300.0-1.0/Temp)/R)
+  C_star_bins[i] = psatorg/R/Temp*MWORG*1.0e6 
+
+
+Caerosol = np.array([so4,aer_n3_n2,aer_n2_n1,aer_n1_0,aer_0_1,aer_1_2,aer_2_3,aer_3_4])
+Cgasphase = np.array([h2so4,cstar_n3_n2,cstar_n2_n1,cstar_n1_0,cstar_0_1,cstar_1_2,cstar_2_3,cstar_3_4])
+C_eqm = []
+
+#for i in range(len(Cgasphase)):
+  
+Ci = Caerosol + Cgasphase
+#print('----------------------------------------------')
+#print('Ci =',Ci,'C* = ',C_star_bins)
+CoaNew = 10 # this is the initial guess for Coa
+Coa = 1 # this is specified here just to get the below loop initiated 
+count = 0 # initialize count for the below loop 
+
+'''The following loop finds the new value for Coa to the specified error value and within 50 iterations'''
+while abs(Coa-CoaNew) > 10**-10 and count < 50: 
+    Coa = CoaNew
+    Caer = ((1+C_star_bins/Coa)**-1)*Ci
+    #print('Caer =',Caer)
+    #CoaNew = Caer
+    CoaNew = sum(Caer)
+    count = count +1
+
+#print('Caer =',Caer)
+#sys.exit()
+C_eqm = Caer
+  
+#print('CoaNew =',CoaNew,Ci)
+#print(np.round(CoaNew/Ci*100,3),'%')
+C_eqm = np.array(C_eqm)
+
+Caer = np.array([so4,aer_n3_n2,aer_n2_n1,aer_n1_0,aer_0_1,aer_1_2,aer_2_3,aer_3_4])
+Ci = np.array([h2so4,cstar_n3_n2,cstar_n2_n1,cstar_n1_0,cstar_0_1,cstar_1_2,cstar_2_3,cstar_3_4])
+#Cstar = np.array(['1e-4','1e-3','1e-2','1e-1','1e0','1e1','1e2','1e3'])
+Cstar = ['SO4','1e-3','1e-2','1e-1','1e0','1e1','1e2','1e3']
+#Caer = np.array([aer_n3_n2,aer_n2_n1,aer_n1_0,aer_0_1,aer_1_2,aer_2_3,aer_3_4])
+#Ci = np.array([cstar_n3_n2,cstar_n2_n1,cstar_n1_0,cstar_0_1,cstar_1_2,cstar_2_3,cstar_3_4])
+#Cstar = np.array([1e-3,1e-2,1e-1,1e0,1e1,1e2,1e3])
+print('Total mass at eqm =',np.sum(C_eqm))
+print('Total mass from ST =',np.sum(Caer))
 
 #sys.exit('Sucker')
 #==================================================================================
+fig, ax = plt.subplots(nrows=1, ncols=1)
+fig.set_size_inches(4,5)
 
-# ----------------------------------------------------------------------------
+#df = pd.DataFrame()
+#df['Particle Phase'] = Caer
+#df['Particle Phase'] = pd.to_numeric(df['Particle Phase'])
+#df['Gas Phase'] = Ci
+#df['Gas Phase'] = pd.to_numeric(df['Gas Phase'])
+#df['C* Bin'] = Cstar
+#df['C* Bin'] = pd.to_numeric(df['C* Bin'])
 
-
-
-df = pd.DataFrame()
-
-df['Particle Phase'] = Caer
-df['Particle Phase'] = pd.to_numeric(df['Particle Phase'])
-df['Gas Phase'] = Ci
-df['Gas Phase'] = pd.to_numeric(df['Gas Phase'])
-df['C* Bin'] = Cstar
-df['C* Bin'] = pd.to_numeric(df['C* Bin'])
-
+my_colors = ['red','green','green','green','green','green','green','green']
+#my_colors = ['red','white','green','white','green','white','green','white','green','white','green','white','green','white','green','white']
+#print('my_colors=',my_colors)
 # df.plot.bar(x='Cstar', y='Caer', rot=0)
 # df.plot.bar(x='Cstar', y='Ci', rot=0)
 #ax = df.plot.bar('C* Bin',['Particle Phase','Gas Phase'],stacked=True,color=['green','white'],edgecolor='black')
-ax = df.plot.bar('C* Bin',stacked=True,color=['green','white'],edgecolor='black',legend=False)
+#ax = df.plot.bar('C* Bin',stacked=False,color=my_colors,edgecolor='black',legend=False)
+plt.bar(Cstar, Caer, color=my_colors, ec='k')
+plt.bar(Cstar, Ci, bottom=Caer, color='white', ec='k')
+plt.scatter(Cstar, C_eqm, color='k', marker='x',zorder=100,label='Equilibrium')
 
-#ax.legend(fontsize=16)
+# Text for base sims
+#ax.text(-0.5,4,'%4.3f [$\mu g$ $ m^{-3}$]'%np.sum(Caer))
+#ax.text(-0.5,1.5,'%4.3f [$\mu g$ $ m^{-3}$]'%np.sum(C_eqm))
 
-fig = ax.get_figure()
-fig.set_size_inches(4,5)
+# Text for fragmentation sims
+ax.text(-0.5,30.,'%4.3f [$\mu g$ $ m^{-3}$]'%np.sum(Caer))
+ax.text(-0.5,10.,'%4.3f [$\mu g$ $ m^{-3}$]'%np.sum(C_eqm))
+#ax.text(-0.5,0.6,'%3.2f [h]'%t_cs)
+#ax.legend(loc=2,fontsize=14)
+#fig = ax.get_figure()
+#fig.set_size_inches(4,5)
 
 #ax.set_title(time_low.strftime('%x') + ', ' + time_low.strftime('%H') + ':00-' + time_up.strftime('%H') + ':00')
 ax.set_title(time_low.strftime('%H') + ':00-' + time_up.strftime('%H') + ':00')
 # ax = df.plot.bar(Cstar,[Caer,Ci-Caer],stacked=True,color=['green','white'],edgecolor='black')
 ax.set_yscale('log')
-ax.set_ylim(0.0000000001,0.001)
+ax.set_ylim(0.00001,100.0)
 #ax.set_ylim(0.000001,10.0)
-
+plt.xticks(rotation=70)
 #ax.set_ylim(0.0,1.5)
 ax.set_ylabel('$\mu g$ $m^{-3}$',fontsize=16)
 ax.set_xlabel('C* [$\mu g$ $m^{-3}$]',fontsize=16)

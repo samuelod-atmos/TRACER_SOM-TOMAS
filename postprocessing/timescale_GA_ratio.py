@@ -201,7 +201,9 @@ for line in switchfile.readlines():
 inst_flow = np.array(inst_flow)
 inst_flow = inst_flow[::30]
 inst_flow = inst_flow[:-1]
+inst_flow[inst_flow == 0] = np.inf
 switchfile.close()
+
 
 #cs_fid = '%s/20220801_%s_vwl1_pwl1_hr1.44e+02_nh35000_orgfn1_inorg1_db%s_cs.dat'%(output_dir,identify,db[0])
 cs_fid = '%s/20220801_%s_A0.001_db%s_pwl%s_vwl%s_OH%s_FN%s_HOM%s_T%s_RH%s_cs.dat'%(output_dir,
@@ -222,7 +224,7 @@ cs_array = cs_array[:-1,1]
 print(np.shape(cs_array),np.shape(inst_flow))
 
 #kpwl = 60.0*2.53E-5
-kpwl = 1.27E-4
+kpwl = 3.2E-4
 #kpwl = 60.0*1.27E-6
 #kpwl = 1.97E-7
 
@@ -240,7 +242,6 @@ OH_ts = OH_ts[:-1]
 
 #pfrag = 0.7
 koh = 8e-13
-
 
 G_A_frag = (1.0/cs_array*(1e9*koh*OH_ts*pfrag_mean[1:]))*(kpwl + 1./inst_flow)
 G_A = (1.0/cs_array)*(kpwl + 1./inst_flow)
@@ -439,6 +440,8 @@ axes[0].plot(x,cstar_n3_n2/aer_n3_n2,  color='k',  linestyle='--', alpha=1.0, la
 #axes.plot(x,cstar_3_4/aer_3_4,    color='k',  linestyle='--', alpha=0.1, label='C*= $ 10^{3} $')
 axes[0].plot(x,sulf/sulfate,  color='r',linestyle='-',label='H2SO4/Sulfate')
 
+hline = np.ones(len(x))
+axes[0].plot(x, hline, color='k', linewidth=0.5,zorder=0)
 #=================================================================
 
 axes[0].set_title('Gas/Aerosol')
@@ -464,7 +467,7 @@ axes[1].set_xlim(mdates.date2num(dt.datetime(2022,8,4,0)),mdates.date2num(dt.dat
 #axes[1].grid(True)
 
 axes[1].plot(x[:-1], 1./cs_array, label='Condensation Sink')
-axes[1].plot(x[:-1], inst_flow + 1/4.82e-4, label='Instruments + Vapor Wall Losses')
+axes[1].plot(x[:-1], 1.0/(1.0/inst_flow + 3.2e-4), label='Instruments + Vapor Wall Losses')
 axes[1].plot(x, 1./t_pwl, label='$D_p$=10 [nm] Particle Wall Losses')
 #axes[1].legend(prop={'size': 10},bbox_to_anchor=(0.5, 0., 0.5, 1.0),loc=1)
 axes[1].legend(loc=2,prop={'size': 10})

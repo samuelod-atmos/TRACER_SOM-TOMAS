@@ -23,8 +23,8 @@ def smoothdist(dist):
 #===========================================================================================================
 
 output_dir = '../outputs'
-#save_png = False 
-save_png = True
+save_png = False 
+#save_png = True
 
 boxvol = 2000000.0
 srtSO4 = 0
@@ -347,7 +347,9 @@ axes[cntr].plot(x,styr,color='blue',label='Styrene')
 
 axes[cntr].set_ylabel('[ppbv]')
 axes[cntr].legend(loc='upper center',prop={'size': 8},ncol=4)
-axes[cntr].set_ylim(0,)
+axes[cntr].set_ylim(0.01,100.)
+axes[cntr].set_yscale('log')
+
 #=============================================================================================
 
 cntr = 4

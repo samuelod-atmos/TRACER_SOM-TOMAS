@@ -4,6 +4,7 @@ Feb_2024_src_backup/
 postprocessing/*.png 
 postprocessing/sum_files/
 inputs/*.json
+inputs/som-tomas-9d97902effb8.json
 inputs/timeseries/
 scripts/__pycache__/
 

@@ -35,7 +35,7 @@ save_png = True
 #identify = 'HOM.3'
 #identify = 'nan_0'
 #identify = 'inx10'
-#identify = 'A1e-3'
+identify = 'A5e-4'
 #identify = 'styon'
 #identify = 'tmbto'
 #identify = 'HOMmx'
@@ -61,7 +61,7 @@ save_png = True
 #identify = 'kflat'
 #identify = 'multi'
 #identify = 'bigDp'
-identify = 'frag2'
+#identify = 'frag2'
 #identify = 'frag4'
 #identify = 'prfct'
 #identify = 'debug'
@@ -74,7 +74,7 @@ endtime = 144.0
 #rname = '%s/20220801_vwl0_pwl0_hr7.20e+01_Pfunc_bg10_noconc.dat'%output_dir
 #rname = '%s/20220801_%s_vwl1_pwl1_hr1.44e+02_bg10_noconc.dat'%(output_dir,identify)
 #rname = '%s/20220801_%s_vwl1_pwl1_hr%4.2e_nh35000_orgfn1_inorg1_db1e-14_noconc.dat'%(output_dir,identify,endtime)
-rname = '%s/20220801_%s_A0.001_db1_pwl1_vwl1_OH0.8_FN1000.0_HOM0_T1_RH1_noconc.dat'%(output_dir,identify)
+rname = '%s/20220801_%s_A0.0005_db1_pwl1_vwl1_OH0.8_FN1000.0_HOM0_T1_RH1_noconc.dat'%(output_dir,identify)
 #rname = '%s/20220801_multi_vwl0_pwl0_nh35000.0_orgfn1_inorg1_db1e-15_ohscale1.0_noconc.dat'%output_dir
 #rname = '../outputs/20220801_multi_vwl1_pwl1_nh35000.0_orgfn1_inorg1_db1e-15_ohscale1.0_noconc.dat'
 
@@ -284,9 +284,9 @@ if nuc==True:
   smps_gr, model_gr, model_indx, smps_indx = [],[],[],[] 
 
 
-fig.set_size_inches(12,3)
+fig.set_size_inches(12,5)
 axes.grid(True)
-axes.set_title('Model') 
+#axes.set_title('Model') 
 axes.set_ylabel('Dp (nm)',fontsize=22)
 axes.set_xlabel('Date',fontsize=22)
 
@@ -333,6 +333,8 @@ axes.set_xlim(mdates.date2num(time_low),mdates.date2num(time_up))
 
 axes.xaxis.set_major_formatter(mdates.DateFormatter('%m/%d'))
 axes.xaxis.set_major_locator(mdates.DayLocator(interval = 1))
+axes.tick_params(axis='x', which='major', labelsize=16)
+axes.tick_params(axis='x', which='minor', labelsize=10)
 
 #--------------------------------------------------------
 #box_time = dt.datetime(2022,8,6,21)
@@ -342,7 +344,7 @@ axes.xaxis.set_major_locator(mdates.DayLocator(interval = 1))
 #axes.add_patch(rect)
 
 #--------------------------------------------------------
-cb1 = fig.colorbar(c1, format=mpl.ticker.FormatStrFormatter('$10^{%2.1f}$'),ax=axes,pad=0.0061, label='$ dN/dlog_{10}(D_p) $')
+#cb1 = fig.colorbar(c1, format=mpl.ticker.FormatStrFormatter('$10^{%2.1f}$'),ax=axes,pad=0.0061, label='$ dN/dlog_{10}(D_p) $')
 #cb1 = fig.colorbar(c1, format=mpl.ticker.FormatStrFormatter('$10^{%2.1f}$'),ax=axes,pad=0.0061, label='$ dN/dlog_{10}(D_p) $')
 c1.set_clim(1,4.3)
 

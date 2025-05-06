@@ -59,7 +59,7 @@ T_switch = [1]
 RH_switch = [1]
 fn_multi = [100.0]
 
-labels = ['Perfect Chamber','Base']
+labels = ['Wall Losses Off','Base']
 
 # Aerosol mass file name(s)
 #####################################################
