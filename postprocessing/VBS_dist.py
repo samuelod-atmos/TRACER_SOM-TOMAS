@@ -25,12 +25,12 @@ R = 8.314
 MWORG = 200.0
 
 #===========================================================================================================
-identify = 'frag4'
+identify = 'multi'
 db = 1
 pwl = 1
 vwl = 1
 OH_scale = 0.8
-FN_scale = 1000.0
+FN_scale = 100.0
 HOM = 0
 T_switch = 1
 RH_switch = 1
@@ -42,7 +42,7 @@ A = 1.0e-3
 #file = '%s/20220801_%s_A%s_db%i_pwl%i_vwl%i_OH%s_FN%s_HOM%i_T%i_RH1_gc.dat'%(output_dir,identify)
 file = '%s/20220801_%s_A%s_db%i_pwl%i_vwl%i_OH%s_FN%s_HOM%i_T%i_RH%i_gc.dat'%(output_dir,identify,A,db,pwl,vwl,OH_scale,FN_scale,HOM,T_switch,RH_switch)
 
-save_png = True
+save_png = False
 delt = 300.0
 
 #time_low = dt.datetime(2022,8,6,7)
@@ -104,7 +104,8 @@ df_somgc = pd.read_csv(file,header=None,delim_whitespace=True)
 som_gas = np.array(df_somgc)
 h2so4 = np.mean(som_gas[low_indx:up_indx,1])/boxvol*1E6*1E9
 #h2so4 = 
-som_gas = som_gas[:,1:-1]
+som_gas = som_gas[:,2:]
+#som_gas = som_gas[:,1:-1]
 #print('Shape of gas file:',np.shape(som_gas))
 
 #    # ----------------------------------------------------------------------------
@@ -119,6 +120,14 @@ df_spec = pd.read_csv('%s_spec.dat'%(file[:-7]), header=None, delim_whitespace=T
 #som_spname = np.array(df_spec.iloc[2,1:iorg+2])
 som_cstar = np.array(df_spec.iloc[7,1:iorg+2])
 som_cstar = som_cstar[:-1]
+saprc_spname = np.array(df_spec.iloc[2,2:iorg+2])
+saprc_mwcb = np.array(df_spec.iloc[6,3:iorg+2])
+
+
+
+for i in range(len(som_cstar)):
+  print('C* =',som_cstar[i],'spname =',saprc_spname[i],'som_gas=',np.mean(som_gas[low_indx:up_indx,i],axis=0))
+sys.exit()
 
 for i in range(len(som_cstar)):
   som_cstar[i] = float(som_cstar[i])
@@ -300,7 +309,7 @@ plt.scatter(Cstar, C_eqm, color='k', marker='x',zorder=100,label='Equilibrium')
 # Text for fragmentation sims
 ax.text(-0.5,30.,'%4.3f [$\mu g$ $ m^{-3}$]'%np.sum(Caer))
 ax.text(-0.5,10.,'%4.3f [$\mu g$ $ m^{-3}$]'%np.sum(C_eqm))
-#ax.text(-0.5,0.6,'%3.2f [h]'%t_cs)
+ax.text(-0.5,4.,'%3.2f [h]'%t_cs)
 #ax.legend(loc=2,fontsize=14)
 #fig = ax.get_figure()
 #fig.set_size_inches(4,5)

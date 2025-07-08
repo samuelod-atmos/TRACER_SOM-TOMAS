@@ -60,18 +60,21 @@ RH_switch = [1]
 fn_multi = [100.0]
 
 labels = ['Wall Losses Off','Base']
-
+colors = ['lightblue','darkblue']
 # Aerosol mass file name(s)
 #####################################################
 #files = ['%s/20220801_vwl0_pwl0_hr7.20e+01_Pfunc_bg10_aemass.dat'%output_dir
 #files = ['%s/20220801_%s_vwl1_pwl1_hr1.44e+02_bg10_aemass.dat'%(output_dir,identify)
 #files = ['%s/20220801_%s_vwl1_pwl1_nh35000.0_orgfn1_inorg1_db%s_ohscale1.0_aemass.dat'%(output_dir,identify,db[0])]
 
+
 plt.figure()
+plt.style.use('seaborn-darkgrid')
 fig = plt.gcf()
 ax = plt.gca()
 fig.set_size_inches(10,4)
 
+ts_all = []
 cntr = 0
 
 for dbk in db:
@@ -206,7 +209,8 @@ for dbk in db:
                 #plt.plot(x/360,organic,label='Organics')
                 #plt.plot(x/360,NH4,label='NH4')
                 #plt.plot(x,H2O,label='Water')
-                plt.plot(x,total,label=labels[cntr])
+                plt.plot(x,total,color=colors[cntr],label=labels[cntr])
+                ts_all.append(total)
   #              plt.plot(x,so4,color='r',label='Sulfate')
   #              plt.plot(x,benz,color='y',label='Benzene')
   #              plt.plot(x,tolu,color='b',label='Toluene')
@@ -216,9 +220,12 @@ for dbk in db:
   #              plt.plot(x,nonvol,color='k',label='Non-Volatile')
                 cntr = cntr + 1
 
-plt.title('Total Mass',fontsize=20)
-plt.xlabel('Date',fontsize=24)
-plt.ylabel('$ \mu g $ $ m^{-3} $',fontsize=24)
+ts_all = np.array(ts_all)
+diff = ts_all[0] - ts_all[1]
+
+ax.set_title('Total Mass',fontsize=20)
+ax.set_xlabel('Date',fontsize=24)
+ax.set_ylabel('$ \mu g $ $ m^{-3} $',fontsize=24)
 
 time_low = dt.datetime(2022,8,4,0)
 time_up = dt.datetime(2022,8,7,0)
@@ -229,6 +236,7 @@ ax.set_xlim(mdates.date2num(time_low),mdates.date2num(time_up))
 ax.xaxis.set_major_formatter(mdates.DateFormatter('%m/%d'))
 ax.xaxis.set_major_locator(mdates.DayLocator(interval = 1))
 
+ax.plot(x,diff,color='k',label='Difference')
 plt.grid(True)
 #plt.yscale('log')
 plt.legend()

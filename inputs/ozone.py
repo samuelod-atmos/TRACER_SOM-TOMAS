@@ -54,9 +54,9 @@ fig.set_size_inches(10,3)
 plt.ticklabel_format(axis='y',style='sci')
 
 x = np.linspace(0,len(OH),len(OH))/360.
-plt.plot(x,OH2,label='AOS')
 plt.plot(x,OH1,label='MAQL2')
 plt.plot(x,OH3,label='Deer Park')
+plt.plot(x,OH2,label='AOS')
 plt.xlabel('Hour of simulation')
 plt.ylabel('Ozone [ppb]')
 plt.title('Ozone Comparison') 

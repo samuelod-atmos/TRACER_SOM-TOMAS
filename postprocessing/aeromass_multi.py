@@ -50,7 +50,7 @@ endtime = 144.0
 
 # Particle phase diffusivity
 #####################################################
-db = [1,2,3,4]
+db = [1]
 VWL  =  [1] # [0 or 1] the switch for On/Off vapor wall loss
 PWL  =  [1] # [0 or 1] the switch for On/Off particle wall loss 
 OH_multi = [0.8]            # multiplier for OH concentration

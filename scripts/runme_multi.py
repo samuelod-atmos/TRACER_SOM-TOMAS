@@ -14,7 +14,7 @@ written by Ali Akherati October 2018 Colorado State University
 ================================================================================================== '''
 
 import numpy as np
-#import pandas as pd
+import pandas as pd
 import pygsheets as pyg
 import time
 import re
@@ -69,7 +69,7 @@ boxvol  = 2000000.0                   # teflon [cm3] - [CalTech 24 m3, CSU 10 m3
 orgfrac_bg = 0.8                                   # Organic fraction of background aerosols  
 density_bg = orgfrac_bg*1400.0+(1-orgfrac_bg)*1770 # [kg/m3] - density of aerosol originally in the chamber
 
-db     = [1,2,3,4]                    # switch for dynamic [1] or constant [0] particle-phase diffusion coefficient [m2/s] 
+db     = [1]                    # switch for dynamic [1] or constant [0] particle-phase diffusion coefficient [m2/s] 
 alpha   = 1.0                     # accommodation coefficient 
 storg   = 0.025                   # [N/m] surface tension
 kc      = 0.0                     # first-order loss rate of species in the particle phase [1/s]
@@ -186,7 +186,7 @@ for i in range(len(Dp)):
 script_directory = os.popen('pwd').read()[:-1]
 src_directory = script_directory[:-(len('scripts'))] + 'src'
 run_directory = script_directory[:-(len('scripts'))] + 'runs'  
-gc = pyg.authorize(service_file='../inputs/som-tomas-9d97902effb8.json')
+#gc = pyg.authorize(service_file='../inputs/som-tomas-9d97902effb8.json')
 
 
 # Background size distribution 
@@ -338,9 +338,10 @@ poa_1st_lenname = len(poa_1stname)
 
 #===================================================================================
 emiss_sheetname = 'Sheet1' 
-gsh_emission_ML = gc.open('CS_NPF_testing')
-df_emiss_ML = gsh_emission_ML.worksheet_by_title(title='%s'%emiss_sheetname).get_as_df()
-
+file_name = 'CS_NPF_testing.xlsx'
+#gsh_emission_ML = gc.open('CS_NPF_testing')
+#df_emiss_ML = gsh_emission_ML.worksheet_by_title(title='%s'%emiss_sheetname).get_as_df()
+df_emiss_ML = pd.read_excel(file_name)#, sheetname=emiss_sheetname)
 #===================================================================================
  
 index  = np.where(df_emiss_ML.iloc[:,0]!='')[0].shape[0] 

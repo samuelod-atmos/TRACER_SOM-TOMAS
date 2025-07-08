@@ -1,4 +1,3 @@
-
 '''
 @author: samuelod
 '''
@@ -33,8 +32,8 @@ output_dir = '../outputs'
 
 # Sage image [True/False]
 #####################################################
-#save_png = False
-save_png = True
+save_png = False
+#save_png = True
 
 # 5 character name of run
 #####################################################
@@ -49,7 +48,6 @@ day = 1
 
 xlow = mdates.date2num(dt.datetime(2022,8,4,0))
 xhigh = mdates.date2num(dt.datetime(2022,8,7,0))
-
 
 # Particle phase diffusivity
 #####################################################
